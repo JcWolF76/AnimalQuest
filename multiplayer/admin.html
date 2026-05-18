@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<!--
+    AnimalQuest © 2026 Jesse Bliss (JcWolF). All rights reserved.
+    Proprietary software — see LICENSE at repo root. Unauthorized copying,
+    modification, redistribution, or commercial use is prohibited.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AnimalQuest Admin</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #0d1b2a; color: #e0e6f0; min-height: 100vh; padding: 20px; }
+
+/* ── Auth gate (codepad) ── */
+#authGate { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 16px; }
+.pin-sheet { background: linear-gradient(145deg, #1a1a2e, #16213e); border: 1px solid rgba(108,52,131,0.7); border-radius: 22px; padding: 30px 22px 24px; width: min(340px, 96vw); text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,0.6); }
+.pin-title { font-size: 22px; font-weight: 800; color: #f1c40f; margin-bottom: 4px; }
+.pin-sub { font-size: 13px; color: #bdc3c7; margin-bottom: 22px; }
+.pin-dots { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; flex-wrap: nowrap; }
+.pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(108,52,131,0.8); background: transparent; transition: background 0.15s, border-color 0.15s; flex: 0 0 auto; }
+.pin-dot.filled { background: #9b59b6; border-color: #9b59b6; }
+.pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.pin-key { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 14px 6px 10px; font-size: 20px; font-weight: 700; color: #ecf0f1; cursor: pointer; touch-action: manipulation; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; transition: background 0.12s, transform 0.1s; font-family: inherit; }
+.pin-key span { font-size: 8px; letter-spacing: 1px; color: #7f8c8d; margin-top: 3px; font-weight: 400; pointer-events: none; }
+.pin-key:active { background: rgba(108,52,131,0.45); transform: scale(0.93); }
+.pin-key.pin-cancel-key { color: #e74c3c; }
+.pin-key.pin-back-key { font-size: 18px; }
+.pin-error { color: #e74c3c; font-size: 13px; font-weight: 600; min-height: 20px; margin-top: 10px; }
+
+/* ── Admin panel ── */
+#adminPanel { display: none; max-width: 680px; margin: 0 auto; padding-bottom: 60px; }
+h2 { font-size: 20px; color: #7eb8f7; margin-bottom: 16px; }
+h3 { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+
+.card { background: #1a2d42; border: 1px solid #2e4a68; border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.row input, .row select { flex: 1; min-width: 0; }
+
+input, select { background: #0d1b2a; border: 1px solid #2e4a68; border-radius: 8px; color: #e0e6f0; font-size: 14px; padding: 9px 12px; outline: none; width: 100%; }
+input:focus, select:focus { border-color: #4a90d9; }
+select option { background: #0d1b2a; }
+
+button { background: #1a73e8; border: none; border-radius: 8px; color: #fff; cursor: pointer; font-size: 14px; font-weight: 600; padding: 9px 18px; white-space: nowrap; }
+button:active { opacity: 0.82; }
+button.secondary { background: rgba(255,255,255,0.08); }
+button.danger { background: rgba(231,76,60,0.8); }
+button:disabled { opacity: 0.4; cursor: default; }
+
+.status { font-size: 13px; padding: 10px 14px; border-radius: 8px; margin-top: 10px; }
+.status.ok  { background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.4); color: #2ecc71; }
+.status.err { background: rgba(231,76,60,0.15); border: 1px solid rgba(231,76,60,0.4); color: #e74c3c; }
+.status.info { background: rgba(52,152,219,0.15); border: 1px solid rgba(52,152,219,0.4); color: #7eb8f7; }
+
+/* ── Game browser ── */
+#gameBrowserCard { margin-bottom: 24px; }
+#gameBrowserCard h2 { margin-bottom: 12px; }
+.browser-controls { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+.browser-controls input { flex: 1; min-width: 140px; font-size: 13px; padding: 7px 10px; }
+.browser-controls button { font-size: 13px; padding: 7px 14px; }
+.browser-stats { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 10px; }
+#gameList { display: flex; flex-direction: column; gap: 6px; max-height: 420px; overflow-y: auto; }
+.game-row { display: flex; align-items: center; gap: 10px; background: #0d1b2a; border: 1px solid #2e4a68; border-radius: 8px; padding: 10px 14px; cursor: pointer; transition: border-color 0.15s; }
+.game-row:hover { border-color: #4a90d9; }
+.game-row.selected { border-color: #1a73e8; background: rgba(26,115,232,0.1); }
+.game-code { font-family: monospace; font-size: 16px; font-weight: 800; letter-spacing: 0.15em; color: #7eb8f7; min-width: 64px; }
+.game-info { flex: 1; min-width: 0; }
+.game-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.game-meta { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.game-status { font-size: 11px; font-weight: 700; border-radius: 5px; padding: 2px 8px; white-space: nowrap; }
+.game-status.active { background: rgba(39,174,96,0.2); color: #2ecc71; border: 1px solid rgba(39,174,96,0.4); }
+.game-status.ended  { background: rgba(231,76,60,0.15); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); }
+.browser-empty { color: rgba(255,255,255,0.3); font-size: 13px; padding: 16px 0; text-align: center; }
+
+/* ── Feedback / Tickets ── */
+#feedbackCard { margin-bottom: 24px; }
+#feedbackList { display: flex; flex-direction: column; gap: 8px; max-height: 480px; overflow-y: auto; }
+.ticket-row { background: #0d1b2a; border: 1px solid #2e4a68; border-radius: 8px; padding: 12px 14px; }
+.ticket-row.bug { border-left: 3px solid #e74c3c; }
+.ticket-row.feature { border-left: 3px solid #2ecc71; }
+.ticket-row.resolved { opacity: 0.5; }
+.ticket-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.ticket-type { font-size: 11px; font-weight: 700; border-radius: 5px; padding: 2px 8px; }
+.ticket-type.bug { background: rgba(231,76,60,0.2); color: #e74c3c; border: 1px solid rgba(231,76,60,0.4); }
+.ticket-type.feature { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid rgba(46,204,113,0.35); }
+.ticket-player { font-size: 11px; color: #7eb8f7; font-weight: 600; }
+.ticket-game { font-size: 11px; color: rgba(255,255,255,0.35); font-family: monospace; }
+.ticket-time { font-size: 11px; color: rgba(255,255,255,0.3); margin-left: auto; }
+.ticket-desc { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 8px; }
+.ticket-actions { display: flex; gap: 6px; }
+.ticket-actions button { font-size: 11px; padding: 4px 10px; border-radius: 6px; cursor: pointer; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.7); }
+.ticket-actions button:hover { background: rgba(255,255,255,0.14); }
+
+#plateList { display: flex; flex-direction: column; gap: 6px; }
+.plate-row { display: flex; align-items: center; gap: 10px; background: #0d1b2a; border: 1px solid #2e4a68; border-radius: 8px; padding: 8px 12px; cursor: pointer; transition: border-color 0.15s; }
+.plate-row:hover { border-color: #4a90d9; }
+.plate-row.selected { border-color: #1a73e8; background: rgba(26,115,232,0.1); }
+.plate-name { flex: 1; font-size: 14px; font-weight: 600; }
+.plate-ts { font-size: 12px; color: rgba(255,255,255,0.45); }
+.plate-first { font-size: 11px; color: #f1c40f; font-weight: 700; }
+
+/* ── Editor ── */
+#editor .field-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 5px; }
+#editor .edit-name { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+.datetime-row { display: flex; gap: 8px; align-items: center; }
+.datetime-row input { font-size: 15px; }
+
+.tag { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 5px; padding: 2px 7px; margin-left: 6px; vertical-align: middle; }
+.tag-first { background: rgba(241,196,15,0.2); color: #f1c40f; border: 1px solid rgba(241,196,15,0.4); }
+.tag-later { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.15); }
+
+#sortBar { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+#sortBar button { font-size: 12px; padding: 5px 12px; }
+#filterInput { font-size: 13px; padding: 7px 10px; }
+</style>
+</head>
+<body>
+
+<!-- ── Auth Gate ── -->
+<div id="authGate">
+    <div class="pin-sheet">
+        <div class="pin-title">🐺 AnimalQuest Admin</div>
+        <div class="pin-sub">Enter passcode</div>
+        <div class="pin-dots" id="pinDots"></div>
+        <div class="pin-pad">
+            <button class="pin-key" data-digit="1" type="button">1</button>
+            <button class="pin-key" data-digit="2" type="button">2<span>ABC</span></button>
+            <button class="pin-key" data-digit="3" type="button">3<span>DEF</span></button>
+            <button class="pin-key" data-digit="4" type="button">4<span>GHI</span></button>
+            <button class="pin-key" data-digit="5" type="button">5<span>JKL</span></button>
+            <button class="pin-key" data-digit="6" type="button">6<span>MNO</span></button>
+            <button class="pin-key" data-digit="7" type="button">7<span>PQRS</span></button>
+            <button class="pin-key" data-digit="8" type="button">8<span>TUV</span></button>
+            <button class="pin-key" data-digit="9" type="button">9<span>WXYZ</span></button>
+            <button class="pin-key pin-cancel-key" id="pinClearBtn" type="button">✕</button>
+            <button class="pin-key" data-digit="0" type="button">0</button>
+            <button class="pin-key pin-back-key" id="pinBackBtn" type="button">⌫</button>
+        </div>
+        <div class="pin-error" id="authError"></div>
+    </div>
+</div>
+
+<!-- ── Admin Panel ── -->
+<div id="adminPanel">
+
+    <!-- Feedback / Tickets -->
+    <div class="card" id="feedbackCard">
+        <h2>🎟️ Player Feedback</h2>
+        <div class="browser-controls">
+            <select id="feedbackFilter" onchange="renderFeedbackList()">
+                <option value="all">All</option>
+                <option value="bug">🐛 Bugs</option>
+                <option value="feature">💡 Features</option>
+                <option value="open">Open</option>
+                <option value="resolved">Resolved</option>
+            </select>
+            <button onclick="loadFeedback()">🔄 Refresh</button>
+        </div>
+        <div id="feedbackStats" style="font-size:13px;color:#7f8c8d;margin-bottom:12px;"></div>
+        <div id="feedbackList"><div class="browser-empty">Loading…</div></div>
+    </div>
+
+    <!-- Game browser -->
+    <div class="card" id="gameBrowserCard">
+        <h2>📋 All Games</h2>
+        <div class="browser-controls">
+            <input id="gameSearchInput" placeholder="Search code or name…" oninput="renderGameList()">
+            <button onclick="browseGames()">🔄 Refresh</button>
+            <button class="secondary" onclick="sortGames('updated')">Latest</button>
+            <button class="secondary" onclick="sortGames('code')">A–Z</button>
+            <button class="secondary" onclick="sortGames('players')">Players</button>
+        </div>
+        <div class="browser-stats" id="browserStats"></div>
+        <div id="gameDeleteBar" style="display:none;background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.4);border-radius:8px;padding:10px 14px;margin-bottom:10px;align-items:center;gap:10px;flex-wrap:wrap">
+            <span id="gameDeleteCount" style="font-size:13px;color:#e74c3c;font-weight:600"></span>
+            <button class="danger" onclick="deleteSelectedGames()" style="margin-left:auto">🗑 Delete selected</button>
+            <button class="secondary" onclick="clearGameSelection()" style="font-size:12px;padding:6px 12px">Clear</button>
+            <div id="gameDeleteStatus" style="width:100%"></div>
+        </div>
+        <div id="gameList"><div class="browser-empty">Loading…</div></div>
+    </div>
+
+    <h2 style="margin:24px 0 16px">👥 Player Management</h2>
+
+    <!-- Cross-game finder -->
+    <div class="card" id="findCard">
+        <h3>Find My Records Across Games</h3>
+        <div class="row">
+            <input id="findTagInput" placeholder="Tag to find (case-insensitive)" style="letter-spacing:0.05em">
+            <button onclick="findMyRecords()">Search</button>
+        </div>
+        <div id="findResultsStats" style="font-size:12px;color:rgba(255,255,255,0.5);margin:10px 0"></div>
+        <div id="findResultsList"></div>
+        <div id="bulkRenameSection" style="display:none;border-top:1px solid #2e4a68;padding-top:14px;margin-top:14px">
+            <div style="font-size:13px;color:#7eb8f7;font-weight:600;margin-bottom:8px">Bulk rename all matches</div>
+            <div class="row" style="margin-bottom:8px">
+                <input id="bulkNewName" placeholder="New name (e.g. JcWolF)">
+                <input id="bulkNewTag" placeholder="New tag (case preserved)">
+            </div>
+            <button onclick="bulkRenameMatches()">Apply to all matches</button>
+            <div id="bulkRenameStatus"></div>
+        </div>
+    </div>
+
+    <!-- In-game player manager (appears when a game is loaded) -->
+    <div class="card" id="playerMgrCard" style="display:none">
+        <h3 id="playerMgrTitle">Players in this game</h3>
+        <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:10px">Tick 2+ to merge. ✏️ to rename in place. 🗑 to delete from this game only.</div>
+        <div id="playerMgrList"></div>
+        <div id="mergeBar" style="display:none;border-top:1px solid #2e4a68;padding-top:12px;margin-top:12px;display:flex;align-items:center;gap:10px">
+            <span id="mergeCount" style="font-size:13px;color:#7eb8f7"></span>
+            <button onclick="openMergeDialog()" id="mergeBtn" style="margin-left:auto">Merge selected →</button>
+        </div>
+        <div id="playerMgrStatus"></div>
+    </div>
+
+    <h2 style="margin:24px 0 16px">🛠️ Timestamp Editor</h2>
+
+    <!-- Game loader -->
+    <div class="card">
+        <h3>Load Game</h3>
+        <div class="row">
+            <input id="gameCodeInput" placeholder="Game code (e.g. WOLF)" maxlength="8" style="text-transform:uppercase;letter-spacing:0.1em;">
+            <button onclick="loadGame()">Load</button>
+        </div>
+        <div id="loadStatus"></div>
+    </div>
+
+    <!-- Player selector -->
+    <div class="card" id="playerCard" style="display:none">
+        <h3>Player</h3>
+        <select id="playerSelect" onchange="loadPlates()">
+            <option value="">— select player —</option>
+        </select>
+    </div>
+
+    <!-- Plate list + editor -->
+    <div class="card" id="platesCard" style="display:none">
+        <h3>Plates</h3>
+        <div id="sortBar">
+            <button class="secondary" onclick="sortPlates('alpha')">A–Z</button>
+            <button class="secondary" onclick="sortPlates('ts-asc')">Oldest first</button>
+            <button class="secondary" onclick="sortPlates('ts-desc')">Newest first</button>
+            <input id="filterInput" placeholder="Filter…" oninput="renderPlateList()">
+        </div>
+        <div id="plateList"></div>
+    </div>
+
+    <!-- Editor -->
+    <div class="card" id="editorCard" style="display:none">
+        <div id="editor">
+            <div class="edit-name" id="editPlateName"></div>
+            <div class="field-label">Found at</div>
+            <div class="datetime-row">
+                <input type="datetime-local" id="editDatetime" step="1">
+                <button onclick="saveTimestamp()">Save</button>
+                <button class="secondary" onclick="closeEditor()">Cancel</button>
+            </div>
+            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+                <button class="secondary" onclick="setToNow()">Set to now</button>
+                <button class="danger" style="margin-left:auto" onclick="deletePlate()">Remove plate</button>
+            </div>
+            <div id="editStatus"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK (compat) -->
+<script src="../data.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+// ── Config ───────────────────────────────────────────────────────────────────
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyCP7wJIufoS6_BVwlaBXtF0SOzqujN-uHo",
+    authDomain: "sparkasia-studios.firebaseapp.com",
+    databaseURL: "https://sparkasia-studios-default-rtdb.firebaseio.com/",
+    projectId: "sparkasia-studios",
+    storageBucket: "sparkasia-studios.firebasestorage.app",
+    messagingSenderId: "1056103344185",
+    appId: "1:1056103344185:web:7016bd6ad39b7a87cec5e8"
+};
+
+// Numeric admin passcode
+const CORRECT_PASSCODE = '96531910';
+
+// ── Auth (codepad) ───────────────────────────────────────────────────────────
+let pinEntry = '';
+const pinDotsEl = document.getElementById('pinDots');
+(function buildPinDots() {
+    for (let i = 0; i < CORRECT_PASSCODE.length; i += 1) {
+        const dot = document.createElement('span');
+        dot.className = 'pin-dot';
+        pinDotsEl.appendChild(dot);
+    }
+})();
+
+function renderPinDots() {
+    [...pinDotsEl.children].forEach((dot, i) => dot.classList.toggle('filled', i < pinEntry.length));
+}
+
+function pinDigit(d) {
+    if (pinEntry.length >= CORRECT_PASSCODE.length) return;
+    pinEntry += d;
+    renderPinDots();
+    document.getElementById('authError').textContent = '';
+    if (pinEntry.length === CORRECT_PASSCODE.length) checkAuth();
+}
+
+function pinBackspace() {
+    pinEntry = pinEntry.slice(0, -1);
+    renderPinDots();
+    document.getElementById('authError').textContent = '';
+}
+
+function pinClear() {
+    pinEntry = '';
+    renderPinDots();
+    document.getElementById('authError').textContent = '';
+}
+
+function checkAuth() {
+    if (pinEntry === CORRECT_PASSCODE) {
+        document.getElementById('authGate').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        initFirebase();
+    } else {
+        document.getElementById('authError').textContent = 'Incorrect passcode';
+        pinEntry = '';
+        renderPinDots();
+    }
+}
+
+document.querySelectorAll('.pin-key[data-digit]').forEach(btn => {
+    btn.addEventListener('click', () => pinDigit(btn.dataset.digit));
+});
+document.getElementById('pinBackBtn').addEventListener('click', pinBackspace);
+document.getElementById('pinClearBtn').addEventListener('click', pinClear);
+document.addEventListener('keydown', e => {
+    if (document.getElementById('adminPanel').style.display === 'block') return;
+    if (/^[0-9]$/.test(e.key)) pinDigit(e.key);
+    else if (e.key === 'Backspace') pinBackspace();
+    else if (e.key === 'Escape') pinClear();
+    else if (e.key === 'Enter' && pinEntry.length === CORRECT_PASSCODE.length) checkAuth();
+});
+
+// ── Firebase ──────────────────────────────────────────────────────────────────
+let db = null;
+function initFirebase() {
+    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.database();
+    loadFeedback();
+    browseGames();
+}
+
+// ── Feedback / Tickets ────────────────────────────────────────────────────────
+let allTickets = [];
+
+async function loadFeedback() {
+    const listEl = document.getElementById('feedbackList');
+    listEl.innerHTML = '<div class="browser-empty">Loading…</div>';
+    document.getElementById('feedbackStats').textContent = '';
+    try {
+        // Read without orderByChild so we don't depend on a Firebase index
+        // being declared in database rules. Sort client-side after fetch.
+        const snap = await db.ref('animalquest/feedback').once('value');
+        const raw = snap.val();
+        allTickets = [];
+        if (raw && typeof raw === 'object') {
+            Object.entries(raw).forEach(([id, val]) => { allTickets.push({ id, ...val }); });
+            allTickets.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
+        }
+        renderFeedbackList();
+    } catch (e) {
+        console.error('loadFeedback error:', e);
+        const msg = e && e.message ? e.message : String(e);
+        listEl.innerHTML = `<div class="browser-empty" style="color:#e74c3c">Could not load feedback: ${escapeHtmlAdmin(msg)}</div>`;
+        document.getElementById('feedbackStats').textContent = '';
+    }
+}
+
+function renderFeedbackList() {
+    const filter = document.getElementById('feedbackFilter')?.value || 'all';
+    let list = allTickets.filter(t => {
+        if (filter === 'bug') return t.type === 'bug';
+        if (filter === 'feature') return t.type === 'feature';
+        if (filter === 'open') return t.status !== 'resolved';
+        if (filter === 'resolved') return t.status === 'resolved';
+        return true;
+    });
+    const bugs = allTickets.filter(t => t.type === 'bug' && t.status !== 'resolved').length;
+    const features = allTickets.filter(t => t.type === 'feature' && t.status !== 'resolved').length;
+    document.getElementById('feedbackStats').textContent = `${allTickets.length} total · ${bugs} open bugs · ${features} open feature requests`;
+    if (!list.length) {
+        const empty = allTickets.length === 0
+            ? 'No feedback received yet.'
+            : 'No tickets match this filter.';
+        document.getElementById('feedbackList').innerHTML = `<div class="browser-empty">${empty}</div>`;
+        return;
+    }
+    document.getElementById('feedbackList').innerHTML = list.map(t => {
+        const date = t.submittedAt ? new Date(t.submittedAt).toLocaleString() : '—';
+        const isResolved = t.status === 'resolved';
+        const typeLabel = t.type === 'bug' ? '🐛 Bug' : '💡 Feature';
+        return `<div class="ticket-row ${t.type}${isResolved ? ' resolved' : ''}">
+            <div class="ticket-header">
+                <span class="ticket-type ${t.type}">${typeLabel}</span>
+                <span class="ticket-player">${t.playerName || 'Anonymous'}${t.playerTag ? ` (${t.playerTag})` : ''}</span>
+                ${t.gameCode ? `<span class="ticket-game">[${t.gameCode}]</span>` : ''}
+                <span class="ticket-time">${date}</span>
+            </div>
+            <div class="ticket-desc">${escapeHtmlAdmin(t.description || '')}</div>
+            <div class="ticket-actions">
+                ${isResolved
+                    ? `<button onclick="setTicketStatus('${t.id}','open')">↩ Reopen</button>`
+                    : `<button onclick="setTicketStatus('${t.id}','resolved')">✓ Resolve</button>`}
+                <button onclick="deleteTicket('${t.id}')">🗑 Delete</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+async function setTicketStatus(id, status) {
+    await db.ref(`animalquest/feedback/${id}/status`).set(status);
+    const t = allTickets.find(t => t.id === id);
+    if (t) t.status = status;
+    renderFeedbackList();
+}
+
+async function deleteTicket(id) {
+    if (!confirm('Delete this ticket permanently?')) return;
+    await db.ref(`animalquest/feedback/${id}`).remove();
+    allTickets = allTickets.filter(t => t.id !== id);
+    renderFeedbackList();
+}
+
+function escapeHtmlAdmin(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Game Browser ──────────────────────────────────────────────────────────────
+let allGames = [];
+let browserSortMode = 'updated';
+
+async function browseGames() {
+    const listEl = document.getElementById('gameList');
+    const statsEl = document.getElementById('browserStats');
+    listEl.innerHTML = '<div class="browser-empty">Loading all games…</div>';
+    statsEl.textContent = '';
+    try {
+        const snap = await db.ref('animalquest/games').once('value');
+        const raw = snap.val() || {};
+        allGames = Object.entries(raw).map(([code, data]) => ({
+            code,
+            name: data.name || '(unnamed)',
+            status: data.status || 'active',
+            playerCount: Object.keys(data.players || {}).length,
+            updatedAt: data.updatedAt || data.createdAt || 0,
+            roundNumber: data.roundNumber || 1,
+            hostKey: data.hostPlayerKey || '',
+            players: data.players || {},
+        }));
+        sortGames(browserSortMode, false);
+        renderGameList();
+    } catch (err) {
+        listEl.innerHTML = `<div class="browser-empty" style="color:#e74c3c">Error: ${err.message}</div>`;
+    }
+}
+
+function sortGames(mode, render = true) {
+    browserSortMode = mode;
+    if (mode === 'updated') allGames.sort((a, b) => b.updatedAt - a.updatedAt);
+    else if (mode === 'code') allGames.sort((a, b) => a.code.localeCompare(b.code));
+    else if (mode === 'players') allGames.sort((a, b) => b.playerCount - a.playerCount);
+    if (render) renderGameList();
+}
+
+// Multi-select state for bulk game deletion. Checkbox per row; the rest of
+// the row still loads the game on click.
+const selectedGamesForDelete = new Set();
+
+function updateGameDeleteBar() {
+    const bar = document.getElementById('gameDeleteBar');
+    const n = selectedGamesForDelete.size;
+    if (n === 0) {
+        bar.style.display = 'none';
+    } else {
+        bar.style.display = 'flex';
+        document.getElementById('gameDeleteCount').textContent = `${n} game${n===1?'':'s'} selected for deletion`;
+    }
+}
+
+function clearGameSelection() {
+    selectedGamesForDelete.clear();
+    document.querySelectorAll('.game-row .game-del-check').forEach(cb => { cb.checked = false; });
+    updateGameDeleteBar();
+}
+
+function renderGameList() {
+    const query = (document.getElementById('gameSearchInput')?.value || '').toLowerCase().trim();
+    const listEl = document.getElementById('gameList');
+    const statsEl = document.getElementById('browserStats');
+    const active = allGames.filter(g => g.status !== 'ended').length;
+    const ended = allGames.filter(g => g.status === 'ended').length;
+    statsEl.textContent = `${allGames.length} total — ${active} active, ${ended} ended`;
+    const visible = query
+        ? allGames.filter(g => g.code.toLowerCase().includes(query) || g.name.toLowerCase().includes(query))
+        : allGames;
+    if (!visible.length) {
+        listEl.innerHTML = '<div class="browser-empty">No games found.</div>';
+        updateGameDeleteBar();
+        return;
+    }
+    listEl.innerHTML = '';
+    visible.forEach(g => {
+        const row = document.createElement('div');
+        row.className = 'game-row';
+        const ts = g.updatedAt ? new Date(g.updatedAt).toLocaleString() : '—';
+        const roundLabel = g.roundNumber > 1 ? ` · Round ${g.roundNumber}` : '';
+        let playerNames = '—';
+        try {
+            const players = g.players && typeof g.players === 'object' ? g.players : {};
+            const names = Object.values(players)
+                .map(p => (p && (p.displayName || p.name)) || '?')
+                .filter(Boolean);
+            if (names.length) playerNames = names.join(', ');
+        } catch (e) { /* leave as '—' */ }
+        const checked = selectedGamesForDelete.has(g.code) ? 'checked' : '';
+        row.innerHTML = `
+            <input type="checkbox" class="game-del-check" data-code="${escapeHtmlAdmin(g.code)}" ${checked} style="flex:0 0 auto;width:18px;height:18px;margin:0 4px 0 0;">
+            <div class="game-code">${escapeHtmlAdmin(g.code)}</div>
+            <div class="game-info">
+                <div class="game-name">${escapeHtmlAdmin(g.name)}</div>
+                <div class="game-meta">${g.playerCount} player${g.playerCount !== 1 ? 's' : ''}${roundLabel} · ${ts}</div>
+                <div class="game-meta" style="opacity:0.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtmlAdmin(playerNames)}</div>
+            </div>
+            <div class="game-status ${g.status}">${g.status === 'ended' ? 'Ended' : 'Active'}</div>`;
+
+        // Checkbox toggles delete-selection without triggering the row's load action.
+        const cb = row.querySelector('.game-del-check');
+        cb.addEventListener('click', (ev) => ev.stopPropagation());
+        cb.addEventListener('change', () => {
+            if (cb.checked) selectedGamesForDelete.add(g.code);
+            else selectedGamesForDelete.delete(g.code);
+            updateGameDeleteBar();
+        });
+
+        row.addEventListener('click', () => {
+            document.querySelectorAll('.game-row').forEach(r => r.classList.remove('selected'));
+            row.classList.add('selected');
+            const codeInput = document.getElementById('gameCodeInput');
+            if (codeInput) { codeInput.value = g.code; loadGame(); }
+            document.getElementById('gameBrowserCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        listEl.appendChild(row);
+    });
+    updateGameDeleteBar();
+}
+
+async function deleteSelectedGames() {
+    const codes = [...selectedGamesForDelete];
+    if (!codes.length) return;
+    const msg = codes.length === 1
+        ? `Delete game ${codes[0]} permanently? Removes the entire game and every player record in it.\n\nCannot be undone.`
+        : `Delete ${codes.length} games permanently? Removes each game and every player record in them.\n\n  ${codes.join(', ')}\n\nCannot be undone.`;
+    if (!confirm(msg)) return;
+
+    const statusEl = document.getElementById('gameDeleteStatus');
+    statusEl.innerHTML = '<div class="status info">Deleting…</div>';
+    let ok = 0, fail = 0;
+    for (const code of codes) {
+        try {
+            await db.ref(`animalquest/games/${code}`).remove();
+            ok++;
+        } catch (err) {
+            fail++;
+            console.error(`Failed to delete game ${code}:`, err);
+        }
+    }
+    selectedGamesForDelete.clear();
+    statusEl.innerHTML = `<div class="status ${fail ? 'err' : 'ok'}">${ok} deleted${fail ? ` · ${fail} failed (see console)` : ''}</div>`;
+    await browseGames();
+}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let gameRef = null;
+let gameData = null;
+let selectedPlayerKey = null;
+let plates = [];        // { name, foundAt, isFirst }
+let sortMode = 'alpha';
+let selectedPlate = null;
+
+// ── Game loader ───────────────────────────────────────────────────────────────
+async function loadGame() {
+    const code = document.getElementById('gameCodeInput').value.trim().toUpperCase();
+    if (!code) return;
+    setStatus('loadStatus', 'Loading…', 'info');
+    try {
+        const snap = await db.ref(`animalquest/games/${code}`).once('value');
+        gameData = snap.val();
+        if (!gameData) { setStatus('loadStatus', 'Game not found.', 'err'); return; }
+        gameRef = db.ref(`animalquest/games/${code}`);
+        setStatus('loadStatus', `✅ Loaded "${gameData.name || code}" — ${Object.keys(gameData.players || {}).length} player(s)`, 'ok');
+
+        // Populate player selector
+        const sel = document.getElementById('playerSelect');
+        sel.innerHTML = '<option value="">— select player —</option>';
+        Object.entries(gameData.players || {}).forEach(([key, p]) => {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = p.displayName || p.name || key;
+            sel.appendChild(opt);
+        });
+        document.getElementById('playerCard').style.display = '';
+        document.getElementById('platesCard').style.display = 'none';
+        document.getElementById('editorCard').style.display = 'none';
+        selectedPlayerKey = null;
+        plates = [];
+        // Clear status messages tied to the previously-loaded game so a stale
+        // 'Renamed to X' or 'Removed Y' doesn't linger over a different game.
+        const pms = document.getElementById('playerMgrStatus');
+        if (pms) pms.innerHTML = '';
+        const es = document.getElementById('editStatus');
+        if (es) es.innerHTML = '';
+        renderPlayerMgr();
+    } catch (err) {
+        setStatus('loadStatus', 'Error: ' + err.message, 'err');
+    }
+}
+
+// ── Plate list ────────────────────────────────────────────────────────────────
+function loadPlates() {
+    selectedPlayerKey = document.getElementById('playerSelect').value;
+    if (!selectedPlayerKey || !gameData) return;
+    const player = gameData.players[selectedPlayerKey];
+    const states = player?.states || {};
+    const claims = gameData.claimedStates || {};
+
+    plates = Object.entries(states).map(([name, data]) => ({
+        name,
+        foundAt: typeof data.foundAt === 'number' ? data.foundAt : 0,
+        isFirst: claims[name]?.playerKey === selectedPlayerKey,
+    }));
+
+    document.getElementById('platesCard').style.display = '';
+    document.getElementById('editorCard').style.display = 'none';
+    selectedPlate = null;
+    sortPlates(sortMode, false);
+    renderPlateList();
+}
+
+function sortPlates(mode, render = true) {
+    sortMode = mode;
+    if (mode === 'alpha') plates.sort((a, b) => a.name.localeCompare(b.name));
+    else if (mode === 'ts-asc') plates.sort((a, b) => a.foundAt - b.foundAt);
+    else if (mode === 'ts-desc') plates.sort((a, b) => b.foundAt - a.foundAt);
+    if (render) renderPlateList();
+}
+
+function renderPlateList() {
+    const filter = document.getElementById('filterInput').value.toLowerCase();
+    const container = document.getElementById('plateList');
+    const visible = filter ? plates.filter(p => p.name.toLowerCase().includes(filter)) : plates;
+
+    if (!visible.length) { container.innerHTML = '<div style="color:rgba(255,255,255,0.35);font-size:13px;padding:8px 0">No plates found.</div>'; return; }
+
+    container.innerHTML = '';
+    visible.forEach(plate => {
+        const row = document.createElement('div');
+        row.className = 'plate-row' + (selectedPlate === plate.name ? ' selected' : '');
+        const ts = plate.foundAt ? new Date(plate.foundAt).toLocaleString() : '—';
+        const firstTag = plate.isFirst ? '<span class="tag tag-first">1st</span>' : '<span class="tag tag-later">later</span>';
+        row.innerHTML = `<div class="plate-name">${plate.name}${firstTag}</div><div class="plate-ts">${ts}</div>`;
+        row.addEventListener('click', () => openEditor(plate.name, plate.foundAt));
+        container.appendChild(row);
+    });
+}
+
+// ── Editor ────────────────────────────────────────────────────────────────────
+function openEditor(name, foundAt) {
+    selectedPlate = name;
+    renderPlateList();
+    document.getElementById('editPlateName').textContent = name;
+    document.getElementById('editDatetime').value = foundAt ? toDatetimeLocal(foundAt) : '';
+    document.getElementById('editStatus').innerHTML = '';
+    const card = document.getElementById('editorCard');
+    card.style.display = '';
+    setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+}
+
+function closeEditor() {
+    selectedPlate = null;
+    document.getElementById('editorCard').style.display = 'none';
+    renderPlateList();
+}
+
+function setToNow() {
+    document.getElementById('editDatetime').value = toDatetimeLocal(Date.now());
+}
+
+async function saveTimestamp() {
+    if (!selectedPlate || !selectedPlayerKey || !gameRef) return;
+    const dtVal = document.getElementById('editDatetime').value;
+    if (!dtVal) { setStatus('editStatus', 'Please enter a date and time.', 'err'); return; }
+    const newTs = new Date(dtVal).getTime();
+    if (isNaN(newTs)) { setStatus('editStatus', 'Invalid date/time.', 'err'); return; }
+
+    setStatus('editStatus', 'Saving…', 'info');
+    try {
+        // Update the foundAt in the player's state record
+        await gameRef.child(`players/${selectedPlayerKey}/states/${selectedPlate}/foundAt`).set(newTs);
+        setStatus('editStatus', `✅ Saved — ${new Date(newTs).toLocaleString()}`, 'ok');
+
+        // Update local cache
+        const plate = plates.find(p => p.name === selectedPlate);
+        if (plate) plate.foundAt = newTs;
+
+        // Refresh claimedStates first-finder for this state based on new timestamps
+        await recomputeFirstFinder(selectedPlate);
+        renderPlateList();
+    } catch (err) {
+        setStatus('editStatus', 'Error: ' + err.message, 'err');
+    }
+}
+
+async function deletePlate() {
+    if (!selectedPlate || !selectedPlayerKey || !gameRef) return;
+    if (!confirm(`Remove ${selectedPlate} from ${document.getElementById('playerSelect').selectedOptions[0]?.text}?\n\nThis cannot be undone from here.`)) return;
+    setStatus('editStatus', 'Removing…', 'info');
+    try {
+        await gameRef.child(`players/${selectedPlayerKey}/states/${selectedPlate}`).remove();
+        // Remove first-finder claim if this player held it
+        const snap = await gameRef.child(`claimedStates/${selectedPlate}`).once('value');
+        if (snap.val()?.playerKey === selectedPlayerKey) {
+            await gameRef.child(`claimedStates/${selectedPlate}`).remove();
+        }
+        setStatus('editStatus', `✅ ${selectedPlate} removed.`, 'ok');
+        plates = plates.filter(p => p.name !== selectedPlate);
+        closeEditor();
+    } catch (err) {
+        setStatus('editStatus', 'Error: ' + err.message, 'err');
+    }
+}
+
+// Recompute and update claimedStates first-finder for one state across all players
+async function recomputeFirstFinder(stateName) {
+    if (!gameRef || !gameData) return;
+    // Refresh full game snapshot to get latest timestamps
+    const snap = await gameRef.once('value');
+    const room = snap.val();
+    if (!room) return;
+    gameData = room;
+
+    let earliest = null;
+    Object.entries(room.players || {}).forEach(([pKey, pData]) => {
+        const sd = pData.states?.[stateName];
+        if (!sd) return;
+        const t = typeof sd.foundAt === 'number' ? sd.foundAt : 0;
+        if (!earliest || t < earliest.t) earliest = { t, playerKey: pKey, playerData: pData };
+    });
+
+    if (!earliest) {
+        await gameRef.child(`claimedStates/${stateName}`).remove();
+    } else {
+        const pd = earliest.playerData;
+        await gameRef.child(`claimedStates/${stateName}`).set({
+            state: stateName,
+            playerKey: earliest.playerKey,
+            name: pd.name, tag: pd.tag,
+            displayName: pd.displayName,
+            claimedAt: earliest.t,
+        });
+    }
+
+    // Refresh local plate isFirst flags
+    const claims = gameData.claimedStates || {};
+    plates.forEach(p => { p.isFirst = claims[p.name]?.playerKey === selectedPlayerKey; });
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function toDatetimeLocal(ts) {
+    const d = new Date(ts);
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+function setStatus(id, msg, type) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = `<div class="status ${type}">${msg}</div>`;
+}
+
+// Auto-uppercase game code input
+document.getElementById('gameCodeInput')?.addEventListener('input', function() {
+    this.value = this.value.toUpperCase();
+});
+document.getElementById('gameCodeInput')?.addEventListener('keydown', e => { if (e.key === 'Enter') loadGame(); });
+
+// ── In-game Player Manager ────────────────────────────────────────────────────
+const selectedForMerge = new Set();
+
+// Mirror the slugify + tag-normalize logic from game.js so admin-computed
+// playerKeys match the keys the multiplayer client will derive at runtime.
+// game.js:876  function slugify(value) { ... toLowerCase().replace(/[^a-z0-9]+/g,'_')... }
+// game.js:878  function normalizeTagInput(value) { ... replace(/[^a-zA-Z0-9]/g,'').slice(0,8); }
+function slugifyAdmin(value) {
+    return String(value || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 40);
+}
+function normalizeTagAdmin(value) {
+    return String(value || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 8);
+}
+function derivedKey(name, tag) {
+    return `${slugifyAdmin(name)}__${slugifyAdmin(normalizeTagAdmin(tag))}`;
+}
+
+function currentGameCodeUpper() {
+    return (document.getElementById('gameCodeInput').value || '').trim().toUpperCase();
+}
+
+function renderPlayerMgr() {
+    const card = document.getElementById('playerMgrCard');
+    if (!gameData || !gameData.players) { card.style.display = 'none'; return; }
+    // Defensive clear of any stale per-action status from a previous game,
+    // belt-and-suspenders to the clear in loadGame(). openRenameFlow /
+    // deletePlayerInGameUI re-set this AFTER calling loadGame so live
+    // confirmations for the just-loaded game still appear.
+    const pms = document.getElementById('playerMgrStatus');
+    if (pms) pms.innerHTML = '';
+    card.style.display = '';
+
+    const code = currentGameCodeUpper();
+    document.getElementById('playerMgrTitle').textContent = `Players in "${gameData.name || code}" (${Object.keys(gameData.players).length})`;
+
+    const list = document.getElementById('playerMgrList');
+    list.innerHTML = '';
+    selectedForMerge.clear();
+    updateMergeBar();
+
+    Object.entries(gameData.players).forEach(([key, p]) => {
+        const plateCount = Object.keys(p.states || {}).length;
+        const coins = p.coins || 0;
+        const isHost = key === gameData.hostPlayerKey;
+        const row = document.createElement('div');
+        row.className = 'plate-row';
+        row.style.cssText = 'cursor:default;flex-wrap:wrap';
+        const shortKey = key.length > 36 ? key.slice(0, 36) + '…' : key;
+        row.innerHTML = `
+            <input type="checkbox" data-key="${key}" class="mgr-check" style="margin-right:6px;flex:0 0 auto">
+            <div style="flex:1;min-width:0">
+                <div style="font-size:13px;font-weight:600">
+                    ${escapeHtmlAdmin(p.displayName || p.name || key)}
+                    ${isHost ? '<span style="color:#f1c40f;font-size:11px;margin-left:6px">★ host</span>' : ''}
+                </div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.5);overflow:hidden;text-overflow:ellipsis">
+                    ${plateCount} plate${plateCount===1?'':'s'} · ${coins} coins · <span style="font-family:monospace">${shortKey}</span>
+                </div>
+            </div>
+            <button class="secondary" data-action="rename" data-key="${key}" style="font-size:11px;padding:5px 10px;flex:0 0 auto">✏️</button>
+            <button class="danger" data-action="delete" data-key="${key}" style="font-size:11px;padding:5px 10px;flex:0 0 auto">🗑</button>
+        `;
+        list.appendChild(row);
+    });
+
+    list.querySelectorAll('.mgr-check').forEach(cb => {
+        cb.addEventListener('change', () => {
+            const k = cb.dataset.key;
+            if (cb.checked) selectedForMerge.add(k); else selectedForMerge.delete(k);
+            updateMergeBar();
+        });
+    });
+    list.querySelectorAll('[data-action="rename"]').forEach(btn => {
+        btn.addEventListener('click', () => openRenameFlow(btn.dataset.key));
+    });
+    list.querySelectorAll('[data-action="delete"]').forEach(btn => {
+        btn.addEventListener('click', () => deletePlayerInGameUI(btn.dataset.key));
+    });
+}
+
+function updateMergeBar() {
+    const bar = document.getElementById('mergeBar');
+    const n = selectedForMerge.size;
+    bar.style.display = (n >= 2) ? 'flex' : 'none';
+    document.getElementById('mergeCount').textContent = n >= 2 ? `${n} selected` : '';
+}
+
+async function openRenameFlow(playerKey) {
+    const p = gameData.players[playerKey];
+    if (!p) return;
+    const newName = prompt(`New name for "${p.displayName || p.name || playerKey}":`, p.name || '');
+    if (newName === null) return;
+    const trimName = newName.trim();
+    if (!trimName) { alert('Name required.'); return; }
+    const newTag = prompt('New tag (case preserved — e.g. JcWolF):', p.tag || '');
+    if (newTag === null) return;
+    // Mirror game.js normalizeTagInput: strip non-alphanumeric, cap at 8 chars.
+    // Do NOT uppercase — tag case is meaningful (JcWolF ≠ JCWOLF visually).
+    const trimTag = normalizeTagAdmin(newTag);
+    if (!trimTag) { alert('Tag required.'); return; }
+
+    setStatus('playerMgrStatus', 'Renaming…', 'info');
+    try {
+        await renamePlayerInGame(currentGameCodeUpper(), playerKey, trimName, trimTag);
+        await loadGame();
+        setStatus('playerMgrStatus', `✅ Renamed to "${trimName} (${trimTag})"`, 'ok');
+    } catch (err) {
+        setStatus('playerMgrStatus', 'Error: ' + err.message, 'err');
+    }
+}
+
+// Reusable: rename one player in one game, also rewriting claimedStates + foundBy refs.
+// After the field update, auto-re-keys the record if the derived slug key
+// no longer matches the current playerKey (e.g. renamed Jc → JcWolF, so
+// jc__jcwolf needs to become jcwolf__jcwolf to match the device's derivation).
+async function renamePlayerInGame(gameCode, playerKey, newName, newTag) {
+    const ref = db.ref(`animalquest/games/${gameCode}`);
+    const displayName = `${newName} (${newTag})`;
+
+    const updates = {};
+    updates[`players/${playerKey}/name`] = newName;
+    updates[`players/${playerKey}/tag`] = newTag;
+    updates[`players/${playerKey}/displayName`] = displayName;
+
+    // Update first-finder claims this player owns
+    const claimsSnap = await ref.child('claimedStates').once('value');
+    const claims = claimsSnap.val() || {};
+    Object.entries(claims).forEach(([state, claim]) => {
+        if (claim.playerKey === playerKey) {
+            updates[`claimedStates/${state}/name`] = newName;
+            updates[`claimedStates/${state}/tag`] = newTag;
+            updates[`claimedStates/${state}/displayName`] = displayName;
+        }
+    });
+
+    // Update historical foundBy on this player's own states (the cosmetic "found by ___" string on plate cards)
+    const statesSnap = await ref.child(`players/${playerKey}/states`).once('value');
+    const states = statesSnap.val() || {};
+    Object.keys(states).forEach(stateName => {
+        if (states[stateName] && states[stateName].foundByKey === playerKey) {
+            updates[`players/${playerKey}/states/${stateName}/foundBy`] = displayName;
+        }
+    });
+
+    await ref.update(updates);
+
+    // Auto-re-key if the derived key changed (rename changes slug-derived key).
+    const newDerived = derivedKey(newName, newTag);
+    if (newDerived !== playerKey) {
+        await rekeyPlayerInGame(gameCode, playerKey, newDerived, { allowOverwrite: true });
+    }
+}
+
+// Move a player record from oldKey to newKey within one game. Rewrites
+// foundByKey on every state, repoints claimedStates entries, and transfers
+// hostPlayerKey if applicable. With allowOverwrite, a destination key that
+// already exists but holds an empty record (0 plates, 0 coins) gets clobbered;
+// without it, a non-empty destination throws so data is never silently lost.
+async function rekeyPlayerInGame(gameCode, oldKey, newKey, opts = {}) {
+    if (oldKey === newKey) return false;
+    const ref = db.ref(`animalquest/games/${gameCode}`);
+
+    const [srcSnap, dstSnap, claimsSnap, gameSnap] = await Promise.all([
+        ref.child(`players/${oldKey}`).once('value'),
+        ref.child(`players/${newKey}`).once('value'),
+        ref.child('claimedStates').once('value'),
+        ref.child('hostPlayerKey').once('value'),
+    ]);
+    const src = srcSnap.val();
+    if (!src) throw new Error(`Source player ${oldKey} not found in ${gameCode}`);
+
+    const dst = dstSnap.val();
+    if (dst) {
+        const dstHasContent = Object.keys(dst.states || {}).length > 0 || (dst.coins || 0) > 0;
+        if (dstHasContent && !opts.allowOverwrite) {
+            throw new Error(`Destination key ${newKey} already has content. Merge first, then re-key.`);
+        }
+    }
+
+    // Rewrite foundByKey on the source player's states so any self-references
+    // point at the new key.
+    const newStates = {};
+    Object.entries(src.states || {}).forEach(([stateName, rec]) => {
+        if (rec && rec.foundByKey === oldKey) {
+            newStates[stateName] = { ...rec, foundByKey: newKey };
+        } else {
+            newStates[stateName] = rec;
+        }
+    });
+
+    const updates = {};
+    updates[`players/${newKey}`] = { ...src, states: newStates };
+    updates[`players/${oldKey}`] = null;
+
+    // Repoint claimedStates that pointed at the old key
+    const claims = claimsSnap.val() || {};
+    Object.entries(claims).forEach(([state, claim]) => {
+        if (claim.playerKey === oldKey) {
+            updates[`claimedStates/${state}/playerKey`] = newKey;
+        }
+    });
+
+    // Transfer host pointer
+    if (gameSnap.val() === oldKey) {
+        updates['hostPlayerKey'] = newKey;
+    }
+
+    await ref.update(updates);
+    return true;
+}
+
+async function deletePlayerInGameUI(playerKey) {
+    const p = gameData.players[playerKey];
+    if (!confirm(`Delete "${p.displayName || playerKey}" from this game?\n\nRemoves their plates, coins, and any first-finder claims. Cannot be undone.`)) return;
+    setStatus('playerMgrStatus', 'Deleting…', 'info');
+    try {
+        const ref = db.ref(`animalquest/games/${currentGameCodeUpper()}`);
+        const updates = {};
+        updates[`players/${playerKey}`] = null;
+        const claimsSnap = await ref.child('claimedStates').once('value');
+        const claims = claimsSnap.val() || {};
+        Object.entries(claims).forEach(([state, claim]) => {
+            if (claim.playerKey === playerKey) updates[`claimedStates/${state}`] = null;
+        });
+        if (gameData.hostPlayerKey === playerKey) updates['hostPlayerKey'] = null;
+        await ref.update(updates);
+        await loadGame();
+        setStatus('playerMgrStatus', `✅ Player deleted.`, 'ok');
+    } catch (err) {
+        setStatus('playerMgrStatus', 'Error: ' + err.message, 'err');
+    }
+}
+
+// ── Merge dialog ──────────────────────────────────────────────────────────────
+function openMergeDialog() {
+    if (selectedForMerge.size < 2) return;
+    const players = [...selectedForMerge].map(k => ({ key: k, ...(gameData.players[k] || {}) }));
+
+    const modal = document.createElement('div');
+    modal.id = 'mergeModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9999';
+    modal.innerHTML = `
+        <div style="background:#1a2d42;border:1px solid #2e4a68;border-radius:14px;padding:18px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto">
+            <h2 style="font-size:18px;color:#7eb8f7;margin-bottom:8px">Merge Players</h2>
+            <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:14px">Pick the player to KEEP. Others' plates, coins, effects, and first-finder claims fold into the winner; then the loser records get deleted.</div>
+            <div id="mergeWinnerList">
+                ${players.map(p => `
+                    <label style="display:block;background:#0d1b2a;border:1px solid #2e4a68;border-radius:8px;padding:10px 14px;margin-bottom:8px;cursor:pointer">
+                        <input type="radio" name="mergeWinner" value="${p.key}" style="margin-right:8px">
+                        <strong>${escapeHtmlAdmin(p.displayName || p.name || p.key)}</strong>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:3px">
+                            ${Object.keys(p.states || {}).length} plates · ${p.coins || 0} coins
+                            <div style="font-family:monospace;margin-top:2px;opacity:0.7">${p.key}</div>
+                        </div>
+                    </label>
+                `).join('')}
+            </div>
+            <div id="mergePreview" style="font-size:12px;color:rgba(255,255,255,0.7);margin:10px 0;line-height:1.5"></div>
+            <div id="mergeStatus"></div>
+            <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
+                <button class="secondary" onclick="closeMergeDialog()">Cancel</button>
+                <button onclick="confirmMerge()" id="confirmMergeBtn" disabled>Merge</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    modal.querySelectorAll('input[name="mergeWinner"]').forEach(r => {
+        r.addEventListener('change', () => {
+            document.getElementById('confirmMergeBtn').disabled = false;
+            updateMergePreview();
+        });
+    });
+}
+
+function updateMergePreview() {
+    const winnerKey = document.querySelector('input[name="mergeWinner"]:checked')?.value;
+    if (!winnerKey) return;
+    const winner = gameData.players[winnerKey];
+    const losers = [...selectedForMerge].filter(k => k !== winnerKey).map(k => gameData.players[k]);
+    const plateIn = losers.reduce((s, p) => s + Object.keys(p.states || {}).length, 0);
+    const coinIn = losers.reduce((s, p) => s + (p.coins || 0), 0);
+    document.getElementById('mergePreview').innerHTML = `
+        <strong>Winner:</strong> ${escapeHtmlAdmin(winner.displayName || winner.name)}<br>
+        <strong>Folding in:</strong> ${losers.length} record${losers.length===1?'':'s'} carrying ${plateIn} plate${plateIn===1?'':'s'} and ${coinIn} coin${coinIn===1?'':'s'}<br>
+        <strong>Plate conflicts:</strong> earliest <code>foundAt</code> wins<br>
+        <strong>Effects:</strong> max remaining expiry per effect
+    `;
+}
+
+function closeMergeDialog() {
+    document.getElementById('mergeModal')?.remove();
+}
+
+async function confirmMerge() {
+    const winnerKey = document.querySelector('input[name="mergeWinner"]:checked')?.value;
+    if (!winnerKey) return;
+    const loserKeys = [...selectedForMerge].filter(k => k !== winnerKey);
+    if (!loserKeys.length) return;
+
+    const winner = gameData.players[winnerKey];
+    setStatus('mergeStatus', 'Merging…', 'info');
+    try {
+        const ref = db.ref(`animalquest/games/${currentGameCodeUpper()}`);
+
+        const mergedStates = { ...(winner.states || {}) };
+        const mergedEffects = { ...(winner.effects || {}) };
+        let mergedCoins = winner.coins || 0;
+
+        for (const loserKey of loserKeys) {
+            const loser = gameData.players[loserKey];
+            if (!loser) continue;
+            mergedCoins += loser.coins || 0;
+
+            Object.entries(loser.states || {}).forEach(([stateName, rec]) => {
+                const existing = mergedStates[stateName];
+                const winnerRecord = (existing && (existing.foundAt || 0) <= (rec.foundAt || 0))
+                    ? existing
+                    : rec;
+                mergedStates[stateName] = {
+                    ...winnerRecord,
+                    foundBy: winner.displayName,
+                    foundByKey: winnerKey,
+                };
+            });
+
+            Object.entries(loser.effects || {}).forEach(([k, v]) => {
+                const cur = mergedEffects[k];
+                if (typeof v === 'number') {
+                    mergedEffects[k] = Math.max(typeof cur === 'number' ? cur : 0, v);
+                } else if (v === true) {
+                    mergedEffects[k] = true;
+                }
+            });
+        }
+
+        const updates = {};
+        updates[`players/${winnerKey}/coins`] = mergedCoins;
+        updates[`players/${winnerKey}/states`] = mergedStates;
+        updates[`players/${winnerKey}/effects`] = mergedEffects;
+
+        // Retarget first-finder claims to the winner
+        const claimsSnap = await ref.child('claimedStates').once('value');
+        const claims = claimsSnap.val() || {};
+        Object.entries(claims).forEach(([state, claim]) => {
+            if (loserKeys.includes(claim.playerKey)) {
+                updates[`claimedStates/${state}`] = {
+                    state,
+                    playerKey: winnerKey,
+                    name: winner.name,
+                    tag: winner.tag,
+                    displayName: winner.displayName,
+                    claimedAt: claim.claimedAt,
+                };
+            }
+        });
+
+        // Host transfer
+        if (loserKeys.includes(gameData.hostPlayerKey)) {
+            updates['hostPlayerKey'] = winnerKey;
+            updates[`players/${winnerKey}/isHost`] = true;
+            updates[`players/${winnerKey}/role`] = 'host';
+        }
+
+        // Delete losers
+        loserKeys.forEach(k => { updates[`players/${k}`] = null; });
+
+        await ref.update(updates);
+
+        // Auto-re-key the winner if its current key doesn't match the slug
+        // derived from its current name+tag. After the loser-delete updates
+        // above, the destination slot is empty if a loser had been holding it.
+        const winnerDerived = derivedKey(winner.name, winner.tag);
+        let finalKey = winnerKey;
+        if (winnerDerived !== winnerKey) {
+            try {
+                await rekeyPlayerInGame(currentGameCodeUpper(), winnerKey, winnerDerived, { allowOverwrite: true });
+                finalKey = winnerDerived;
+            } catch (rekeyErr) {
+                // Surface the failure but leave the merge result in place — the
+                // user can re-key manually later or rename the winner.
+                console.warn('Post-merge re-key skipped:', rekeyErr);
+            }
+        }
+
+        const keyNote = finalKey !== winnerKey ? ` (also re-keyed: ${winnerKey} → ${finalKey})` : '';
+        setStatus('mergeStatus', `✅ Merged ${loserKeys.length} record${loserKeys.length===1?'':'s'} into "${winner.displayName}"${keyNote}`, 'ok');
+        setTimeout(() => { closeMergeDialog(); loadGame(); }, 1500);
+    } catch (err) {
+        setStatus('mergeStatus', 'Error: ' + err.message, 'err');
+    }
+}
+
+// ── Cross-game finder ─────────────────────────────────────────────────────────
+let currentMatches = [];
+
+async function findMyRecords() {
+    const rawTag = (document.getElementById('findTagInput').value || '').trim();
+    if (!rawTag) {
+        document.getElementById('findResultsStats').textContent = 'Enter a tag to search.';
+        document.getElementById('findResultsList').innerHTML = '';
+        document.getElementById('bulkRenameSection').style.display = 'none';
+        currentMatches = [];
+        return;
+    }
+    // Match case-insensitively against stored tags, but the search input
+    // itself preserves whatever case the user typed (purely a comparison
+    // convenience — does not affect anything saved or displayed).
+    const tagCmp = rawTag.toLowerCase();
+    document.getElementById('findResultsStats').textContent = 'Searching all games…';
+    try {
+        const snap = await db.ref('animalquest/games').once('value');
+        const raw = snap.val() || {};
+        currentMatches = [];
+        Object.entries(raw).forEach(([code, data]) => {
+            Object.entries(data.players || {}).forEach(([key, p]) => {
+                if ((p.tag || '').toLowerCase() === tagCmp) {
+                    currentMatches.push({
+                        gameCode: code,
+                        gameName: data.name || '(unnamed)',
+                        playerKey: key,
+                        displayName: p.displayName || p.name || '?',
+                        name: p.name || '',
+                        tag: p.tag || '',
+                        plateCount: Object.keys(p.states || {}).length,
+                        coins: p.coins || 0,
+                    });
+                }
+            });
+        });
+        renderRecordResults();
+    } catch (err) {
+        document.getElementById('findResultsStats').textContent = 'Error: ' + err.message;
+    }
+}
+
+function renderRecordResults() {
+    const list = document.getElementById('findResultsList');
+    const stats = document.getElementById('findResultsStats');
+    const bulk = document.getElementById('bulkRenameSection');
+
+    if (!currentMatches.length) {
+        stats.textContent = 'No matches.';
+        list.innerHTML = '';
+        bulk.style.display = 'none';
+        return;
+    }
+    const gameCount = new Set(currentMatches.map(m => m.gameCode)).size;
+    stats.textContent = `${currentMatches.length} record${currentMatches.length===1?'':'s'} across ${gameCount} game${gameCount===1?'':'s'}`;
+    list.innerHTML = currentMatches.map(m => `
+        <div class="plate-row" style="cursor:default;flex-wrap:wrap">
+            <div style="flex:1;min-width:0">
+                <div style="font-size:13px;font-weight:600">${escapeHtmlAdmin(m.displayName)}</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.5)">
+                    <span style="font-family:monospace;color:#7eb8f7">[${m.gameCode}]</span>
+                    ${escapeHtmlAdmin(m.gameName)} · ${m.plateCount} plates · ${m.coins} coins
+                </div>
+            </div>
+            <button class="secondary" onclick="jumpToGame('${m.gameCode}')" style="font-size:11px;padding:5px 10px;flex:0 0 auto">Open</button>
+        </div>
+    `).join('');
+    bulk.style.display = '';
+}
+
+function jumpToGame(code) {
+    document.getElementById('gameCodeInput').value = code;
+    loadGame();
+    document.getElementById('gameCodeInput').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function bulkRenameMatches() {
+    const newName = (document.getElementById('bulkNewName').value || '').trim();
+    // Preserve case the user typed — only strip non-alphanumeric and cap length, same as game.js.
+    const newTag = normalizeTagAdmin(document.getElementById('bulkNewTag').value || '');
+    if (!newName || !newTag) { setStatus('bulkRenameStatus', 'Both name and tag required.', 'err'); return; }
+    if (!currentMatches.length) return;
+    const gameCount = new Set(currentMatches.map(m => m.gameCode)).size;
+    if (!confirm(`Rename ${currentMatches.length} record${currentMatches.length===1?'':'s'} to "${newName} (${newTag})" across ${gameCount} game${gameCount===1?'':'s'}?\n\nCannot be undone.`)) return;
+
+    setStatus('bulkRenameStatus', 'Applying…', 'info');
+    let ok = 0, fail = 0;
+    for (const m of currentMatches) {
+        try {
+            await renamePlayerInGame(m.gameCode, m.playerKey, newName, newTag);
+            ok++;
+        } catch (err) {
+            fail++;
+            console.error(`Rename failed for ${m.gameCode}/${m.playerKey}:`, err);
+        }
+    }
+    setStatus('bulkRenameStatus', `${ok} renamed${fail ? ` · ${fail} failed (see console)` : ''}`, fail ? 'err' : 'ok');
+    findMyRecords();
+}
+</script>
+</body>
+</html>
