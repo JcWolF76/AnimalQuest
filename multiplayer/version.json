@@ -1,51 +1,13 @@
 {
-  "version": "20260518c",
+  "version": "20260518a",
   "changelog": {
-    "20260518c": [
-      "🐛 Edit Pack (the host's settings modal) now saves properly. It was silently failing since yesterday's update.",
-      "✏️ Rename Pack now updates the displayed pack name immediately — no more refresh required.",
-      "👤 Solo player profiles now have both Name and Tag fields, matching the multiplayer setup.",
-      "🏠 Sparkasia Studios landing page polish — logo no longer crops, and the brand attribution is cleaned up."
-    ],
-    "20260518b": [
-      "🐛 Challenging someone no longer shows you a misleading \"they challenged you\" message — only the recipient gets the challenge notification.",
-      "✏️ Hosts can rename a pack on the fly — new \"Rename Pack\" button in Host Controls. The game code stays the same, only the display name changes.",
-      "🚗 Easier navigation from inside the multiplayer game — new shortcuts to the Single Player Version and the Sparkasia Studios landing page in the App section of the menu."
-    ],
-    "20260518a": ["🔧 Maintenance update"],
-    "20260517h": ["👏 React + ⚔️ Challenge polish: (1) tapping React a second time now closes the picker instead of leaving it open — easy dismiss without sending. (2) higher-contrast buttons (white text on dark backgrounds) so React/Challenge labels are readable on the green leaderboard cards. (3) fixed the challenger-side toast — when YOU challenge someone, you no longer see a misleading \"they challenged you\" message; only the recipient sees the challenge notification."],
-    "20260517g": ["🐛 Reactions & Challenge tap-through (real fix this time): there was a delegated listener on the leaderboard container that I had missed in three previous attempts. It was opening the player detail card even when the per-card and per-button handlers were correctly stopped. Now it explicitly bails on React/Challenge/popover targets like the others."],
-    "20260517f": ["🐛 Reactions & Challenge: doubled down on the touch-isolation fix from 20260517d. The buttons now stop their own touchstart and touchend events at the source so the score-card never sees them, in case the previous target-inspection approach was getting fooled by iOS Safari event routing."],
-    "20260517e": ["📖 How2Play sheet now documents what 👏 React and ⚔️ Challenge do — they were undocumented and easy to mistake for badges. First-time tap on the leaderboard shows a one-time onboarding tip pointing at the React button. The Challenge confirmation toast now explains what a rivalry is (head-to-head stats on tap, one rival at a time, Drop to end it)."],
-    "20260517d": ["🐛 Fixed: React and Challenge buttons on leaderboard cards no longer fall through to opening the player detail card. Tapping them now actually fires the action."],
-    "20260517c": ["👏 Reactions reworked — leaderboard cards now show a single \"👏 React\" button instead of four bare emoji icons that read like badges. Tap it and a floating picker (Facebook/LinkedIn style) shows all four reactions in big circular buttons. Tap one to send. Tap anywhere else to dismiss. Same reactions, less clutter."],
-    "20260517b": ["🔍 New \"Find My Packs\" button on the setup screen — scans the server for every pack where your tag is a player and folds any missing ones into your My Packs list. Useful if you played from a different device or browser and your packs got dropped from local storage. My Packs capacity raised from 8 to 50."],
-    "20260517a": ["🔄 New host-only Reset Round button — wipes all plates, first-finders, and region progress for the whole pack while keeping the round number the same. Use it for a clean do-over of the current round; use New Round to bump to a fresh round number."],
-    "20260430b": ["🔧 Maintenance update"],
-    "20260430a": ["🔐 Admin panel now uses a numeric codepad gate (same style as the JcWolF PlayerTag PIN). Setup-page Dev Tools button now opens it directly."],
-    "20260429z": ["🐺 Fixed: editing your identity to the JcWolF dev tag now actually saves after the PIN — previously the new name/tag was silently dropped and the old identity stuck around", "🔐 New Dev Tools button on the setup page (JcWolF only) — passcode-gated link to the admin panel"],
-    "20260429y": ["📥 New persistent Pending Requests inbox for the host — plate-removal requests now live in their own sheet (Host Controls → 📥 Pending Requests) with a red badge showing the count, so they no longer disappear before you can approve or deny"],
-    "20260429x": ["🔊 Fixed sounds not playing on iOS — audio is now unlocked on first tap so taunts, praises, chat blips, badge fanfares, and other-player plate finds actually make noise"],
-    "20260429w": ["🔊 New sound effects — chat messages get a soft blip, taunts get a cheeky descending sneer, praises get a bright ascending sparkle, and badge unlocks get a triumphant fanfare"],
-    "20260429v": ["🟢🟠 Restored found-state coloring on mobile — plates you found turn green, plates found by other players turn orange (previously only the hidden header was colored)"],
-    "20260429u": ["📱 Mobile plate layout overhauled — name sits on the top edge across the full width, flag is centered, the ✕ button sits on the same line as the flag (right side), and the first-finder tag now lives in the bottom-right next to the point value"],
-    "20260429t": ["📱 Plate names now sit at the top of every card and wrap to a second line if too wide (e.g. New / Hampshire) — no more cut-off names like \"Pennsylv...\" or \"South Car...\""],
-    "20260429s": ["📱 Mobile plate cards now keep proper plate proportions (1.7:1) — and first-finder tag no longer overlaps the state name"],
-    "20260429r": ["📱 Plate grid is now 3 columns on mobile — cards are shorter, narrower, and the redundant \"LICENSE PLATE\" header is hidden since section labels already identify the type"],
-    "20260429q": ["📊 Leaderboard cards are now compact — same info (score, plates, FF, coins, achievements, badges, reactions) in a tighter layout"],
-    "20260429p": ["🌙 Thief in the Night — pick any opponent and steal their single highest-value plate; they lose it permanently (75🪙)"],
-    "20260429c": ["📣 Announcements and taunts now reliably reach all players — previously a race condition could cause other pack members to miss them entirely"],
-    "20260429d": ["📱 Swiping on plates no longer causes the screen to bounce horizontally — left swipes and swipes on already-spotted plates are now fully absorbed by the card instead of the page"],
-    "20260429e": ["📖 How to Play instructions are now available anytime via the How2Play button in the top bar — they no longer pop up automatically on every join", "📵 Horizontal page bounce fully suppressed at the document level"],
-    "20260429f": ["💬 Chat now supports private messages — tap the recipient chips above the input to send to specific players or everyone. The host and pack leader always see all messages. Private messages show a 🔒 lock indicator."],
-    "20260429g": ["👏 New Praise feature — tap the gold Praise button in the Social section to send a compliment to one or more players, with 12 different messages to choose from", "⚡ Quick-react on plate finds — whenever a pack member spots a plate, their notification now shows instant 👏 Praise and 😈 Taunt buttons pre-targeting that player so you can react in two taps"],
-    "20260429h": ["📋 Update notes now clearly describe every new feature — no more generic \"bug fixes\" messages when you see the update banner"],
-    "20260429i": ["🌎 Mexico, Central America & South America — a new Latin America section now appears in the plate grid when enabled under Plate Coverage", "🗺️ Four scope options: U.S. only, U.S. + Canada, U.S. + Latin America, or U.S. + Canada + Latin America"],
-    "20260429j": ["🔔 Update notes now always fetch fresh from the server — no more \"Performance improvements\" placeholder regardless of how old your cached version is"],
-    "20260429k": ["🌍 South American plates are now worth 200 pts (Global tier) and Central American plates 150 pts (International tier) — the rarest finds in the game", "🇲🇽 Mexico is now worth 70 pts (Gold Elite), matching Canadian territories", "🌺 Hawaii and Puerto Rico both bumped to 100 pts (Ultra tier)"],
-    "20260429l": ["📍 Mexico rarity is now distance-based — playing in San Diego or Texas puts it at 20 pts (Rare), scaling up to 70 pts (Gold Elite) the further you are from the border"],
-    "20260429m": ["🍀 Lucky Plate and 🎯 Secret Targets now only draw from U.S. states — territorial and international plates are excluded from secret assignments"],
-    "20260429n": ["🛢️ Oil Slick — blacks out other players' screens completely for 3 minutes with a countdown they can't dismiss", "🌁 Haze — blankets other players' screens in thick fog for 3 minutes", "🎰 Russian Roulette — instantly removes one random spotted plate from every player including yourself", "👻 Ghost Mode — hides your score and plate count from opponents for 5 minutes (Boosts section)", "🔃 Wrong Way — reverses the plate grid for all other players for 3 minutes", "🚔 Speed Trap — forces a 30-second cooldown between plate spots for all other players for 3 minutes"],
-    "20260429o": ["🪄 Copycat — steals a copy of one random plate from the leader's collection (55🪙)", "🔋 Dead Battery — kills chat for all other players for 3 minutes (40🪙)", "🎭 Decoy — makes opponents see your score inflated 50% for 5 minutes (50🪙, Boosts)", "🎯 Bounty Board — opens the bounty panel so any player can place a coin bounty on any plate", "🐛 Fixed: Russian Roulette now correctly respects your own Shield — buying it while shielded protects your plate and consumes the shield"]
+    "20260518a": [
+      "🐺 AnimalQuest multiplayer launched — full port of PlateQuest's pack-based gameplay re-themed for wildlife spotting.",
+      "🎯 423-species database — wild North American animals plus 120 global zoo creatures.",
+      "💬 Public + private chat, praise reactions, taunts, announcements.",
+      "🛒 Shop with re-themed tricks (Predator Alert, Stampede, Poacher, Burrow, etc.) and coins.",
+      "🏆 Achievements, badges, streak bonuses, first-finder claims, bounties, secret targets.",
+      "📍 GPS-based regional rarity coming next — for now, regional tagging from data.js applies."
+    ]
   }
 }

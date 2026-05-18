@@ -12,13 +12,13 @@ const TAUNT_LIST = [
     "Watch out, [name] — I'm coming for that top spot! 🚗💨",
     "You snooze, you lose that first-finder bonus, [name]! 😴",
     "Nice score, [name]... if this were last round. 👀",
-    "Better eyes next time, [name]! That plate was right there. 🙈",
+    "Better eyes next time, [name]! That animal was right there. 🙈",
     "I can see first place from here, [name]. Can you? 🏆",
-    "Don't blink, [name] — rare plates don't wait! ⚡",
+    "Don't blink, [name] — rare animals don't wait! ⚡",
     "The scoreboard doesn't lie, [name]. Just saying. 📊",
     "Found it first, [name]. Maybe next highway! 🛣️",
     "Keep refreshing — the view from second place isn't getting better, [name]. 😂",
-    "What's that sound? Oh, just me finding plates while you're napping, [name]! 🎉",
+    "What's that sound? Oh, just me finding animals while you're napping, [name]! 🎉",
 ];
 
 const PRAISE_LIST = [
@@ -30,7 +30,7 @@ const PRAISE_LIST = [
     "Spotted before I even looked, [name]! Well played! 👏",
     "The pack appreciates you, [name]! 🐺",
     "Always one step ahead, [name] — impressive! 🏆",
-    "Plate hunter extraordinaire, [name]! 🎯",
+    "Animal hunter extraordinaire, [name]! 🎯",
     "Keeping the pack sharp, [name]! 💪",
     "Can't stop [name] today — unstoppable! ⚡",
     "Love the hustle, [name]! That's how it's done! 🙌",
@@ -40,39 +40,39 @@ const PRAISE_LIST = [
 const PLAYER_ICONS = ['🦊','🐻','🐯','🦁','🦅','🐸','🦝','🦉','🦄','🐲','🦋','🚗','🦈','🐬','🦖','🦏','🦬','🐆','🦓','🐘','🦒','🦜','🐊','🦦'];
 
 const SHOP_ITEMS = [
-    { id: 'blender',   name: 'Blender',          icon: '🌀', cost: 40, effectKey: 'blender',   duration: 3*60*1000,
-      category: 'trick',   desc: 'Scrambles the plate order for all other players for 3 minutes.' },
-    { id: 'freeze',    name: 'Time Freeze',       icon: '⏸️', cost: 75, effectKey: 'freeze',    duration: 2*60*1000,
-      category: 'trick',   desc: 'Blocks other players from spotting new plates for 2 minutes.' },
-    { id: 'fog',       name: 'Fog of War',        icon: '🌫️', cost: 50, effectKey: 'fog',       duration: 5*60*1000,
-      category: 'trick',   desc: "Hides everyone else's scores and plate counts for 5 minutes." },
-    { id: 'oilSlick',  name: 'Oil Slick',         icon: '🛢️', cost: 60, effectKey: 'oilSlick',  duration: 3*60*1000,
+    { id: 'blender',   name: 'Shuffle Brush',          icon: '🌀', cost: 40, effectKey: 'blender',   duration: 3*60*1000,
+      category: 'trick',   desc: 'Scrambles the animal order for all other players for 3 minutes.' },
+    { id: 'freeze',    name: 'Hibernation',       icon: '⏸️', cost: 75, effectKey: 'freeze',    duration: 2*60*1000,
+      category: 'trick',   desc: 'Blocks other players from spotting new animals for 2 minutes.' },
+    { id: 'fog',       name: 'Camouflage',        icon: '🌫️', cost: 50, effectKey: 'fog',       duration: 5*60*1000,
+      category: 'trick',   desc: "Hides everyone else's scores and animal counts for 5 minutes." },
+    { id: 'oilSlick',  name: 'Mud Slide',         icon: '🛢️', cost: 60, effectKey: 'oilSlick',  duration: 3*60*1000,
       category: 'trick',   desc: 'Blacks out the screen for all other players for 3 minutes — they can\'t see a thing.' },
-    { id: 'haze',      name: 'Haze',              icon: '🌁', cost: 50, effectKey: 'haze',      duration: 3*60*1000,
+    { id: 'haze',      name: 'Morning Fog',              icon: '🌁', cost: 50, effectKey: 'haze',      duration: 3*60*1000,
       category: 'trick',   desc: 'Blankets other players\' screens in thick fog for 3 minutes.' },
-    { id: 'wrongWay',  name: 'Wrong Way',         icon: '🔃', cost: 30, effectKey: 'wrongWay',  duration: 3*60*1000,
-      category: 'trick',   desc: 'Reverses the plate grid for all other players for 3 minutes.' },
-    { id: 'speedTrap', name: 'Speed Trap',        icon: '🚔', cost: 65, effectKey: 'speedTrap', duration: 3*60*1000,
-      category: 'trick',   desc: 'Forces a 30-second cooldown between plate spots for all other players for 3 minutes.' },
-    { id: 'roulette',  name: 'Russian Roulette',  icon: '🎰', cost: 80, effectKey: null,         duration: null,
-      category: 'trick',   desc: 'Instantly removes one random spotted plate from every player — including yourself. Pure chaos.' },
-    { id: 'copycat',     name: 'Copycat',      icon: '🪄', cost: 200, effectKey: null,           duration: null,
-      category: 'trick',   desc: "Steals a copy of one random spotted plate from the leader's collection." },
-    { id: 'thiefInTheNight', name: 'Thief in the Night', icon: '🌙', cost: 350, effectKey: null, duration: null,
-      category: 'trick',   desc: 'Pick any opponent — steals their single highest-value plate. They lose it permanently.' },
-    { id: 'deadBattery', name: 'Dead Battery', icon: '🔋', cost: 40, effectKey: 'deadBattery', duration: 3*60*1000,
+    { id: 'wrongWay',  name: 'Migration Mix-up',         icon: '🔃', cost: 30, effectKey: 'wrongWay',  duration: 3*60*1000,
+      category: 'trick',   desc: 'Reverses the animal grid for all other players for 3 minutes.' },
+    { id: 'speedTrap', name: 'Predator Alert',        icon: '🚔', cost: 65, effectKey: 'speedTrap', duration: 3*60*1000,
+      category: 'trick',   desc: 'Forces a 30-second cooldown between animal spots for all other players for 3 minutes.' },
+    { id: 'roulette',  name: 'Stampede',  icon: '🎰', cost: 80, effectKey: null,         duration: null,
+      category: 'trick',   desc: 'Instantly removes one random spotted animal from every player — including yourself. Pure chaos.' },
+    { id: 'copycat',     name: 'Mimic',      icon: '🪄', cost: 200, effectKey: null,           duration: null,
+      category: 'trick',   desc: "Steals a copy of one random spotted animal from the leader's collection." },
+    { id: 'thiefInTheNight', name: 'Poacher', icon: '🌙', cost: 350, effectKey: null, duration: null,
+      category: 'trick',   desc: 'Pick any opponent — steals their single highest-value animal. They lose it permanently.' },
+    { id: 'deadBattery', name: 'Lost Binoculars', icon: '🔋', cost: 40, effectKey: 'deadBattery', duration: 3*60*1000,
       category: 'trick',   desc: 'Kills chat for all other players for 3 minutes.' },
-    { id: 'bountyBoard', name: 'Bounty Board', icon: '🎯', cost: 0,  effectKey: null,           duration: null,
-      category: 'trick',   desc: 'Place a coin bounty on any plate — first finder collects the pot. Cost comes from your coins.' },
-    { id: 'ghost',     name: 'Ghost Mode',        icon: '👻', cost: 45, effectKey: 'ghost',     duration: 5*60*1000,
-      category: 'boost',   desc: 'Hides your score and plate count from all other players for 5 minutes. Play in stealth.' },
-    { id: 'decoy',     name: 'Decoy',             icon: '🎭', cost: 50, effectKey: 'decoy',     duration: 5*60*1000,
+    { id: 'bountyBoard', name: 'Wildlife Bounty', icon: '🎯', cost: 0,  effectKey: null,           duration: null,
+      category: 'trick',   desc: 'Place a coin bounty on any animal — first finder collects the pot. Cost comes from your coins.' },
+    { id: 'ghost',     name: 'Cryptid Mode',        icon: '👻', cost: 45, effectKey: 'ghost',     duration: 5*60*1000,
+      category: 'boost',   desc: 'Hides your score and animal count from all other players for 5 minutes. Play in stealth.' },
+    { id: 'decoy',     name: 'Decoy Call',             icon: '🎭', cost: 50, effectKey: 'decoy',     duration: 5*60*1000,
       category: 'boost',   desc: 'All other players see your score inflated by 50% for 5 minutes. Make them sweat.' },
-    { id: 'shield',    name: 'Shield',            icon: '🛡️', cost: 250, effectKey: 'shield',    duration: null,
+    { id: 'shield',    name: 'Burrow',            icon: '🛡️', cost: 250, effectKey: 'shield',    duration: null,
       category: 'defense', desc: 'Blocks the next trick used against you. One use only.' },
 ];
 
-const STREAK_WINDOW_MS = 10 * 60 * 1000; // plates found within this window count toward the streak
+const STREAK_WINDOW_MS = 10 * 60 * 1000; // animals found within this window count toward the streak
 
 const STREAK_BONUSES = [
     { count: 3,  coins: 10 },
@@ -82,21 +82,21 @@ const STREAK_BONUSES = [
 
 // check(stats, player, totalPlates) — undefined check means manually awarded
 const ACHIEVEMENTS = [
-    { id: 'first_plate',  icon: '🥇', name: 'First Find',       desc: 'Spot your very first plate',
+    { id: 'first_plate',  icon: '🥇', name: 'First Find',       desc: 'Spot your very first animal',
       check: s         => s.foundCount >= 1 },
-    { id: 'plates_10',   icon: '🔟', name: 'Tenner',            desc: 'Find 10 plates',
+    { id: 'plates_10',   icon: '🔟', name: 'Tenner',            desc: 'Find 10 animals',
       check: s         => s.foundCount >= 10 },
-    { id: 'plates_25',   icon: '💪', name: 'Quarter Century',   desc: 'Find 25 plates',
+    { id: 'plates_25',   icon: '💪', name: 'Quarter Century',   desc: 'Find 25 animals',
       check: s         => s.foundCount >= 25 },
-    { id: 'plates_50',   icon: '🏅', name: 'Half Century',      desc: 'Find 50 plates',
+    { id: 'plates_50',   icon: '🏅', name: 'Half Century',      desc: 'Find 50 animals',
       check: s         => s.foundCount >= 50 },
-    { id: 'plates_all',  icon: '🏆', name: 'Road Legend',       desc: 'Find every available plate',
+    { id: 'plates_all',  icon: '🏆', name: 'Road Legend',       desc: 'Find every available animal',
       check: (s,_,t)   => t > 0 && s.foundCount >= t },
-    { id: 'ff_1',        icon: '⭐', name: 'Eagle Eye',         desc: 'Be first finder on any plate',
+    { id: 'ff_1',        icon: '⭐', name: 'Eagle Eye',         desc: 'Be first finder on any animal',
       check: s         => s.firstCount >= 1 },
-    { id: 'ff_5',        icon: '🌟', name: 'Sharp Spotter',     desc: 'First finder on 5 plates',
+    { id: 'ff_5',        icon: '🌟', name: 'Sharp Spotter',     desc: 'First finder on 5 animals',
       check: s         => s.firstCount >= 5 },
-    { id: 'ff_15',       icon: '💫', name: 'First Hunter',      desc: 'First finder on 15 plates',
+    { id: 'ff_15',       icon: '💫', name: 'First Hunter',      desc: 'First finder on 15 animals',
       check: s         => s.firstCount >= 15 },
     { id: 'region_1',   icon: '🗺️', name: 'Regional Scout',   desc: 'Complete any region or sub-region',
       check: s         => (s.completedSubBonuses?.length||0) + (s.completedRegionBonuses?.length||0) >= 1 },
@@ -104,9 +104,9 @@ const ACHIEVEMENTS = [
       check: s         => (s.completedSubBonuses?.length||0) + (s.completedRegionBonuses?.length||0) >= 3 },
     { id: 'corridor',   icon: '🛣️', name: 'The Corridor',       desc: 'Complete the full travel corridor',
       check: s         => s.corridorComplete },
-    { id: 'streak_5',   icon: '🔥', name: 'On Fire',            desc: 'Build a 5-plate streak',
+    { id: 'streak_5',   icon: '🔥', name: 'On Fire',            desc: 'Build a 5-animal streak',
       check: (s,p)     => (p?.streak?.count||0) >= 5 },
-    { id: 'streak_10',  icon: '🌋', name: 'Unstoppable',        desc: 'Build a 10-plate streak',
+    { id: 'streak_10',  icon: '🌋', name: 'Unstoppable',        desc: 'Build a 10-animal streak',
       check: (s,p)     => (p?.streak?.count||0) >= 10 },
     { id: 'coins_100',  icon: '💰', name: 'Coin Collector',     desc: 'Hold 100 coins at once',
       check: (s,p)     => (p?.coins||0) >= 100 },
@@ -118,15 +118,15 @@ const ACHIEVEMENTS = [
       check: s         => s.foundSet?.has('Hawaii') },
     { id: 'dc',         icon: '🏛️', name: 'Capital Spotter',   desc: 'Spot Washington DC',
       check: s         => s.foundSet?.has('Washington DC') },
-    { id: 'lucky',      icon: '🍀', name: 'Lucky Break',        desc: 'Find the Lucky Plate',
+    { id: 'lucky',      icon: '🍀', name: 'Lucky Break',        desc: 'Find the Rare Sighting',
       check: (s,p)     => gameData?.luckyPlateFound?.foundByKey === p?.playerKey },
     // manually awarded:
-    { id: 'bounty_hunter', icon: '🎯', name: 'Bounty Hunter',   desc: 'Claim a bounty on any plate' },
-    { id: 'speed_podium',  icon: '⚡', name: 'Road Sprinter',   desc: 'Finish top 3 in a Speed Round' },
+    { id: 'bounty_hunter', icon: '🎯', name: 'Bounty Hunter',   desc: 'Claim a bounty on any animal' },
+    { id: 'speed_podium',  icon: '⚡', name: 'Road Sprinter',   desc: 'Finish top 3 in a Migration Sprint' },
 ];
 
 const COIN_RATES = {
-    plateFind:          2,   // any plate spotted
+    plateFind:          2,   // any animal spotted
     plateFirst:         5,   // first finder bonus on top
     subRegionFirst:    15,   // first to complete a sub-region
     subRegionLater:     5,   // later completions
@@ -174,7 +174,7 @@ const CHANGELOG = {
         '🔍 New "Find My Packs" button on the setup screen — scans the server for every pack where your tag is a player and folds any missing ones into your My Packs list. Useful if you played from a different device or browser and your packs got dropped from local storage. My Packs capacity raised from 8 to 50.',
     ],
     '20260517a': [
-        '🔄 New host-only Reset Round button — wipes all plates, first-finders, and region progress for the whole pack while keeping the round number the same. Use it for a clean do-over of the current round; use New Round to bump to a fresh round number.',
+        '🔄 New host-only Reset Round button — wipes all animals, first-finders, and region progress for the whole pack while keeping the round number the same. Use it for a clean do-over of the current round; use New Round to bump to a fresh round number.',
     ],
     '20260430b': [
         '🔧 Maintenance update',
@@ -186,12 +186,12 @@ const CHANGELOG = {
         '😈 Taunts — fire friendly trash talk at specific players or the whole pack',
     ],
     '20260424b': [
-        '🔁 New Round — host can wipe all plates and start fresh without breaking up the pack',
+        '🔁 New Round — host can wipe all animals and start fresh without breaking up the pack',
         '🔄 Refresh button added to the header for web-app users (no browser bar = no problem)',
         '📍 GPS permission now fires at game join for GPS-rarity games, not on first swipe',
     ],
     '20260424c': [
-        '⚑ Dispute a plate first-finder — tap the flag on any plate someone else claimed first',
+        '⚑ Dispute a animal first-finder — tap the flag on any animal someone else claimed first',
         '🔧 Fixed: region dispute button was showing on badges YOU already held (now shows on others)',
     ],
     '20260424d': [
@@ -241,37 +241,37 @@ const CHANGELOG = {
         '🎨 Icon picker expanded to 24 options — shark, dolphin, dino, leopard, otter, and more',
     ],
     '20260426a': [
-        '🪙 Coin system — earn coins every time you spot a plate or complete a region',
-        '⭐ First finders earn bonus coins — 5🪙 for claiming a plate first, 2🪙 for any find',
+        '🪙 Coin system — earn coins every time you spot a animal or complete a region',
+        '⭐ First finders earn bonus coins — 5🪙 for claiming a animal first, 2🪙 for any find',
         '🗺️ Region bonuses — up to 50🪙 for completing the corridor first',
         '👛 Your coin balance shows live in the header and on every player card',
     ],
     '20260426b': [
         '🏪 Pack Shop — spend your coins on tricks to mess with the competition',
-        '🌀 Blender (40🪙) — scrambles the plate order for everyone else for 3 minutes',
-        '⏸️ Time Freeze (75🪙) — blocks other players from spotting plates for 2 minutes',
-        '🌫️ Fog of War (50🪙) — hides all scores from other players for 5 minutes',
-        '🛡️ Shield (35🪙) — blocks the next trick used against you',
+        '🌀 Shuffle Brush (40🪙) — scrambles the animal order for everyone else for 3 minutes',
+        '⏸️ Hibernation (75🪙) — blocks other players from spotting animals for 2 minutes',
+        '🌫️ Camouflage (50🪙) — hides all scores from other players for 5 minutes',
+        '🛡️ Burrow (35🪙) — blocks the next trick used against you',
     ],
     '20260426c': [
-        '🍀 Lucky Plate — one secret plate is worth triple points. Find it to win big.',
-        '🎁 Hidden Chests — scattered across plates, each holds coins, a trick, or a shield',
-        'Chests appear as 🎁 on unclaimed plates — claim the plate to open the chest',
+        '🍀 Rare Sighting — one secret animal is worth triple points. Find it to win big.',
+        '🎁 Hidden Chests — scattered across animals, each holds coins, a trick, or a shield',
+        'Chests appear as 🎁 on unclaimed animals — claim the animal to open the chest',
         'Host can re-roll prizes anytime with the new 🎲 Re-roll button in Host Controls',
     ],
     '20260427a': [
         '🔥 Quick Reactions — tap 🔥 😮 👏 💀 on anyone\'s score card to react in real time',
         'Reactions float up on the target\'s card so everyone sees the moment',
-        '🔥 Streaks — spot plates in a row within 10 minutes to earn bonus coins',
-        '3 plates: +10🪙 · 5 plates: +25🪙 · 10 plates: +50🪙',
+        '🔥 Streaks — spot animals in a row within 10 minutes to earn bonus coins',
+        '3 animals: +10🪙 · 5 animals: +25🪙 · 10 animals: +50🪙',
         'Streak count shows on your score card when you\'re on a hot run',
     ],
     '20260427b': [
-        '💰 Bounties — host can place a coin bounty on any plate; first finder wins the reward',
-        'Bounty amount shows right on the plate card so everyone knows what\'s at stake',
-        '⚡ Speed Round — host launches a timed sprint (3 / 5 / 10 min) for extra coin bonuses',
-        'Top 3 plate-finders in the window earn 100🪙, 60🪙, and 30🪙 — the pack gets final results',
-        '🏁 Blackout — first player to find ALL available plates wins a 500🪙 bonus',
+        '💰 Bounties — host can place a coin bounty on any animal; first finder wins the reward',
+        'Bounty amount shows right on the animal card so everyone knows what\'s at stake',
+        '⚡ Migration Sprint — host launches a timed sprint (3 / 5 / 10 min) for extra coin bonuses',
+        'Top 3 animal-finders in the window earn 100🪙, 60🪙, and 30🪙 — the pack gets final results',
+        '🏁 Blackout — first player to find ALL available animals wins a 500🪙 bonus',
     ],
     '20260427c': [
         '🏆 Achievements — 21 unlockable milestones tracked per player per game',
@@ -280,10 +280,10 @@ const CHANGELOG = {
         'Your achievement count is visible on your score card for the whole pack to see',
     ],
     '20260427d': [
-        '🎯 Secret Targets — host assigns each player a hidden target plate worth +200🪙 as first finder',
-        'Your target shows as a private banner above the plate grid — only you can see it',
+        '🎯 Secret Targets — host assigns each player a hidden target animal worth +200🪙 as first finder',
+        'Your target shows as a private banner above the animal grid — only you can see it',
         '⚔️ Rivalries — challenge any player to a rivalry; head-to-head comparison shows in their profile',
-        '🔔 Sudden Death — host announces a plate; first player to tap it wins 150🪙',
+        '🔔 Sudden Death — host announces a animal; first player to tap it wins 150🪙',
     ],
     '20260427e': [
         '🔍 Audit expanded — now checks and repairs coin balances and missing achievements for all players',
@@ -297,10 +297,10 @@ const CHANGELOG = {
     ],
     '20260427h': [
         '📖 How to Play — a welcome guide now appears every time you join a game explaining swiping, scoring, and features. Tap ? next to Wildlife to reopen it anytime',
-        '👆 Swipe hint bar added at the top of the plate list as a permanent quick reference',
+        '👆 Swipe hint bar added at the top of the animal list as a permanent quick reference',
     ],
     '20260429a': [
-        '🎯 Secret Targets — pressing the button now assigns a target plate to every player in the pack, including anyone temporarily offline. Each player sees their own target privately and it stays until they find it first.',
+        '🎯 Secret Targets — pressing the button now assigns a target animal to every player in the pack, including anyone temporarily offline. Each player sees their own target privately and it stays until they find it first.',
     ],
     '20260429b': [
         '🔄 Update notifications fixed — the banner no longer reappears after you update, and if you missed several updates you\'ll see all of them listed together in one go',
@@ -309,7 +309,7 @@ const CHANGELOG = {
         '📣 Announcements and taunts now reliably reach all players — previously a race condition could cause other pack members to miss them entirely',
     ],
     '20260429d': [
-        '📱 Swiping on plates no longer causes the screen to bounce horizontally — left swipes and swipes on already-spotted plates are now fully absorbed by the card instead of the page',
+        '📱 Swiping on animals no longer causes the screen to bounce horizontally — left swipes and swipes on already-spotted animals are now fully absorbed by the card instead of the page',
     ],
     '20260429e': [
         '📖 How to Play instructions are now available anytime via the How2Play button in the top bar — they no longer pop up automatically on every join',
@@ -320,20 +320,20 @@ const CHANGELOG = {
     ],
     '20260429g': [
         '👏 New Praise feature — tap the gold Praise button in the Social section to send a compliment to one or more players, with 12 different messages to choose from',
-        '⚡ Quick-react on plate finds — whenever a pack member spots a plate, their notification now shows instant 👏 Praise and 😈 Taunt buttons pre-targeting that player so you can react in two taps',
+        '⚡ Quick-react on animal finds — whenever a pack member spots a animal, their notification now shows instant 👏 Praise and 😈 Taunt buttons pre-targeting that player so you can react in two taps',
     ],
     '20260429h': [
         '📋 Update notes now clearly describe every new feature — no more generic "bug fixes" messages when you see the update banner',
     ],
     '20260429i': [
-        '🌎 Mexico, Central America & South America — a new Latin America section now appears in the plate grid when enabled under Plate Coverage',
+        '🌎 Mexico, Central America & South America — a new Latin America section now appears in the animal grid when enabled under Animal Coverage',
         '🗺️ Four scope options: U.S. only, U.S. + Canada, U.S. + Latin America, or U.S. + Canada + Latin America',
     ],
     '20260429j': [
         '🔔 Update notes now always fetch fresh from the server — no more "Performance improvements" placeholder regardless of how old your cached version is',
     ],
     '20260429k': [
-        '🌍 South American plates are now worth 200 pts (Global tier) and Central American plates 150 pts (International tier) — the rarest finds in the game',
+        '🌍 South American animals are now worth 200 pts (Global tier) and Central American animals 150 pts (International tier) — the rarest finds in the game',
         '🇲🇽 Mexico is now worth 70 pts (Gold Elite), matching Canadian territories',
         '🌺 Hawaii and Puerto Rico both bumped to 100 pts (Ultra tier)',
     ],
@@ -341,130 +341,96 @@ const CHANGELOG = {
         '📍 Mexico rarity is now distance-based — playing in San Diego or Texas puts it at 20 pts (Rare), scaling up to 70 pts (Gold Elite) the further you are from the border',
     ],
     '20260429m': [
-        '🍀 Lucky Plate and 🎯 Secret Targets now only draw from U.S. states — territorial and international plates are excluded from secret assignments',
+        '🍀 Rare Sighting and 🎯 Secret Targets now only draw from U.S. states — territorial and international animals are excluded from secret assignments',
     ],
     '20260429n': [
-        '🛢️ Oil Slick — blacks out other players\' screens completely for 3 minutes with a countdown they can\'t dismiss',
-        '🌁 Haze — blankets other players\' screens in thick fog for 3 minutes',
-        '🎰 Russian Roulette — instantly removes one random spotted plate from every player including yourself',
-        '👻 Ghost Mode — hides your score and plate count from opponents for 5 minutes (Boosts section)',
-        '🔃 Wrong Way — reverses the plate grid for all other players for 3 minutes',
-        '🚔 Speed Trap — forces a 30-second cooldown between plate spots for all other players for 3 minutes',
+        '🛢️ Mud Slide — blacks out other players\' screens completely for 3 minutes with a countdown they can\'t dismiss',
+        '🌁 Morning Fog — blankets other players\' screens in thick fog for 3 minutes',
+        '🎰 Stampede — instantly removes one random spotted animal from every player including yourself',
+        '👻 Cryptid Mode — hides your score and animal count from opponents for 5 minutes (Boosts section)',
+        '🔃 Migration Mix-up — reverses the animal grid for all other players for 3 minutes',
+        '🚔 Predator Alert — forces a 30-second cooldown between animal spots for all other players for 3 minutes',
     ],
     '20260429y': [
-        '📥 New persistent Pending Requests inbox for the host — plate-removal requests now live in their own sheet (Host Controls → 📥 Pending Requests) with a red badge showing the count, so they no longer disappear before you can approve or deny',
+        '📥 New persistent Pending Requests inbox for the host — animal-removal requests now live in their own sheet (Host Controls → 📥 Pending Requests) with a red badge showing the count, so they no longer disappear before you can approve or deny',
     ],
     '20260429x': [
-        '🔊 Fixed sounds not playing on iOS — audio is now unlocked on first tap so taunts, praises, chat blips, badge fanfares, and other-player plate finds actually make noise',
+        '🔊 Fixed sounds not playing on iOS — audio is now unlocked on first tap so taunts, praises, chat blips, badge fanfares, and other-player animal finds actually make noise',
     ],
     '20260429w': [
         '🔊 New sound effects — chat messages get a soft blip, taunts get a cheeky descending sneer, praises get a bright ascending sparkle, and badge unlocks get a triumphant fanfare',
     ],
     '20260429v': [
-        '🟢🟠 Restored found-state coloring on mobile — plates you found turn green, plates found by other players turn orange (previously only the hidden header was colored)',
+        '🟢🟠 Restored found-state coloring on mobile — animals you found turn green, animals found by other players turn orange (previously only the hidden header was colored)',
     ],
     '20260429u': [
-        '📱 Mobile plate layout overhauled — name sits on the top edge across the full width, flag is centered, the ✕ button sits on the same line as the flag (right side), and the first-finder tag now lives in the bottom-right next to the point value',
+        '📱 Mobile animal layout overhauled — name sits on the top edge across the full width, flag is centered, the ✕ button sits on the same line as the flag (right side), and the first-finder tag now lives in the bottom-right next to the point value',
     ],
     '20260429t': [
-        '📱 Plate names now sit at the top of every card and wrap to a second line if too wide (e.g. New / Hampshire) — no more cut-off names like "Pennsylv..." or "South Car..."',
+        '📱 Animal names now sit at the top of every card and wrap to a second line if too wide (e.g. New / Hampshire) — no more cut-off names like "Pennsylv..." or "South Car..."',
     ],
     '20260429s': [
-        '📱 Mobile plate cards now keep proper plate proportions (1.7:1) — and first-finder tag no longer overlaps the state name',
+        '📱 Mobile animal cards now keep proper animal proportions (1.7:1) — and first-finder tag no longer overlaps the state name',
     ],
     '20260429r': [
-        '📱 Plate grid is now 3 columns on mobile — cards are shorter, narrower, and the redundant "WILDLIFE" header is hidden since section labels already identify the type',
+        '📱 Animal grid is now 3 columns on mobile — cards are shorter, narrower, and the redundant "WILDLIFE" header is hidden since section labels already identify the type',
     ],
     '20260429q': [
-        '📊 Leaderboard cards are now compact — same info (score, plates, FF, coins, achievements, badges, reactions) in a tighter layout',
+        '📊 Leaderboard cards are now compact — same info (score, animals, FF, coins, achievements, badges, reactions) in a tighter layout',
     ],
     '20260429p': [
-        '🌙 Thief in the Night — pick any opponent and steal their single highest-value plate; they lose it permanently (75🪙)',
+        '🌙 Poacher — pick any opponent and steal their single highest-value animal; they lose it permanently (75🪙)',
     ],
     '20260429o': [
-        '🪄 Copycat — steals a copy of one random plate from the leader\'s collection (55🪙)',
-        '🔋 Dead Battery — kills chat for all other players for 3 minutes (40🪙)',
-        '🎭 Decoy — makes opponents see your score inflated 50% for 5 minutes (50🪙, Boosts)',
-        '🎯 Bounty Board — opens the bounty panel so any player can place a coin bounty on any plate',
-        '🐛 Fixed: Russian Roulette now correctly respects your own Shield — buying it while shielded protects your plate and consumes the shield',
+        '🪄 Mimic — steals a copy of one random animal from the leader\'s collection (55🪙)',
+        '🔋 Lost Binoculars — kills chat for all other players for 3 minutes (40🪙)',
+        '🎭 Decoy Call — makes opponents see your score inflated 50% for 5 minutes (50🪙, Boosts)',
+        '🎯 Wildlife Bounty — opens the bounty panel so any player can place a coin bounty on any animal',
+        '🐛 Fixed: Stampede now correctly respects your own Burrow — buying it while shielded protects your animal and consumes the shield',
     ],
 };
 
-const firebaseConfig = {
-    apiKey: "AIzaSyCP7wJIufoS6_BVwlaBXtF0SOzqujN-uHo",
-    authDomain: "sparkasia-studios.firebaseapp.com",
-    databaseURL: "https://sparkasia-studios-default-rtdb.firebaseio.com/",
-    projectId: "sparkasia-studios",
-    storageBucket: "sparkasia-studios.firebasestorage.app",
-    messagingSenderId: "1056103344185",
-    appId: "1:1056103344185:web:7016bd6ad39b7a87cec5e8"
-};
+const firebaseConfig = (window.AnimalQuestData && window.AnimalQuestData.FIREBASE_CONFIG) || {};
 
-const US_PLATES = [
-    { name: "Alabama", abbr: "AL", category: "us" }, { name: "Alaska", abbr: "AK", category: "us" }, { name: "Arizona", abbr: "AZ", category: "us" }, { name: "Arkansas", abbr: "AR", category: "us" },
-    { name: "California", abbr: "CA", category: "us" }, { name: "Colorado", abbr: "CO", category: "us" }, { name: "Connecticut", abbr: "CT", category: "us" }, { name: "Delaware", abbr: "DE", category: "us" },
-    { name: "Florida", abbr: "FL", category: "us" }, { name: "Georgia", abbr: "GA", category: "us" }, { name: "Hawaii", abbr: "HI", category: "us" }, { name: "Idaho", abbr: "ID", category: "us" },
-    { name: "Illinois", abbr: "IL", category: "us" }, { name: "Indiana", abbr: "IN", category: "us" }, { name: "Iowa", abbr: "IA", category: "us" }, { name: "Kansas", abbr: "KS", category: "us" },
-    { name: "Kentucky", abbr: "KY", category: "us" }, { name: "Louisiana", abbr: "LA", category: "us" }, { name: "Maine", abbr: "ME", category: "us" }, { name: "Maryland", abbr: "MD", category: "us" },
-    { name: "Massachusetts", abbr: "MA", category: "us" }, { name: "Michigan", abbr: "MI", category: "us" }, { name: "Minnesota", abbr: "MN", category: "us" }, { name: "Mississippi", abbr: "MS", category: "us" },
-    { name: "Missouri", abbr: "MO", category: "us" }, { name: "Montana", abbr: "MT", category: "us" }, { name: "Nebraska", abbr: "NE", category: "us" }, { name: "Nevada", abbr: "NV", category: "us" },
-    { name: "New Hampshire", abbr: "NH", category: "us" }, { name: "New Jersey", abbr: "NJ", category: "us" }, { name: "New Mexico", abbr: "NM", category: "us" }, { name: "New York", abbr: "NY", category: "us" },
-    { name: "North Carolina", abbr: "NC", category: "us" }, { name: "North Dakota", abbr: "ND", category: "us" }, { name: "Ohio", abbr: "OH", category: "us" }, { name: "Oklahoma", abbr: "OK", category: "us" },
-    { name: "Oregon", abbr: "OR", category: "us" }, { name: "Pennsylvania", abbr: "PA", category: "us" }, { name: "Rhode Island", abbr: "RI", category: "us" }, { name: "South Carolina", abbr: "SC", category: "us" },
-    { name: "South Dakota", abbr: "SD", category: "us" }, { name: "Tennessee", abbr: "TN", category: "us" }, { name: "Texas", abbr: "TX", category: "us" }, { name: "Utah", abbr: "UT", category: "us" },
-    { name: "Vermont", abbr: "VT", category: "us" }, { name: "Virginia", abbr: "VA", category: "us" }, { name: "Washington", abbr: "WA", category: "us" }, { name: "Washington DC", abbr: "DC", category: "us" },
-    { name: "West Virginia", abbr: "WV", category: "us" }, { name: "Wisconsin", abbr: "WI", category: "us" }, { name: "Wyoming", abbr: "WY", category: "us" }
-];
+// === AnimalQuest entity data ===
+// AnimalQuest swaps PlateQuest's "license plate" entities for animal species.
+// To minimise structural churn in this phase-1 port, we keep the legacy
+// variable names (US_PLATES, etc.) but populate them from window.AnimalQuestData.
+// Many downstream identifiers (state, stateName, player.states) are left as-is
+// because they are opaque string keys to the game engine; treat them as
+// "claimable entity id" rather than literal geographic states.
+// TODO: review — geography vs entity (REGION_STATES, playAreaStates BFS, etc.
+// further down still refer to true geography and must not be touched).
+const _AQ_ANIMALS = (window.AnimalQuestData && window.AnimalQuestData.ANIMALS) || [];
+// Map AnimalQuest species onto the animal-shape the rest of the engine expects:
+//   name     -> animal display name (unique key for claims)
+//   abbr     -> short id (used as scientific-style fallback label)
+//   category -> 'animal' (single bucket; we no longer split US/canada/latam)
+//   rarity   -> carried through for points/scoring
+//   emoji    -> for UI rendering
+//   regions  -> for regional-rarity logic
+const US_PLATES = _AQ_ANIMALS.map(a => ({
+    name: a.name,
+    abbr: a.id,
+    category: 'animal',
+    rarity: a.rarity,
+    emoji: a.emoji,
+    scientific: a.scientific,
+    animalCategory: a.category,
+    regions: a.regions || [],
+    setting: a.setting || 'wild',
+    groups: a.groups || []
+}));
 
-const TERRITORY_PLATES = [
-    { name: "Puerto Rico",              abbr: "PR",   category: "territory" },
-    { name: "US Virgin Islands",         abbr: "USVI", category: "territory" },
-    { name: "American Samoa",           abbr: "AS",   category: "territory" },
-    { name: "Guam",                     abbr: "GU",   category: "territory" },
-    { name: "Northern Mariana Islands", abbr: "CNMI", category: "territory" }
-];
+// Convenient alias matching the task spec rename request.
+const ANIMALS = US_PLATES;
 
-const CANADA_PLATES = [
-    { name: "Alberta", abbr: "AB", category: "canada" },
-    { name: "British Columbia", abbr: "BC", category: "canada" },
-    { name: "Manitoba", abbr: "MB", category: "canada" },
-    { name: "New Brunswick", abbr: "NB", category: "canada" },
-    { name: "Newfoundland and Labrador", abbr: "NL", category: "canada" },
-    { name: "Northwest Territories", abbr: "NT", category: "canada" },
-    { name: "Nova Scotia", abbr: "NS", category: "canada" },
-    { name: "Nunavut", abbr: "NU", category: "canada" },
-    { name: "Ontario", abbr: "ON", category: "canada" },
-    { name: "Prince Edward Island", abbr: "PE", category: "canada" },
-    { name: "Quebec", abbr: "QC", category: "canada" },
-    { name: "Saskatchewan", abbr: "SK", category: "canada" },
-    { name: "Yukon", abbr: "YT", category: "canada" }
-];
-
-const LATAM_PLATES = [
-    // Mexico
-    { name: "Mexico",       abbr: "MX",  category: "latam", region: "mexico" },
-    // Central America
-    { name: "Belize",       abbr: "BZ",  category: "latam", region: "central" },
-    { name: "Costa Rica",   abbr: "CR",  category: "latam", region: "central" },
-    { name: "El Salvador",  abbr: "SV",  category: "latam", region: "central" },
-    { name: "Guatemala",    abbr: "GT",  category: "latam", region: "central" },
-    { name: "Honduras",     abbr: "HN",  category: "latam", region: "central" },
-    { name: "Nicaragua",    abbr: "NI",  category: "latam", region: "central" },
-    { name: "Panama",       abbr: "PAN", category: "latam", region: "central" },
-    // South America
-    { name: "Argentina",    abbr: "ARG", category: "latam", region: "south" },
-    { name: "Bolivia",      abbr: "BO",  category: "latam", region: "south" },
-    { name: "Brazil",       abbr: "BR",  category: "latam", region: "south" },
-    { name: "Chile",        abbr: "CL",  category: "latam", region: "south" },
-    { name: "Colombia",     abbr: "COL", category: "latam", region: "south" },
-    { name: "Ecuador",      abbr: "EC",  category: "latam", region: "south" },
-    { name: "Guyana",       abbr: "GY",  category: "latam", region: "south" },
-    { name: "Paraguay",     abbr: "PY",  category: "latam", region: "south" },
-    { name: "Peru",         abbr: "PER", category: "latam", region: "south" },
-    { name: "Suriname",     abbr: "SR",  category: "latam", region: "south" },
-    { name: "Uruguay",      abbr: "UY",  category: "latam", region: "south" },
-    { name: "Venezuela",    abbr: "VE",  category: "latam", region: "south" },
-];
+// Vestigial PlateQuest scope buckets — empty in AnimalQuest. Kept so existing
+// scope-switching code paths (us / us_canada / us_latam / us_canada_latam)
+// continue to evaluate without error.
+const TERRITORY_PLATES = [];
+const CANADA_PLATES = [];
+const LATAM_PLATES = [];
 
 const PRIMARY_REGIONS = {
     // Eight non-overlapping primary regions — all 50 US states, exactly once
@@ -688,12 +654,19 @@ function formatFoundAt(ts) {
     return sameDay ? `${h}:${mins}${ampm}` : `${month} ${day} ${h}:${mins}${ampm}`;
 }
 
-// Returns the rarity tier for a plate given the pack's travel corridor.
+// Returns the rarity tier for a animal given the pack's travel corridor.
 // BFS hop-distance from the corridor determines tier for contiguous US, Canadian provinces, and Mexico.
 // Mexico uses border-state BFS: CA/AZ/NM/TX in corridor → rare (20 pts), scaling to gold-elite (70 pts) 6+ hops away.
 // Special fixed tiers: Hawaii/US territories → ultra; Canadian territories → gold-elite; Central/South America → fixed.
 // No corridor set → flat occasional for all states (AK still silver-elite, HI ultra).
 function computeRarityForState(stateName, corridorStates) {
+    // AnimalQuest: if this entity is an animal (not a true US state name),
+    // return its native rarity tier directly. RARITY_CONFIG must include
+    // matching keys (common, uncommon, rare, epic, legendary, mythic).
+    const animalEntry = (window.AnimalQuestData && window.AnimalQuestData.ANIMALS || [])
+        .find(a => a.name === stateName);
+    if (animalEntry) return animalEntry.rarity || 'common';
+
     // Fixed tiers — always the same regardless of corridor
     if (SOUTH_AMERICA_NAMES.has(stateName))   return 'global';        // 200 pts
     if (CENTRAL_AMERICA_NAMES.has(stateName)) return 'international'; // 150 pts
@@ -766,14 +739,19 @@ function computeRarityForState(stateName, corridorStates) {
 }
 
 const RARITY_CONFIG = {
-    'common':        { label: 'Common',        points: 2,   color: '#7f8c8d' },
+    // AnimalQuest tiers — match data.js RARITY
+    'common':        { label: 'Common',        points: 5,   color: '#7fbf7f' },
+    'uncommon':      { label: 'Uncommon',      points: 10,  color: '#5da8a8' },
+    'rare':          { label: 'Rare',          points: 25,  color: '#3a92e0' },
+    'epic':          { label: 'Epic',          points: 50,  color: '#9b59b6' },
+    'legendary':     { label: 'Legendary',     points: 100, color: '#e67e22' },
+    'mythic':        { label: 'Mythic',        points: 250, color: '#e84393' },
+    // Legacy PlateQuest tiers — kept so any code paths that still reference
+    // geographic-rarity strings don't blow up.
     'occasional':    { label: 'Occasional',    points: 4,   color: '#27ae60' },
     'scarce':        { label: 'Scarce',        points: 6,   color: '#16a085' },
     'semi-rare':     { label: 'Semi-Rare',     points: 10,  color: '#2980b9' },
-    'rare':          { label: 'Rare',          points: 20,  color: '#3498db' },
     'mega-rare':     { label: 'Mega-Rare',     points: 30,  color: '#7d3c98' },
-    'epic':          { label: 'Epic',          points: 40,  color: '#9b59b6' },
-    'legendary':     { label: 'Legendary',     points: 50,  color: '#e67e22' },
     'silver-elite':  { label: 'Silver Elite',  points: 60,  color: '#a0aec0' },
     'gold-elite':    { label: 'Gold Elite',    points: 70,  color: '#d4ac0d' },
     'ultra':         { label: 'Ultra',         points: 100, color: '#e74c3c' },
@@ -784,11 +762,11 @@ const RARITY_CONFIG = {
 // ── Badge Definitions ─────────────────────────────────────────────────────────
 
 const BADGE_DEFS = [
-    // Milestone — plates found
-    { id:'milestone_5',       group:'milestone',   icon:'🚗', label:'Road Warrior',    desc:'Found 5 plates',                 test:s=>s.foundCount>=5 },
-    { id:'milestone_10',      group:'milestone',   icon:'👀', label:'Spotter',          desc:'Found 10 plates',                test:s=>s.foundCount>=10 },
-    { id:'milestone_20',      group:'milestone',   icon:'🐺', label:'Pack Hunter',      desc:'Found 20 plates',                test:s=>s.foundCount>=20 },
-    { id:'milestone_40',      group:'milestone',   icon:'🏆', label:'Cross-Country',    desc:'Found 40 plates',                test:s=>s.foundCount>=40 },
+    // Milestone — animals found
+    { id:'milestone_5',       group:'milestone',   icon:'🚗', label:'Road Warrior',    desc:'Found 5 animals',                 test:s=>s.foundCount>=5 },
+    { id:'milestone_10',      group:'milestone',   icon:'👀', label:'Spotter',          desc:'Found 10 animals',                test:s=>s.foundCount>=10 },
+    { id:'milestone_20',      group:'milestone',   icon:'🐺', label:'Pack Hunter',      desc:'Found 20 animals',                test:s=>s.foundCount>=20 },
+    { id:'milestone_40',      group:'milestone',   icon:'🏆', label:'Cross-Country',    desc:'Found 40 animals',                test:s=>s.foundCount>=40 },
     { id:'milestone_50',      group:'milestone',   icon:'⭐', label:'Full Set',         desc:'Found all 50 states',            test:s=>s.foundCount>=50 },
     // Milestone — first finds
     { id:'ff_5',              group:'firstfinder', icon:'🎯', label:'Sharp Eye',        desc:'5 first finds',                  test:s=>s.firstCount>=5 },
@@ -835,7 +813,7 @@ const BADGE_DEFS = [
     { id:'region_mountain_west', group:'region', icon:'🏔️',label:'Mountain West', desc:'Completed the Mountain West',test:s=>s.completedRegions?.includes('mountain_west') },
     { id:'region_pacific',       group:'region', icon:'🌊', label:'Pacific',       desc:'Completed the Pacific',      test:s=>s.completedRegions?.includes('pacific') },
     // Travel corridor
-    { id:'corridor_complete', group:'corridor', icon:'🛣️',label:'Home Ground',       desc:'Found all corridor plates',   test:s=>s.corridorComplete },
+    { id:'corridor_complete', group:'corridor', icon:'🛣️',label:'Home Ground',       desc:'Found all corridor animals',   test:s=>s.corridorComplete },
 ];
 
 const STORAGE_KEYS = {
@@ -870,7 +848,7 @@ let tauntsChildRef = null;
 let chatChildRef = null;
 let prevClearRequestKeys = null; // null = not yet initialized; reset on game exit
 let prevRegionClearRequestKeys = null; // same, for region completion disputes
-let prevPlateDisputeKeys = null;         // same, for individual plate first-finder disputes
+let prevPlateDisputeKeys = null;         // same, for individual animal first-finder disputes
 let prevChatKeys = null;                  // null = not yet initialized; reset on game exit
 let prevReactionKeys = null;             // null = not yet initialized; reset on game exit
 let chatUnreadCount = 0;
@@ -932,8 +910,27 @@ function getActivePlateEntries(scopeOverride = null) {
     return base;
 }
 
+// True US-state geography list — used by the host's play-area BFS picker.
+// This is REAL geography, not entities-being-claimed. Kept independent of
+// US_PLATES (which in AnimalQuest holds animal species).
+const US_STATE_GEOGRAPHY = [
+    { name: "Alabama", abbr: "AL" }, { name: "Alaska", abbr: "AK" }, { name: "Arizona", abbr: "AZ" }, { name: "Arkansas", abbr: "AR" },
+    { name: "California", abbr: "CA" }, { name: "Colorado", abbr: "CO" }, { name: "Connecticut", abbr: "CT" }, { name: "Delaware", abbr: "DE" },
+    { name: "Florida", abbr: "FL" }, { name: "Georgia", abbr: "GA" }, { name: "Hawaii", abbr: "HI" }, { name: "Idaho", abbr: "ID" },
+    { name: "Illinois", abbr: "IL" }, { name: "Indiana", abbr: "IN" }, { name: "Iowa", abbr: "IA" }, { name: "Kansas", abbr: "KS" },
+    { name: "Kentucky", abbr: "KY" }, { name: "Louisiana", abbr: "LA" }, { name: "Maine", abbr: "ME" }, { name: "Maryland", abbr: "MD" },
+    { name: "Massachusetts", abbr: "MA" }, { name: "Michigan", abbr: "MI" }, { name: "Minnesota", abbr: "MN" }, { name: "Mississippi", abbr: "MS" },
+    { name: "Missouri", abbr: "MO" }, { name: "Montana", abbr: "MT" }, { name: "Nebraska", abbr: "NE" }, { name: "Nevada", abbr: "NV" },
+    { name: "New Hampshire", abbr: "NH" }, { name: "New Jersey", abbr: "NJ" }, { name: "New Mexico", abbr: "NM" }, { name: "New York", abbr: "NY" },
+    { name: "North Carolina", abbr: "NC" }, { name: "North Dakota", abbr: "ND" }, { name: "Ohio", abbr: "OH" }, { name: "Oklahoma", abbr: "OK" },
+    { name: "Oregon", abbr: "OR" }, { name: "Pennsylvania", abbr: "PA" }, { name: "Rhode Island", abbr: "RI" }, { name: "South Carolina", abbr: "SC" },
+    { name: "South Dakota", abbr: "SD" }, { name: "Tennessee", abbr: "TN" }, { name: "Texas", abbr: "TX" }, { name: "Utah", abbr: "UT" },
+    { name: "Vermont", abbr: "VT" }, { name: "Virginia", abbr: "VA" }, { name: "Washington", abbr: "WA" }, { name: "Washington DC", abbr: "DC" },
+    { name: "West Virginia", abbr: "WV" }, { name: "Wisconsin", abbr: "WI" }, { name: "Wyoming", abbr: "WY" }
+];
+
 function getUsStateEntries() {
-    return US_PLATES;
+    return US_STATE_GEOGRAPHY;
 }
 
 async function ensureDatabaseReady(actionLabel = 'continue') {
@@ -1216,7 +1213,7 @@ function disableGameCards() {
 
 function stateMapToCount(statesMap) { return Object.keys(statesMap || {}).length; }
 function getPackUniqueStatesCount() { const uniqueStates = new Set(); Object.values(playersData || {}).forEach((player) => Object.keys(player?.states || {}).forEach((stateName) => uniqueStates.add(stateName))); return uniqueStates.size; }
-function getStateClaim(stateName) { return gameData?.claimedStates?.[stateName] || null; }
+function getStateClaim(stateName) { return gameData?.claimedSpecies?.[stateName] || null; }
 
 function renderPlayAreaSelector() {
     const map = document.getElementById('playAreaMap');
@@ -1284,7 +1281,7 @@ function normalizePlayers(rawPlayers = {}) {
 
 function getMyStatesMap() { return currentPlayer ? (playersData[currentPlayer.playerKey]?.states || {}) : {}; }
 function findStateOwner(stateName) { let owner = null; Object.values(playersData).forEach((player) => { if (!owner && player.states && player.states[stateName]) owner = player; }); return owner; }
-function buildStateSignature() { return JSON.stringify({ players: Object.values(playersData).map((player) => ({ key: player.playerKey, count: stateMapToCount(player.states), connected: Boolean(player.connected), states: Object.keys(player.states || {}).sort() })), claims: Object.keys(gameData?.claimedStates || {}).sort(), settings: gameData?.settings || {} }); }
+function buildStateSignature() { return JSON.stringify({ players: Object.values(playersData).map((player) => ({ key: player.playerKey, count: stateMapToCount(player.states), connected: Boolean(player.connected), states: Object.keys(player.states || {}).sort() })), claims: Object.keys(gameData?.claimedSpecies || {}).sort(), settings: gameData?.settings || {} }); }
 function formatSyncTime(value) { if (!value) return '—'; const date = new Date(value); return Number.isNaN(date.getTime()) ? '—' : date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' }); }
 
 function updateDiagnosticsPanel() {
@@ -1505,7 +1502,7 @@ async function buyShopItem(itemId) {
             [`players/${currentPlayer.playerKey}/coins`]: firebase.database.ServerValue.increment(-item.cost),
             [`players/${currentPlayer.playerKey}/effects/shield`]: true,
         });
-        showToast('🛡️ Shield equipped! You\'re protected from the next trick.', 'success');
+        showToast('🛡️ Burrow equipped! You\'re protected from the next trick.', 'success');
         closeShopModal();
         return;
     }
@@ -1519,18 +1516,18 @@ async function buyShopItem(itemId) {
     if (item.id === 'copycat') {
         const others = Object.values(playersData).filter(p => p.playerKey !== currentPlayer.playerKey);
         const myPlates = new Set(Object.keys(playersData[currentPlayer.playerKey]?.states || {}));
-        // Pick the player with the most plates as the target
+        // Pick the player with the most animals as the target
         const leader = others.sort((a, b) => Object.keys(b.states || {}).length - Object.keys(a.states || {}).length)[0];
         if (!leader) { showToast('No other players to copy from!', 'info'); return; }
         const available = Object.keys(leader.states || {}).filter(p => !myPlates.has(p));
-        if (available.length === 0) { showToast('🪄 You already have all of the leader\'s plates!', 'info'); return; }
+        if (available.length === 0) { showToast('🪄 You already have all of the leader\'s animals!', 'info'); return; }
         const pick = available[Math.floor(Math.random() * available.length)];
         const stateRecord = { state: pick, foundAt: firebase.database.ServerValue.TIMESTAMP, foundBy: currentPlayer.displayName, foundByKey: currentPlayer.playerKey, copiedFrom: leader.displayName || '?' };
         await currentGameRef.update({
             [`players/${currentPlayer.playerKey}/coins`]: firebase.database.ServerValue.increment(-item.cost),
             [`players/${currentPlayer.playerKey}/states/${pick}`]: stateRecord,
         });
-        showToast(`🪄 Copycat! Swiped ${pick} from ${leader.displayName || 'the leader'}!`, 'success');
+        showToast(`🪄 Mimic! Swiped ${pick} from ${leader.displayName || 'the leader'}!`, 'success');
         writeRegionCompletions();
         closeShopModal();
         return;
@@ -1548,7 +1545,7 @@ async function buyShopItem(itemId) {
             [`players/${currentPlayer.playerKey}/coins`]: firebase.database.ServerValue.increment(-item.cost),
             [`players/${currentPlayer.playerKey}/effects/ghost`]: expiry,
         });
-        showToast('👻 Ghost Mode active — opponents can\'t see your score for 5 minutes!', 'success');
+        showToast('👻 Cryptid Mode active — opponents can\'t see your score for 5 minutes!', 'success');
         closeShopModal();
         return;
     }
@@ -1559,7 +1556,7 @@ async function buyShopItem(itemId) {
             [`players/${currentPlayer.playerKey}/coins`]: firebase.database.ServerValue.increment(-item.cost),
             [`players/${currentPlayer.playerKey}/effects/decoy`]: expiry,
         });
-        showToast('🎭 Decoy active — opponents see a fake inflated score for 5 minutes!', 'success');
+        showToast('🎭 Decoy Call active — opponents see a fake inflated score for 5 minutes!', 'success');
         closeShopModal();
         return;
     }
@@ -1575,15 +1572,15 @@ async function buyShopItem(itemId) {
                 shielded++;
                 continue;
             }
-            const plates = Object.keys(player.states || {});
-            if (plates.length === 0) continue;
-            const pick = plates[Math.floor(Math.random() * plates.length)];
+            const animals = Object.keys(player.states || {});
+            if (animals.length === 0) continue;
+            const pick = animals[Math.floor(Math.random() * animals.length)];
             updates[`players/${player.playerKey}/states/${pick}`] = null;
             lost.push(`${player.displayName || '?'} lost ${pick}`);
         }
-        if (lost.length === 0 && shielded === 0) { showToast('No one has plates to lose!', 'info'); return; }
+        if (lost.length === 0 && shielded === 0) { showToast('No one has animals to lose!', 'info'); return; }
         await currentGameRef.update(updates);
-        const msg = `🎰 Russian Roulette! ${lost.join(' · ')}${shielded ? ` · ${shielded} shielded` : ''}`;
+        const msg = `🎰 Stampede! ${lost.join(' · ')}${shielded ? ` · ${shielded} shielded` : ''}`;
         showToast(msg, 'info');
         closeShopModal();
         return;
@@ -1605,7 +1602,7 @@ async function buyShopItem(itemId) {
         })
     ));
 
-    if (blocked > 0) showToast(`${item.icon} ${item.name} — ${blocked} player${blocked !== 1 ? 's' : ''} blocked it with a Shield!`, 'info');
+    if (blocked > 0) showToast(`${item.icon} ${item.name} — ${blocked} player${blocked !== 1 ? 's' : ''} blocked it with a Burrow!`, 'info');
     else showToast(`${item.icon} ${item.name} activated on the pack!`, 'success');
     closeShopModal();
 }
@@ -1616,17 +1613,17 @@ function updateActiveEffectsBar() {
     const fx = getMyEffects();
     const now = Date.now();
     const active = [];
-    if ((fx.blender     || 0) > now) active.push({ icon: '🌀', label: 'Plates scrambled',      expiry: fx.blender });
+    if ((fx.blender     || 0) > now) active.push({ icon: '🌀', label: 'Animals scrambled',      expiry: fx.blender });
     if ((fx.freeze      || 0) > now) active.push({ icon: '⏸️', label: 'You are frozen',         expiry: fx.freeze });
     if ((fx.fog         || 0) > now) active.push({ icon: '🌫️', label: 'Scores hidden',          expiry: fx.fog });
-    if ((fx.oilSlick    || 0) > now) active.push({ icon: '🛢️', label: 'Oil Slick',              expiry: fx.oilSlick });
-    if ((fx.haze        || 0) > now) active.push({ icon: '🌁', label: 'Hazed in',               expiry: fx.haze });
+    if ((fx.oilSlick    || 0) > now) active.push({ icon: '🛢️', label: 'Mud Slide',              expiry: fx.oilSlick });
+    if ((fx.haze        || 0) > now) active.push({ icon: '🌁', label: 'Foggy morning',          expiry: fx.haze });
     if ((fx.wrongWay    || 0) > now) active.push({ icon: '🔃', label: 'Grid reversed',          expiry: fx.wrongWay });
-    if ((fx.speedTrap   || 0) > now) active.push({ icon: '🚔', label: 'Speed trap — 30s delay', expiry: fx.speedTrap });
+    if ((fx.speedTrap   || 0) > now) active.push({ icon: '🚔', label: 'Predator nearby — 30s delay', expiry: fx.speedTrap });
     if ((fx.deadBattery || 0) > now) active.push({ icon: '🔋', label: 'Chat disabled',          expiry: fx.deadBattery });
-    if ((fx.ghost       || 0) > now) active.push({ icon: '👻', label: 'Ghost Mode — stealth',   expiry: fx.ghost });
-    if ((fx.decoy       || 0) > now) active.push({ icon: '🎭', label: 'Decoy score active',     expiry: fx.decoy });
-    if (fx.shield)                   active.push({ icon: '🛡️', label: 'Shielded',               expiry: null });
+    if ((fx.ghost       || 0) > now) active.push({ icon: '👻', label: 'Cryptid Mode — stealth',   expiry: fx.ghost });
+    if ((fx.decoy       || 0) > now) active.push({ icon: '🎭', label: 'Decoy Call score active',     expiry: fx.decoy });
+    if (fx.shield)                   active.push({ icon: '🛡️', label: 'Burrowed',               expiry: null });
     bar.style.display = active.length ? 'flex' : 'none';
     bar.innerHTML = active.map(e =>
         `<div class="effect-pill">${e.icon} ${e.label}${e.expiry ? ` <span class="effect-time">${formatTimeLeft(e.expiry)}</span>` : ''}</div>`
@@ -1638,7 +1635,7 @@ function updateTrickOverlay() {
     const fx = getMyEffects();
     const now = Date.now();
     const active =
-        (fx.oilSlick || 0) > now ? { expiry: fx.oilSlick, title: '🛢️ You hit an oil slick!',     dark: true  } :
+        (fx.oilSlick || 0) > now ? { expiry: fx.oilSlick, title: '🪨 You got caught in a mud slide!', dark: true  } :
         (fx.haze     || 0) > now ? { expiry: fx.haze,     title: '🌁 Visibility near zero!',       dark: false } :
         null;
     let overlay = document.getElementById('trickOverlay');
@@ -2065,7 +2062,7 @@ async function createGame() {
             hostPlayerKey: currentPlayer.playerKey,
             createdAt: firebase.database.ServerValue.TIMESTAMP,
             updatedAt: firebase.database.ServerValue.TIMESTAMP,
-            claimedStates: {},
+            claimedSpecies: {},
             players: { [currentPlayer.playerKey]: buildPlayerRoomRecord(currentPlayer, { isHost: true }) }
         };
         await roomRef.set(roomData);
@@ -2253,7 +2250,7 @@ function updateGameUI() {
         if (speedRoundInterval) { clearInterval(speedRoundInterval); speedRoundInterval = null; }
         endGameScreenShown = false; lastRenderedStateSignature = '';
         closeEndGameScreen();
-        showToast('New round started! 🏁 Plates cleared.', 'success');
+        showToast('New round started! 🏁 Animals cleared.', 'success');
     }
     lastKnownRound = currentRound;
     detectNewFinds();
@@ -2321,7 +2318,7 @@ function updateConnectionBadgeText() {
     const me = playersData[currentPlayer.playerKey];
     const packCount = getPackUniqueStatesCount();
     if (currentConnectionState !== 'online') statusText.textContent = 'Offline - reconnecting…';
-    else if (me && me.connected) statusText.textContent = `Pack Connected • ${packCount} plates`;
+    else if (me && me.connected) statusText.textContent = `Pack Connected • ${packCount} animals`;
     else statusText.textContent = 'Rejoining pack…';
 }
 
@@ -2372,7 +2369,7 @@ function updateScores() {
                 ${streakBadge}${rivalBadge}
                 <span class="score-pts-inline">${fogged ? '🌫️' : displayScore}${fogged ? '' : '<span class="score-pts-label-inline"> pts</span>'}</span>
             </div>
-            <div class="score-card-stats">${fogged ? '— hidden in fog —' : `${player.foundCount} plates · ${player.firstCount} FF · 🪙 ${coins.toLocaleString()}${achCount > 0 ? ` · 🏆 ${achCount}` : ''}`}</div>
+            <div class="score-card-stats">${fogged ? '— hidden in fog —' : `${player.foundCount} animals · ${player.firstCount} FF · 🪙 ${coins.toLocaleString()}${achCount > 0 ? ` · 🏆 ${achCount}` : ''}`}</div>
             ${badgeRow}
             ${reactionRow}
         `;
@@ -2435,7 +2432,7 @@ function updateScores() {
         Object.values(playersData).forEach(p => Object.keys(p.states || {}).forEach(s => packSet.add(s)));
         const packFound = packSet.size;
         const pct = Math.round((packFound / totalPlates) * 100);
-        stat.textContent = `${packFound} / ${totalPlates} plates · ${pct}%`;
+        stat.textContent = `${packFound} / ${totalPlates} animals · ${pct}%`;
         fill.style.width = `${pct}%`;
         wrap.style.display = packFound > 0 ? '' : 'none';
     }
@@ -2471,10 +2468,10 @@ function renderStates() {
     if (!statesGrid || !currentPlayer) return;
     statesGrid.innerHTML = '';
 
-    // Swipe instruction — always at the top of the plate list
+    // Swipe instruction — always at the top of the animal list
     const hint = document.createElement('div');
     hint.className = 'swipe-hint-bar';
-    hint.innerHTML = '<b>👆 Swipe right</b> to mark a plate spotted <span class="swipe-hint-sep">·</span> <b>Long-press</b> to remove <span class="swipe-hint-sep">·</span> <span class="h-you">🐺 you found it</span> <span class="swipe-hint-sep">·</span> <span class="h-pack">👤 pack found it first</span>';
+    hint.innerHTML = '<b>👆 Swipe right</b> to mark a animal spotted <span class="swipe-hint-sep">·</span> <b>Long-press</b> to remove <span class="swipe-hint-sep">·</span> <span class="h-you">🐺 you found it</span> <span class="swipe-hint-sep">·</span> <span class="h-pack">👤 pack found it first</span>';
     statesGrid.appendChild(hint);
 
     const myStates = getMyStatesMap();
@@ -2520,8 +2517,9 @@ function renderStates() {
         const claim = getStateClaim(state.name);
         if (foundByMe) card.classList.add('selected'); else if (foundByOther) card.classList.add('selected-by-other');
 
-        const flagImg = `../flags/${state.abbr.toLowerCase()}.png`;
-        const plateTypeLabel = state.category === 'canada' ? 'PROVINCE PLATE' : state.category === 'territory' ? 'TERRITORY PLATE' : state.category === 'latam' ? 'COUNTRY PLATE' : 'WILDLIFE';
+        // In AnimalQuest, the legacy "state flag" slot is replaced by the species emoji.
+        const animalEmoji = state.emoji || '🐾';
+        const plateTypeLabel = 'WILDLIFE';
         const corridor = gameData?.settings?.playAreaStates || [];
         const myStateData = getMyStatesMap()[state.name];
         const cardCorridor = (gameData?.settings?.gpsRarity && myStateData?.foundNearState) ? [myStateData.foundNearState] : corridor;
@@ -2533,18 +2531,18 @@ function renderStates() {
         const isLucky = gameData?.luckyPlateFound?.stateName === state.name;
         const bountyData = gameData?.bounties?.[state.name];
         const chestBadge = hasChest ? '<div class="chest-badge">🎁</div>' : '';
-        const luckyBadge = isLucky ? '<div class="lucky-badge">🍀 Lucky Plate!</div>' : '';
+        const luckyBadge = isLucky ? '<div class="lucky-badge">🍀 Rare Sighting!</div>' : '';
         const bountyBadge = bountyData ? `<div class="bounty-badge">💰${bountyData.reward}</div>` : '';
 
         card.innerHTML = `
-            <div class="license-plate-header">${plateTypeLabel}</div>
-            <div class="plate-body">
-                <div class="plate-info">
-                    <div class="plate-name">${state.name}</div>
-                    <div class="plate-abbr">${state.abbr}</div>
+            <div class="license-animal-header">${plateTypeLabel}</div>
+            <div class="animal-body">
+                <div class="animal-info">
+                    <div class="animal-name">${state.name}</div>
+                    <div class="animal-abbr">${state.abbr}</div>
                 </div>
-                <div class="state-flag">
-                    <img src="${flagImg}" alt="${state.abbr}" onerror="this.style.display='none';this.parentNode.textContent='${state.abbr}';">
+                <div class="state-flag" style="font-size:18px;display:flex;align-items:center;justify-content:center;">
+                    <span aria-label="${state.name}">${animalEmoji}</span>
                 </div>
             </div>
             ${rarityBadge}
@@ -2552,7 +2550,7 @@ function renderStates() {
             ${chestBadge}
             ${luckyBadge}
             ${bountyBadge}
-            ${foundByMe ? '<button class="clear-req-btn" aria-label="Request host to remove plate">✕</button>' : ''}
+            ${foundByMe ? '<button class="clear-req-btn" aria-label="Request host to remove animal">✕</button>' : ''}
         `;
         if (foundByMe) {
             const clearBtn = card.querySelector('.clear-req-btn');
@@ -2639,7 +2637,7 @@ function showDeselectConfirm(stateName) {
     const ec = (useGps && sd?.foundNearState) ? [sd.foundNearState] : corridor;
     const tier = computeRarityForState(stateName, ec);
     const pts = RARITY_CONFIG[tier]?.points || 0;
-    const isFirst = gameData?.claimedStates?.[stateName]?.playerKey === currentPlayer?.playerKey;
+    const isFirst = gameData?.claimedSpecies?.[stateName]?.playerKey === currentPlayer?.playerKey;
     const ptsLost = isFirst ? pts : Math.ceil(pts / 2);
     document.getElementById('clearConfirmTitle').textContent = `Remove ${stateName}?`;
     document.getElementById('clearConfirmMsg').textContent = `You'll lose ${ptsLost} pts${isFirst ? ' including your First Find bonus' : ''}. This cannot be undone.`;
@@ -2713,7 +2711,7 @@ async function approveClearRequest(stateName, req) {
     try {
         const updates = {};
         updates[`clearRequests/${stateName}`] = null;
-        updates[`claimedStates/${stateName}`] = null;
+        updates[`claimedSpecies/${stateName}`] = null;
         updates[`players/${req.playerKey}/states/${stateName}`] = null;
         await currentGameRef.update(updates);
         showToast(`Cleared ${stateName} for ${req.displayName}.`, 'info');
@@ -2733,14 +2731,14 @@ async function denyClearRequest(stateName) {
 async function toggleState(stateName, currentlySelected) {
     if (!currentGameRef || !currentPlayer) return;
     if (gameData?.status === 'ended') { showToast('The game has ended — no more spotting!', 'info'); return; }
-    if (!currentlySelected && (getMyEffects().freeze || 0) > Date.now()) { showToast('⏸️ You\'re frozen! Can\'t spot plates right now.', 'error'); return; }
+    if (!currentlySelected && (getMyEffects().freeze || 0) > Date.now()) { showToast('⏸️ You\'re frozen! Can\'t spot animals right now.', 'error'); return; }
     if (!currentlySelected && (getMyEffects().speedTrap || 0) > Date.now()) {
         const lastSpot = playersData[currentPlayer.playerKey]?.lastSpotAt || 0;
         const wait = Math.ceil((30000 - (Date.now() - lastSpot)) / 1000);
-        if (wait > 0) { showToast(`🚔 Speed Trap! Wait ${wait}s before your next spot.`, 'error'); return; }
+        if (wait > 0) { showToast(`🚔 Predator Alert! Wait ${wait}s before your next spot.`, 'error'); return; }
     }
     const playerStatesRef = currentGameRef.child(`players/${currentPlayer.playerKey}/states`);
-    const stateClaimRef = currentGameRef.child(`claimedStates/${stateName}`);
+    const stateClaimRef = currentGameRef.child(`claimedSpecies/${stateName}`);
     try {
         if (currentlySelected) {
             await playerStatesRef.child(stateName).remove();
@@ -2760,12 +2758,12 @@ async function toggleState(stateName, currentlySelected) {
             if (gameData?.bounties?.[stateName]) claimBounty(stateName);
             if (isFirstFinder && gameData?.luckyPlate === stateName && !gameData?.luckyPlateFound) revealLuckyPlate(stateName);
             if (isFirstFinder && gameData?.secretTargets?.[currentPlayer.playerKey] === stateName) claimSecretTarget(stateName);
-            if (isFirstFinder && gameData?.suddenDeath?.active && gameData?.suddenDeath?.plate === stateName) winSuddenDeath(stateName);
+            if (isFirstFinder && gameData?.suddenDeath?.active && gameData?.suddenDeath?.animal === stateName) winSuddenDeath(stateName);
         }
         await currentGameRef.update({ updatedAt: firebase.database.ServerValue.TIMESTAMP });
         lastSyncAt = Date.now();
         const myCount = currentlySelected ? stateMapToCount(getMyStatesMap()) - 1 : stateMapToCount(getMyStatesMap()) + 1;
-        if (!currentlySelected && myCount === getActivePlateEntries(gameData?.settings?.plateScope).length) showToast('🏆 AMAZING! You found every available plate!', 'success');
+        if (!currentlySelected && myCount === getActivePlateEntries(gameData?.settings?.plateScope).length) showToast('🏆 AMAZING! You found every available animal!', 'success');
         updateDiagnosticsPanel();
     } catch (error) {
         console.error('Error updating state:', error);
@@ -2775,7 +2773,7 @@ async function toggleState(stateName, currentlySelected) {
 
 async function resetMyProgress() {
     if (!currentGameRef || !currentPlayer) return;
-    if (!confirm('Reset all your spotted plates? This cannot be undone.\n\nFirst-finder records you hold will be reassigned to the next-earliest player.')) return;
+    if (!confirm('Reset all your spotted animals? This cannot be undone.\n\nFirst-finder records you hold will be reassigned to the next-earliest player.')) return;
     try {
         const myKey = currentPlayer.playerKey;
         const snap = await currentGameRef.once('value');
@@ -2783,10 +2781,10 @@ async function resetMyProgress() {
         if (!room) return;
 
         const players = normalizePlayers(room.players || {});
-        const claims  = room.claimedStates || {};
+        const claims  = room.claimedSpecies || {};
         const updates = {};
 
-        // Clear this player's plates
+        // Clear this player's animals
         updates[`players/${myKey}/states`] = {};
 
         // For every first-finder claim this player holds, remove or reassign
@@ -2802,9 +2800,9 @@ async function resetMyProgress() {
                 if (!next || t < next.t) next = { t, playerKey: pKey, playerData: pData };
             });
             if (!next) {
-                updates[`claimedStates/${stateName}`] = null;
+                updates[`claimedSpecies/${stateName}`] = null;
             } else {
-                updates[`claimedStates/${stateName}`] = {
+                updates[`claimedSpecies/${stateName}`] = {
                     state: stateName, playerKey: next.playerKey,
                     name: next.playerData.name, tag: next.playerData.tag,
                     displayName: next.playerData.displayName, claimedAt: next.t,
@@ -2936,7 +2934,7 @@ function playChime(isFirstFind = false) {
 
 // Compares current player states against the previous snapshot.
 // On first call: silently absorbs existing data (no notifications).
-// On subsequent calls: toasts + chimes for any newly found plates.
+// On subsequent calls: toasts + chimes for any newly found animals.
 function detectNewFinds() {
     if (!gameData || !currentPlayer) return;
     const initOnly = prevPlayerStates === null;
@@ -2950,7 +2948,7 @@ function detectNewFinds() {
             for (const stateName of currentStates) {
                 if (!previousStates.has(stateName)) {
                     const isMe = playerKey === currentPlayer.playerKey;
-                    const isFirst = gameData?.claimedStates?.[stateName]?.playerKey === playerKey;
+                    const isFirst = gameData?.claimedSpecies?.[stateName]?.playerKey === playerKey;
                     if (isMe) {
                         playChime(isFirst);
                     } else {
@@ -3481,7 +3479,7 @@ function renderChatMessages() {
 
 async function sendChatMessage() {
     if (!currentGameRef || !currentPlayer) return;
-    if ((getMyEffects().deadBattery || 0) > Date.now()) { showToast('🔋 Dead Battery! Your chat is disabled.', 'error'); return; }
+    if ((getMyEffects().deadBattery || 0) > Date.now()) { showToast('🔋 Lost Binoculars! Your chat is disabled.', 'error'); return; }
     const input = document.getElementById('chatInput');
     const message = input?.value.trim();
     if (!message) return;
@@ -3578,12 +3576,12 @@ async function runAuditCorrections() {
     try {
         const updates = {};
 
-        // Plate first-finder fixes
+        // Animal first-finder fixes
         corrections.forEach(c => {
             if (c.type === 'remove') {
-                updates[`claimedStates/${c.stateName}`] = null;
+                updates[`claimedSpecies/${c.stateName}`] = null;
             } else {
-                updates[`claimedStates/${c.stateName}`] = {
+                updates[`claimedSpecies/${c.stateName}`] = {
                     state: c.stateName, playerKey: c.newPlayerKey,
                     name: c.newPlayerData.name, tag: c.newPlayerData.tag,
                     displayName: c.newPlayerData.displayName, claimedAt: c.foundAt,
@@ -3625,10 +3623,10 @@ async function runAuditCorrections() {
         const achItems = achievementCorrections.map(c =>
             `<div class="audit-item">🏆 <strong>${c.playerName}</strong>: ${c.achIcon} ${c.achName} awarded</div>`
         ).join('');
-        const overflow = corrections.length > MAX_SHOWN ? `<div class="audit-more">…and ${corrections.length - MAX_SHOWN} more plate fixes</div>` : '';
+        const overflow = corrections.length > MAX_SHOWN ? `<div class="audit-more">…and ${corrections.length - MAX_SHOWN} more animal fixes</div>` : '';
 
         const parts = [];
-        if (corrections.length) parts.push(`${corrections.length} plate record${corrections.length === 1 ? '' : 's'}`);
+        if (corrections.length) parts.push(`${corrections.length} animal record${corrections.length === 1 ? '' : 's'}`);
         if (regionCorrections.length) parts.push(`${regionCorrections.length} region record${regionCorrections.length === 1 ? '' : 's'}`);
         if (coinCorrections.length) parts.push(`${coinCorrections.length} coin balance${coinCorrections.length === 1 ? '' : 's'}`);
         if (achievementCorrections.length) parts.push(`${achievementCorrections.length} achievement${achievementCorrections.length === 1 ? '' : 's'}`);
@@ -3732,14 +3730,14 @@ async function denyRegionClearRequest(type, key) {
     catch (err) { showToast('Failed to deny request.', 'error'); }
 }
 
-// ── Plate First-Finder Dispute Flow ──────────────────────────────────────────
+// ── Animal First-Finder Dispute Flow ──────────────────────────────────────────
 
 async function requestPlateDispute(stateName) {
     if (!currentGameRef || !currentPlayer) return;
     const existing = gameData?.plateDisputeRequests?.[stateName];
     if (existing) { showToast('Dispute already pending — waiting for host.', 'info'); return; }
-    const currentFirst = gameData?.claimedStates?.[stateName];
-    if (!currentFirst) { showToast('No first-finder record for this plate.', 'info'); return; }
+    const currentFirst = gameData?.claimedSpecies?.[stateName];
+    if (!currentFirst) { showToast('No first-finder record for this animal.', 'info'); return; }
     const myFoundAt = playersData[currentPlayer.playerKey]?.states?.[stateName]?.foundAt || 0;
     const myTime = formatFoundAt(myFoundAt) || 'unknown';
     const theirName = currentFirst.displayName || currentFirst.name || 'Unknown';
@@ -3780,7 +3778,7 @@ function showPlateDisputeToast(stateName, req) {
     const toast = document.createElement('div');
     toast.className = 'toast pack';
     toast.innerHTML = `
-        <div style="font-weight:700;margin-bottom:4px;">Plate Dispute — ${stateName}</div>
+        <div style="font-weight:700;margin-bottom:4px;">Animal Dispute — ${stateName}</div>
         <div style="font-size:13px;"><strong>${req.displayName}</strong>: ${myTime}<br>vs <strong>${req.currentFirstName}</strong>: ${theirTime}</div>
         <div class="clear-toast-btns">
             <button class="clear-toast-approve">✓ Reassign to ${req.displayName.split(' ')[0]}</button>
@@ -3796,7 +3794,7 @@ async function approvePlateDispute(stateName, req) {
     try {
         const playerData = playersData[req.playerKey];
         const updates = {};
-        updates[`claimedStates/${stateName}`] = {
+        updates[`claimedSpecies/${stateName}`] = {
             state: stateName,
             playerKey: req.playerKey,
             name: playerData?.name || req.displayName,
@@ -3862,7 +3860,7 @@ async function deselectWithBackup(stateName) {
     if (!currentGameRef || !currentPlayer) return;
     try {
         const stateData = playersData[currentPlayer.playerKey]?.states?.[stateName];
-        const isFirst = gameData?.claimedStates?.[stateName]?.playerKey === currentPlayer.playerKey;
+        const isFirst = gameData?.claimedSpecies?.[stateName]?.playerKey === currentPlayer.playerKey;
         const now = Date.now();
         const safeKey = stateName.replace(/[^a-zA-Z0-9_-]/g, '_');
         const backup = {
@@ -3886,7 +3884,7 @@ async function deselectWithBackup(stateName) {
         updateDiagnosticsPanel();
     } catch (err) {
         console.error('deselectWithBackup failed:', err);
-        showToast('Failed to remove plate.', 'error');
+        showToast('Failed to remove animal.', 'error');
     }
 }
 
@@ -4002,9 +4000,9 @@ async function computeAuditCorrections() {
         const room = snapshot.val();
         if (!room) return null;
         const players = normalizePlayers(room.players || {});
-        const currentClaims = room.claimedStates || {};
+        const currentClaims = room.claimedSpecies || {};
 
-        // ── Plate first-finder corrections ───────────────────────────────────────
+        // ── Animal first-finder corrections ───────────────────────────────────────
         const earliestByState = {};
 
         // Seed with current claimers using their original claimedAt timestamp
@@ -4295,10 +4293,10 @@ function computePlayerStats(playerKey) {
     const foundSet = new Set(Object.keys(player.states || {}));
     const foundCount = foundSet.size;
     const firstCount = Array.from(foundSet).filter(
-        name => gameData?.claimedStates?.[name]?.playerKey === playerKey
+        name => gameData?.claimedSpecies?.[name]?.playerKey === playerKey
     ).length;
 
-    // Base plate score — rarity is route-aware (BFS from corridor, or GPS-based per-plate)
+    // Base animal score — rarity is route-aware (BFS from corridor, or GPS-based per-animal)
     const corridor = gameData?.settings?.playAreaStates || [];
     const useGps = gameData?.settings?.gpsRarity;
     let score = 0;
@@ -4308,7 +4306,7 @@ function computePlayerStats(playerKey) {
         const effectiveCorridor = (useGps && stateData?.foundNearState) ? [stateData.foundNearState] : corridor;
         const tier = computeRarityForState(name, effectiveCorridor);
         const pts = RARITY_CONFIG[tier].points;
-        const isFirst = gameData?.claimedStates?.[name]?.playerKey === playerKey;
+        const isFirst = gameData?.claimedSpecies?.[name]?.playerKey === playerKey;
         const multiplier = (isFirst && name === luckyStateName) ? 3 : 1;
         score += isFirst ? pts * multiplier : pts / 2;
     });
@@ -4379,9 +4377,9 @@ const ELITE_BADGE_STATES = {
     'territory_hunter': ['Puerto Rico', 'US Virgin Islands', 'American Samoa', 'Guam', 'Northern Mariana Islands'],
 };
 
-function getBadgeDetailItems(badgeId, playerStates, claimedStates, corridorStates, playerKey) {
+function getBadgeDetailItems(badgeId, playerStates, claimedSpecies, corridorStates, playerKey) {
     const ps = playerStates || {};
-    const toItem = name => ps[name] ? { name, foundAt: ps[name].foundAt, isFirst: claimedStates?.[name]?.playerKey === playerKey } : null;
+    const toItem = name => ps[name] ? { name, foundAt: ps[name].foundAt, isFirst: claimedSpecies?.[name]?.playerKey === playerKey } : null;
     const sortByTime = items => [...items].sort((a, b) => (a.foundAt || 0) - (b.foundAt || 0));
 
     if (badgeId.startsWith('region_')) {
@@ -4398,11 +4396,11 @@ function getBadgeDetailItems(badgeId, playerStates, claimedStates, corridorState
         return sortByTime(ELITE_BADGE_STATES[badgeId].map(toItem).filter(Boolean));
     }
     if (badgeId.startsWith('milestone_')) {
-        return sortByTime(Object.entries(ps).map(([name, d]) => ({ name, foundAt: d.foundAt, isFirst: claimedStates?.[name]?.playerKey === playerKey })));
+        return sortByTime(Object.entries(ps).map(([name, d]) => ({ name, foundAt: d.foundAt, isFirst: claimedSpecies?.[name]?.playerKey === playerKey })));
     }
     if (badgeId.startsWith('ff_')) {
         return sortByTime(Object.entries(ps)
-            .filter(([name]) => claimedStates?.[name]?.playerKey === playerKey)
+            .filter(([name]) => claimedSpecies?.[name]?.playerKey === playerKey)
             .map(([name, d]) => ({ name, foundAt: d.foundAt, isFirst: true })));
     }
     return [];
@@ -4416,7 +4414,7 @@ function openBadgeDetail(badgeId, playerKey) {
     if (!overlay) return;
     document.getElementById('badgeDetailTitle').textContent = `${badge.icon} ${badge.label}`;
     document.getElementById('badgeDetailDesc').textContent = badge.desc;
-    const items = getBadgeDetailItems(badgeId, player.states, gameData?.claimedStates, gameData?.settings?.playAreaStates || [], playerKey);
+    const items = getBadgeDetailItems(badgeId, player.states, gameData?.claimedSpecies, gameData?.settings?.playAreaStates || [], playerKey);
     const list = document.getElementById('badgeDetailList');
     list.innerHTML = items.length
         ? items.map(({ name, foundAt, isFirst }) =>
@@ -4469,7 +4467,7 @@ function openPlayerDetail(playerKey) {
             const tier = computeRarityForState(name, effectiveCorridor);
             if (!byTier[tier]) byTier[tier] = { count: 0, pts: 0 };
             const pts = RARITY_CONFIG[tier].points;
-            const isFirst = gameData?.claimedStates?.[name]?.playerKey === playerKey;
+            const isFirst = gameData?.claimedSpecies?.[name]?.playerKey === playerKey;
             byTier[tier].count++;
             byTier[tier].pts += isFirst ? pts : pts / 2;
         });
@@ -4477,7 +4475,7 @@ function openPlayerDetail(playerKey) {
         const rows = tierOrder.filter(t => byTier[t]).map(t => {
             const cfg = RARITY_CONFIG[t];
             const d = byTier[t];
-            return `<div class="breakdown-row"><span class="rarity-badge rarity-${t}">${cfg.label}</span><span class="breakdown-count">${d.count} plate${d.count !== 1 ? 's' : ''}</span><span class="breakdown-pts">${d.pts} pts</span></div>`;
+            return `<div class="breakdown-row"><span class="rarity-badge rarity-${t}">${cfg.label}</span><span class="breakdown-count">${d.count} animal${d.count !== 1 ? 's' : ''}</span><span class="breakdown-pts">${d.pts} pts</span></div>`;
         });
         (stats.completedSubBonuses || []).forEach(({ key, label, bonus, isFirst }) => {
             const firstHolder = gameData?.completedSubRegions?.[key];
@@ -4506,10 +4504,10 @@ function openPlayerDetail(playerKey) {
                 : '';
             rows.push(`<div class="breakdown-row breakdown-bonus"><span class="breakdown-bonus-label">🛣️ Corridor Complete</span><span class="breakdown-count">${stats.corridorBonus === 150 ? '1st' : 'later'}</span><span class="breakdown-pts">+${stats.corridorBonus || 75} pts</span>${disputeBtn}</div>`);
         }
-        breakdownEl.innerHTML = rows.join('') || '<div class="detail-empty">No plates found yet.</div>';
+        breakdownEl.innerHTML = rows.join('') || '<div class="detail-empty">No animals found yet.</div>';
     }
 
-    // Found plates chips sorted rarity-first
+    // Found animals chips sorted rarity-first
     const foundGrid = document.getElementById('detailFoundGrid');
     if (foundGrid) {
         const tierRank = { global: 0, international: 1, ultra: 2, 'gold-elite': 3, 'silver-elite': 4, legendary: 5, epic: 6, 'mega-rare': 7, rare: 8, 'semi-rare': 9, scarce: 10, occasional: 11, common: 12 };
@@ -4527,16 +4525,16 @@ function openPlayerDetail(playerKey) {
             const ec = (detailUseGps && sd?.foundNearState) ? [sd.foundNearState] : detailCorridor;
             const tier = computeRarityForState(name, ec);
             const abbr = allPlates.find(p => p.name === name)?.abbr || name.slice(0, 2).toUpperCase();
-            const isFirst = gameData?.claimedStates?.[name]?.playerKey === playerKey;
+            const isFirst = gameData?.claimedSpecies?.[name]?.playerKey === playerKey;
             const ts = formatFoundAt(sd?.foundAt);
-            const canDispute = isMe && !isFirst && gameData?.claimedStates?.[name];
+            const canDispute = isMe && !isFirst && gameData?.claimedSpecies?.[name];
             const pendingDispute = gameData?.plateDisputeRequests?.[name];
             const safeState = name.replace(/'/g, "\\'");
             const disputeEl = canDispute
                 ? `<div class="found-chip-dispute" onclick="event.stopPropagation();requestPlateDispute('${safeState}')">${pendingDispute ? '⏳' : '⚑'}</div>`
                 : '';
             return `<div class="found-chip rarity-chip-${tier}" title="${name}${isFirst ? ' — First Find!' : ''}${canDispute ? ' — Tap ⚑ to dispute' : ''}"><div class="found-chip-abbr">${abbr}${isFirst ? '⭐' : ''}</div>${ts ? `<div class="found-chip-time">${ts}</div>` : ''}${disputeEl}</div>`;
-        }).join('') || '<div class="detail-empty">No plates found yet.</div>';
+        }).join('') || '<div class="detail-empty">No animals found yet.</div>';
     }
 
     // Achievements
@@ -4570,9 +4568,9 @@ function openPlayerDetail(playerKey) {
                     <div class="h2h-stat"><div class="h2h-val">${stats.score}</div><div class="h2h-lbl">${player.displayName}</div></div>
                 </div>
                 <div class="h2h-row">
-                    <div class="h2h-stat"><div class="h2h-val">${myStats.foundCount}</div><div class="h2h-lbl">Your plates</div></div>
+                    <div class="h2h-stat"><div class="h2h-val">${myStats.foundCount}</div><div class="h2h-lbl">Your animals</div></div>
                     <div class="h2h-vs">vs</div>
-                    <div class="h2h-stat"><div class="h2h-val">${stats.foundCount}</div><div class="h2h-lbl">plates</div></div>
+                    <div class="h2h-stat"><div class="h2h-val">${stats.foundCount}</div><div class="h2h-lbl">animals</div></div>
                 </div>`;
             h2hSection.style.display = '';
         } else {
@@ -4605,23 +4603,23 @@ async function endGame() {
     }
 }
 
-// ── Lucky Plate + Hidden Chests ───────────────────────────────────────────────
+// ── Rare Sighting + Hidden Chests ───────────────────────────────────────────────
 
 const CHEST_PRIZES = [
     { prize: 'coins', amount: 30 },
     { prize: 'coins', amount: 50 },
     { prize: 'coins', amount: 75 },
-    { prize: 'trick', effectKey: 'blender',   name: 'Blender',      icon: '🌀' },
-    { prize: 'trick', effectKey: 'freeze',    name: 'Time Freeze',  icon: '⏸️' },
-    { prize: 'trick', effectKey: 'fog',       name: 'Fog of War',   icon: '🌫️' },
-    { prize: 'trick', effectKey: 'oilSlick',    name: 'Oil Slick',    icon: '🛢️' },
-    { prize: 'trick', effectKey: 'haze',        name: 'Haze',         icon: '🌁' },
-    { prize: 'trick', effectKey: 'wrongWay',    name: 'Wrong Way',    icon: '🔃' },
-    { prize: 'trick', effectKey: 'speedTrap',   name: 'Speed Trap',   icon: '🚔' },
-    { prize: 'trick', effectKey: 'deadBattery', name: 'Dead Battery', icon: '🔋' },
-    { prize: 'self',  effectKey: 'ghost',       name: 'Ghost Mode',   icon: '👻' },
-    { prize: 'self',  effectKey: 'decoy',       name: 'Decoy',        icon: '🎭' },
-    { prize: 'shield', name: 'Shield', icon: '🛡️' },
+    { prize: 'trick', effectKey: 'blender',   name: 'Shuffle Brush',      icon: '🌀' },
+    { prize: 'trick', effectKey: 'freeze',    name: 'Hibernation',  icon: '⏸️' },
+    { prize: 'trick', effectKey: 'fog',       name: 'Camouflage',   icon: '🌫️' },
+    { prize: 'trick', effectKey: 'oilSlick',    name: 'Mud Slide',    icon: '🛢️' },
+    { prize: 'trick', effectKey: 'haze',        name: 'Morning Fog',         icon: '🌁' },
+    { prize: 'trick', effectKey: 'wrongWay',    name: 'Migration Mix-up',    icon: '🔃' },
+    { prize: 'trick', effectKey: 'speedTrap',   name: 'Predator Alert',   icon: '🚔' },
+    { prize: 'trick', effectKey: 'deadBattery', name: 'Lost Binoculars', icon: '🔋' },
+    { prize: 'self',  effectKey: 'ghost',       name: 'Cryptid Mode',   icon: '👻' },
+    { prize: 'self',  effectKey: 'decoy',       name: 'Decoy Call',        icon: '🎭' },
+    { prize: 'shield', name: 'Burrow', icon: '🛡️' },
 ];
 
 async function assignGamePrizes(gameCode, plateScope) {
@@ -4645,7 +4643,7 @@ function detectLuckyPlateReveal() {
     if (!found || found.foundAt === lastKnownLuckyFound) return;
     lastKnownLuckyFound = found.foundAt;
     if (found.foundByKey === currentPlayer?.playerKey) return; // showed in toggleState
-    showToast(`🍀 ${found.foundBy} found the Lucky Plate — ${found.stateName}! Triple points!`, 'success');
+    showToast(`🍀 ${found.foundBy} found the Rare Sighting — ${found.stateName}! Triple points!`, 'success');
 }
 
 // ── Streaks ───────────────────────────────────────────────────────────────────
@@ -4668,7 +4666,7 @@ async function updateStreak(playerKey) {
     if (bonus) {
         bonusCoins = bonus.coins;
         currentGameRef.child(`players/${playerKey}/coins`).transaction(c => (c || 0) + bonusCoins).catch(() => {});
-        showToast(`🔥 ${newCount}-plate streak! +${bonusCoins}🪙 bonus!`, 'success');
+        showToast(`🔥 ${newCount}-animal streak! +${bonusCoins}🪙 bonus!`, 'success');
     }
 }
 
@@ -4863,9 +4861,9 @@ function openThiefModal(cost) {
     const corridor = gameData?.settings?.playAreaStates || [];
     const others = Object.values(playersData).filter(p => p.playerKey !== currentPlayer.playerKey);
     const playerRows = others.map(p => {
-        const plates = Object.keys(p.states || {});
+        const animals = Object.keys(p.states || {});
         let bestPlate = null, bestPts = -1;
-        for (const name of plates) {
+        for (const name of animals) {
             const tier = computeRarityForState(name, corridor);
             const pts = RARITY_CONFIG[tier]?.points || 0;
             if (pts > bestPts) { bestPts = pts; bestPlate = name; }
@@ -4873,8 +4871,8 @@ function openThiefModal(cost) {
         const disabled = !bestPlate;
         const icon = resolvePlayerIcon(p);
         const label = disabled
-            ? `<span class="thief-no-plates">No plates yet</span>`
-            : `<span class="thief-plate-preview">${bestPlate} <span class="thief-pts">${bestPts} pts</span></span>`;
+            ? `<span class="thief-no-animals">No animals yet</span>`
+            : `<span class="thief-animal-preview">${bestPlate} <span class="thief-pts">${bestPts} pts</span></span>`;
         return `<button class="thief-player-btn${disabled ? ' disabled' : ''}" ${disabled ? 'disabled' : `onclick="executeThief('${p.playerKey}',${cost})"`}>
             <span class="thief-player-icon">${icon}</span>
             <span class="thief-player-name">${escapeHtml(p.displayName || '?')}</span>
@@ -4887,10 +4885,10 @@ function openThiefModal(cost) {
     overlay.innerHTML = `
         <div class="bounty-sheet" style="max-width:500px;margin:0 auto;">
             <div class="bounty-header">
-                <span class="bounty-title">🌙 Thief in the Night</span>
+                <span class="bounty-title">🌙 Poacher</span>
                 <button onclick="closeThiefModal()" style="background:none;border:none;color:#7f8c8d;font-size:22px;cursor:pointer;padding:0 4px;">✕</button>
             </div>
-            <p class="bounty-desc">Pick a target — steal their highest-value plate. They lose it permanently.</p>
+            <p class="bounty-desc">Pick a target — steal their highest-value animal. They lose it permanently.</p>
             <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">${playerRows || '<p style="opacity:.6;text-align:center;color:#95a5a6">No other players in the pack.</p>'}</div>
         </div>`;
     document.body.appendChild(overlay);
@@ -4913,14 +4911,14 @@ async function executeThief(targetPlayerKey, cost) {
         return;
     }
     const corridor = gameData?.settings?.playAreaStates || [];
-    const plates = Object.keys(target.states || {});
+    const animals = Object.keys(target.states || {});
     let bestPlate = null, bestPts = -1;
-    for (const name of plates) {
+    for (const name of animals) {
         const tier = computeRarityForState(name, corridor);
         const pts = RARITY_CONFIG[tier]?.points || 0;
         if (pts > bestPts) { bestPts = pts; bestPlate = name; }
     }
-    if (!bestPlate) { showToast(`${target.displayName || '?'} has no plates to steal!`, 'info'); return; }
+    if (!bestPlate) { showToast(`${target.displayName || '?'} has no animals to steal!`, 'info'); return; }
     const stateRecord = { state: bestPlate, foundAt: firebase.database.ServerValue.TIMESTAMP, foundBy: currentPlayer.displayName, foundByKey: currentPlayer.playerKey, stolenFrom: target.displayName || '?' };
     await currentGameRef.update({
         [`players/${currentPlayer.playerKey}/coins`]: firebase.database.ServerValue.increment(-cost),
@@ -4931,7 +4929,7 @@ async function executeThief(targetPlayerKey, cost) {
         senderKey: currentPlayer.playerKey,
         senderName: currentPlayer.displayName,
         targetKeys: [targetPlayerKey],
-        message: `🌙 Thief in the Night stole your ${bestPlate}!`,
+        message: `🌙 Poacher stole your ${bestPlate}!`,
         sentAt: firebase.database.ServerValue.TIMESTAMP,
     });
     showToast(`🌙 Stole ${bestPlate} from ${target.displayName || '?'}!`, 'success');
@@ -4963,10 +4961,10 @@ async function claimBounty(stateName) {
     awardManualAchievement('bounty_hunter');
 }
 
-// ── Speed Round ───────────────────────────────────────────────────────────────
+// ── Migration Sprint ───────────────────────────────────────────────────────────────
 
 function openSpeedRoundModal() {
-    if (gameData?.speedRound?.active) { showToast('A speed round is already running!', 'info'); return; }
+    if (gameData?.speedRound?.active) { showToast('A migration sprint is already running!', 'info'); return; }
     const modal = document.getElementById('speedRoundModal');
     if (modal) modal.style.display = 'flex';
 }
@@ -4981,7 +4979,7 @@ async function startSpeedRound(durationMs) {
     if (!currentGameRef || gameData?.hostPlayerKey !== currentPlayer?.playerKey) return;
     const startedAt = Date.now();
     await currentGameRef.update({ speedRound: { active: true, startedAt, durationMs } });
-    showToast(`⚡ Speed Round started! ${durationMs / 60000} minutes — go!`, 'success');
+    showToast(`⚡ Migration Sprint started! ${durationMs / 60000} minutes — go!`, 'success');
 }
 
 function detectSpeedRound() {
@@ -5044,8 +5042,8 @@ async function finalizeSpeedRound(sr) {
     });
     await currentGameRef.update(updates).catch(() => {});
 
-    const lines = results.slice(0, 3).map((r, i) => `${['🥇','🥈','🥉'][i]} ${r.displayName}: ${r.count} plates (+${SPEED_PRIZES[i]}🪙)`).join('\n');
-    const summary = results.length ? `⚡ Speed Round over!\n${lines}` : '⚡ Speed Round over — no plates found!';
+    const lines = results.slice(0, 3).map((r, i) => `${['🥇','🥈','🥉'][i]} ${r.displayName}: ${r.count} animals (+${SPEED_PRIZES[i]}🪙)`).join('\n');
+    const summary = results.length ? `⚡ Migration Sprint over!\n${lines}` : '⚡ Migration Sprint over — no animals found!';
     showToast(summary, 'success');
     const myRank = results.findIndex(r => r.playerKey === currentPlayer?.playerKey);
     if (myRank >= 0 && myRank <= 2) awardManualAchievement('speed_podium');
@@ -5106,7 +5104,7 @@ function detectBlackout() {
     blackoutWon = true;
     currentGameRef?.child(`players/${currentPlayer.playerKey}/coins`)
         .transaction(c => (c || 0) + BLACKOUT_BONUS).catch(() => {});
-    showToast(`🏁 BLACKOUT! You found every plate! +${BLACKOUT_BONUS}🪙`, 'success');
+    showToast(`🏁 BLACKOUT! You found every animal! +${BLACKOUT_BONUS}🪙`, 'success');
 }
 
 // ── Secret Target ─────────────────────────────────────────────────────────────
@@ -5243,7 +5241,7 @@ function openSuddenDeathModal() {
     if (select) {
         select.innerHTML = '';
         const entries = getActivePlateEntries(gameData?.settings?.plateScope);
-        const unclaimed = entries.filter(e => !gameData?.claimedStates?.[e.name]);
+        const unclaimed = entries.filter(e => !gameData?.claimedSpecies?.[e.name]);
         (unclaimed.length ? unclaimed : entries).forEach(e => {
             const opt = document.createElement('option');
             opt.value = e.name;
@@ -5260,11 +5258,11 @@ function closeSuddenDeathModal() {
 }
 
 async function startSuddenDeath() {
-    const plate = document.getElementById('suddenDeathPlateSelect')?.value;
-    if (!plate || !currentGameRef) return;
+    const animal = document.getElementById('suddenDeathPlateSelect')?.value;
+    if (!animal || !currentGameRef) return;
     closeSuddenDeathModal();
-    await currentGameRef.update({ suddenDeath: { plate, active: true, startedAt: Date.now(), announcedBy: currentPlayer.displayName } });
-    showToast(`🔔 SUDDEN DEATH: Find ${plate} first!`, 'success');
+    await currentGameRef.update({ suddenDeath: { animal, active: true, startedAt: Date.now(), announcedBy: currentPlayer.displayName } });
+    showToast(`🔔 SUDDEN DEATH: Find ${animal} first!`, 'success');
 }
 
 async function winSuddenDeath(stateName) {
@@ -5286,13 +5284,13 @@ function detectSuddenDeath() {
     if (sd?.active) {
         banner.style.display = '';
         const plateEl = document.getElementById('suddenDeathBannerPlate');
-        if (plateEl) plateEl.textContent = sd.plate;
+        if (plateEl) plateEl.textContent = sd.animal;
     } else {
         banner.style.display = 'none';
         if (sd?.winnerKey && sd.wonAt !== lastKnownSuddenDeathWinner) {
             lastKnownSuddenDeathWinner = sd.wonAt;
             if (sd.winnerKey !== currentPlayer?.playerKey) {
-                showToast(`🔔 ${sd.winnerName} won Sudden Death — found ${sd.plate}! +150🪙`, 'info');
+                showToast(`🔔 ${sd.winnerName} won Sudden Death — found ${sd.animal}! +150🪙`, 'info');
             }
         }
     }
@@ -5319,7 +5317,7 @@ async function claimChest(stateName) {
         showToast(`🎁 Chest! ${chest.icon} ${chest.name} activated on the pack!`, 'success');
     } else if (chest.prize === 'shield') {
         updates[`players/${currentPlayer.playerKey}/effects/shield`] = true;
-        showToast('🎁 Chest! 🛡️ Shield equipped!', 'success');
+        showToast('🎁 Chest! 🛡️ Burrow equipped!', 'success');
     } else if (chest.prize === 'self') {
         const shopItem = SHOP_ITEMS.find(i => i.effectKey === chest.effectKey);
         const expiry = Date.now() + (shopItem?.duration || 5 * 60 * 1000);
@@ -5336,7 +5334,7 @@ async function revealLuckyPlate(stateName) {
         luckyPlateFound: { stateName, foundBy: currentPlayer.displayName, foundByKey: currentPlayer.playerKey, foundAt: Date.now() },
         [`players/${currentPlayer.playerKey}/coins`]: firebase.database.ServerValue.increment(bonusCoins),
     });
-    showToast(`🍀 YOU found the Lucky Plate — ${stateName}! Triple points + ${bonusCoins}🪙!`, 'success');
+    showToast(`🍀 YOU found the Rare Sighting — ${stateName}! Triple points + ${bonusCoins}🪙!`, 'success');
 }
 
 async function rerollPrizes() {
@@ -5349,14 +5347,14 @@ async function rerollPrizes() {
 async function startNewRound() {
     if (!currentGameRef || !currentPlayer) return;
     if (gameData?.hostPlayerKey !== currentPlayer.playerKey) return;
-    if (!confirm('Start a new round? This wipes all plates, first-finders, and region completions for everyone. Pack stays together.')) return;
+    if (!confirm('Start a new round? This wipes all animals, first-finders, and region completions for everyone. Pack stays together.')) return;
     try {
         const snap = await currentGameRef.once('value');
         const room = snap.val();
         if (!room) return;
         const updates = {};
         Object.keys(room.players || {}).forEach(pKey => { updates[`players/${pKey}/states`] = {}; });
-        updates.claimedStates = null;
+        updates.claimedSpecies = null;
         updates.completedSubRegions = null;
         updates.completedRegions = null;
         updates.completedCorridor = null;
@@ -5386,14 +5384,14 @@ async function startNewRound() {
 async function resetCurrentRound() {
     if (!currentGameRef || !currentPlayer) return;
     if (gameData?.hostPlayerKey !== currentPlayer.playerKey) return;
-    if (!confirm('Reset this round? Wipes all plates, first-finders, and region completions for everyone — but keeps the round number the same. Pack stays together.')) return;
+    if (!confirm('Reset this round? Wipes all animals, first-finders, and region completions for everyone — but keeps the round number the same. Pack stays together.')) return;
     try {
         const snap = await currentGameRef.once('value');
         const room = snap.val();
         if (!room) return;
         const updates = {};
         Object.keys(room.players || {}).forEach(pKey => { updates[`players/${pKey}/states`] = {}; });
-        updates.claimedStates = null;
+        updates.claimedSpecies = null;
         updates.completedSubRegions = null;
         updates.completedRegions = null;
         updates.completedCorridor = null;
@@ -5457,49 +5455,49 @@ function generatePlayerSummary(playerKey, rank, sortedKeys) {
     let main;
     if (found === 0) {
         main = pick([
-            `${firstName} was deeply immersed in the journey — just not the plate-spotting part. Zero plates, but reportedly excellent company.`,
-            `Did ${firstName} see any plates? The data says no. But we choose to believe they were keeping watch for hazards. Important work.`,
-            `${firstName} finished with a spotless record — and by spotless we mean zero plates spotted. There's always next mile.`,
+            `${firstName} was deeply immersed in the journey — just not the animal-spotting part. Zero animals, but reportedly excellent company.`,
+            `Did ${firstName} see any animals? The data says no. But we choose to believe they were keeping watch for hazards. Important work.`,
+            `${firstName} finished with a spotless record — and by spotless we mean zero animals spotted. There's always next mile.`,
         ]);
     } else if (isWinner) {
         main = pick([
-            `Absolute road royalty. ${score} points, ${found} plates, and the undeniable confidence of someone who's been doing this since birth. Nobody came close.`,
-            `The pack's MVP — ${found} plates and ${firsts} first-finds isn't just good, it's suspiciously good. We're not saying ${firstName} has a deal with the highway gods, but...`,
+            `Absolute road royalty. ${score} points, ${found} animals, and the undeniable confidence of someone who's been doing this since birth. Nobody came close.`,
+            `The pack's MVP — ${found} animals and ${firsts} first-finds isn't just good, it's suspiciously good. We're not saying ${firstName} has a deal with the highway gods, but...`,
             `Finished first with ${score} points and left the competition so far behind they needed binoculars just to see the scoreboard. Dominant. Decisive. Done.`,
-            `Champion of the road, ruler of the rearview, collector of ${found} plates. ${score} points. The crown fits perfectly.`,
+            `Champion of the road, ruler of the rearview, collector of ${found} animals. ${score} points. The crown fits perfectly.`,
         ]);
     } else if (isLast && total >= 3) {
         main = pick([
-            `Dead last? Sure. But ${found} plates and ${score} points means ${firstName} was genuinely playing — just at a more relaxed pace. Very scenic.`,
-            `Last place in a field of ${total} is still top ${Math.round((rank / total) * 100)}%. That's how stats work sometimes. ${found} plates, ${score} points — no shame here.`,
+            `Dead last? Sure. But ${found} animals and ${score} points means ${firstName} was genuinely playing — just at a more relaxed pace. Very scenic.`,
+            `Last place in a field of ${total} is still top ${Math.round((rank / total) * 100)}%. That's how stats work sometimes. ${found} animals, ${score} points — no shame here.`,
             `${firstName} brought up the rear with ${score} points, which honestly takes courage. The view from the back of the pack is great — less pressure, more snacks.`,
-            `The caboose of the pack, but cabooses are iconic. ${score} points, ${found} plates, and a spirit that carried everyone through. At least ${firstName} personally.`,
+            `The caboose of the pack, but cabooses are iconic. ${score} points, ${found} animals, and a spirit that carried everyone through. At least ${firstName} personally.`,
         ]);
     } else if (rank === 2) {
         const winnerName = (playersData[sortedKeys[0]]?.name || 'first place').split(' ')[0];
         main = pick([
-            `Silver. ${score} points, ${found} plates, and genuine dignity about it. Just a few unlucky seconds away from the top all game.`,
+            `Silver. ${score} points, ${found} animals, and genuine dignity about it. Just a few unlucky seconds away from the top all game.`,
             `Runner-up with ${score} points — behind ${winnerName} technically, but have you seen ${winnerName}'s stats? That's a monster. Second is perfectly respectable.`,
-            `So close to first it stings a little. ${score} points and ${found} plates says this was no accident — ${firstName} was absolutely here to compete.`,
+            `So close to first it stings a little. ${score} points and ${found} animals says this was no accident — ${firstName} was absolutely here to compete.`,
         ]);
     } else if (rank === 3 && total >= 4) {
         main = pick([
-            `Bronze is a medal. Bronze is ALWAYS a medal. ${score} points, ${found} plates, and the determination to keep spotting until the very end.`,
-            `Top three out of ${total} — ${firstName} beat ${total - 3} people. Let that sink in. ${score} points and ${found} plates. That's a podium finish.`,
-            `Third place! ${score} points and ${found} plates locked in the final medal position. Not bad for someone riding in a car.`,
+            `Bronze is a medal. Bronze is ALWAYS a medal. ${score} points, ${found} animals, and the determination to keep spotting until the very end.`,
+            `Top three out of ${total} — ${firstName} beat ${total - 3} people. Let that sink in. ${score} points and ${found} animals. That's a podium finish.`,
+            `Third place! ${score} points and ${found} animals locked in the final medal position. Not bad for someone riding in a car.`,
         ]);
     } else {
         main = pick([
-            `A solid ${ordinalSuffix(rank)}-place finish with ${score} points and ${found} plates found. Consistent, reliable, and genuinely fun to play with.`,
-            `${ordinalSuffix(rank)} out of ${total} with ${score} points. ${firstName} held their own — ${found} plates don't find themselves.`,
-            `Finished ${ordinalSuffix(rank)} with ${score} points and ${found} plates, proving you don't need first place to have an excellent adventure.`,
+            `A solid ${ordinalSuffix(rank)}-place finish with ${score} points and ${found} animals found. Consistent, reliable, and genuinely fun to play with.`,
+            `${ordinalSuffix(rank)} out of ${total} with ${score} points. ${firstName} held their own — ${found} animals don't find themselves.`,
+            `Finished ${ordinalSuffix(rank)} with ${score} points and ${found} animals, proving you don't need first place to have an excellent adventure.`,
         ]);
     }
 
     const bonuses = [];
     if (corridorDone) bonuses.push(pick([
         'Also completed the full travel corridor — an achievement that even cartographers would applaud.',
-        'Knocked out the entire corridor, which requires a level of plate-spotting intensity normally reserved for professionals.',
+        'Knocked out the entire corridor, which requires a level of animal-spotting intensity normally reserved for professionals.',
     ]));
     if (foundAK && foundHI) bonuses.push(pick([
         'Snagged BOTH Alaska AND Hawaii — those don\'t just drive by. That\'s elite-tier spotting right there.',
@@ -5508,15 +5506,15 @@ function generatePlayerSummary(playerKey, rank, sortedKeys) {
     else if (foundAK) bonuses.push('Also somehow spotted Alaska, which is either incredibly lucky or incredibly focused.');
     else if (foundHI) bonuses.push('Hawaii made an appearance too — statistically improbable and deeply satisfying.');
     if (territoryCount >= 3) bonuses.push(pick([
-        `Racked up ${territoryCount} US territory plates — international explorer vibes on a domestic road trip.`,
-        `Found ${territoryCount} territories, which means those plates were ranging far and wide. Or ${firstName} has very sharp eyes.`,
+        `Racked up ${territoryCount} US territory animals — international explorer vibes on a domestic road trip.`,
+        `Found ${territoryCount} territories, which means those animals were ranging far and wide. Or ${firstName} has very sharp eyes.`,
     ]));
     if (completedCount >= 3) bonuses.push(pick([
         `Completed ${completedCount} regional bonus goals — the kind of strategic play that changes scoreboards.`,
-        `${completedCount} region completions. That's not just spotting plates, that's executing a geographic masterplan.`,
+        `${completedCount} region completions. That's not just spotting animals, that's executing a geographic masterplan.`,
     ]));
     if (firstRatio > 0.7 && firsts >= 5) bonuses.push(pick([
-        `With ${firsts} first-finds out of ${found} plates, ${firstName} was clearly on a mission to get there before everyone else.`,
+        `With ${firsts} first-finds out of ${found} animals, ${firstName} was clearly on a mission to get there before everyone else.`,
         `First-find ratio of ${Math.round(firstRatio * 100)}% — technically aggressive, officially impressive.`,
     ]));
     if (foundDC && !foundAK && !foundHI) bonuses.push('Even grabbed Washington DC, which a surprising number of players just completely miss.');
@@ -5555,7 +5553,7 @@ function showEndGameScreen() {
                     <div class="end-player-medal">${medal}</div>
                     <div>
                         <div class="end-player-name">${player.displayName || player.name || 'Player'}${isMe ? ' 🐺' : ''}</div>
-                        <div class="end-player-score">${player.score} pts · ${player.foundCount} plates · ${player.firstCount} first-finds</div>
+                        <div class="end-player-score">${player.score} pts · ${player.foundCount} animals · ${player.firstCount} first-finds</div>
                     </div>
                 </div>
                 <div class="end-player-summary">${summary}</div>
@@ -5592,7 +5590,7 @@ function shareEndGameResults() {
     const lines = [
         `🏁 AnimalQuest — ${gameData.name || 'Pack'} Final Results`,
         '',
-        ...sorted.map((p, i) => `${medals[i] || `#${i + 1}`} ${p.displayName || p.name} — ${p.score} pts · ${p.foundCount}/${totalPlates} plates · ${p.firstCount} first-finds`),
+        ...sorted.map((p, i) => `${medals[i] || `#${i + 1}`} ${p.displayName || p.name} — ${p.score} pts · ${p.foundCount}/${totalPlates} animals · ${p.firstCount} first-finds`),
         '',
         `Play at: ${window.location.origin}${window.location.pathname}`,
     ];
@@ -5613,14 +5611,14 @@ function buildPithyDescription(sorted, totalPlates) {
 
     if (anyAlaska && anyHawaii) return pick([
         'Alaska AND Hawaii spotted in the same game. This pack is elite.',
-        'Two mythical plates in one trip. The highway surrendered.',
+        'Two mythical animals in one trip. The highway surrendered.',
     ]);
     if (anyAlaska) return `Alaska appeared and ${winnerName} still dominated. Pure efficiency.`;
     if (anyHawaii) return `Hawaii showed up. ${winnerName} remained unfazed. True road royalty.`;
 
     if (n === 1) return pick([
-        `Solo run. ${winner.foundCount} plates, ${winner.score} pts. ${winnerName} doesn't need competition — just a highway.`,
-        `One player, ${winner.foundCount} plates, zero chill. ${winnerName} plays for keeps.`,
+        `Solo run. ${winner.foundCount} animals, ${winner.score} pts. ${winnerName} doesn't need competition — just a highway.`,
+        `One player, ${winner.foundCount} animals, zero chill. ${winnerName} plays for keeps.`,
     ]);
 
     if (margin === 0) return pick([
@@ -5635,21 +5633,21 @@ function buildPithyDescription(sorted, totalPlates) {
     ]);
 
     if (margin !== null && margin <= 15 && margin > 0) return pick([
-        `Final margin: ${margin} points. One more plate would have changed everything.`,
+        `Final margin: ${margin} points. One more animal would have changed everything.`,
         `${winnerName} by just ${margin} pts. The back seat saw that coming a mile away.`,
         `${margin} points separated legend from runner-up. ${winnerName} holds the crown.`,
     ]);
 
     if (totalFound > 60) return pick([
-        `A combined ${totalFound} plates spotted. The interstate has been fully reviewed.`,
-        `${totalFound} plates across ${n} road warriors. The highway had nowhere to hide.`,
+        `A combined ${totalFound} animals spotted. The interstate has been fully reviewed.`,
+        `${totalFound} animals across ${n} road warriors. The highway had nowhere to hide.`,
     ]);
 
     return pick([
-        `${n} players. ${totalFound} plates. ${winnerName} took the crown. Road trip complete.`,
-        `Pack closed. ${winnerName}: victorious. ${totalFound} plates documented. No notes.`,
+        `${n} players. ${totalFound} animals. ${winnerName} took the crown. Road trip complete.`,
+        `Pack closed. ${winnerName}: victorious. ${totalFound} animals documented. No notes.`,
         `${winnerName} wins with ${winner.score} pts. The road knew it before we did.`,
-        `Miles driven. Plates spotted. ${winnerName} emerged. Life is good.`,
+        `Miles driven. Animals spotted. ${winnerName} emerged. Life is good.`,
     ]);
 }
 
@@ -5766,7 +5764,7 @@ function renderWinnersCanvas(sorted, pithyDesc) {
         // Stats
         ctx.font = '13px system-ui, -apple-system, sans-serif';
         ctx.fillStyle = 'rgba(255,255,255,0.48)';
-        ctx.fillText(`${p.score} pts  ·  ${p.foundCount} plates  ·  ${p.firstCount} first-finds`, PL + 56, cardY + ROW_H / 2 + 16);
+        ctx.fillText(`${p.score} pts  ·  ${p.foundCount} animals  ·  ${p.firstCount} first-finds`, PL + 56, cardY + ROW_H / 2 + 16);
 
         // Rank coins if present
         if ((p.coins || 0) > 0) {
@@ -5814,7 +5812,7 @@ async function shareWinnersCircle() {
     const shareText = [
         `🏆 AnimalQuest — ${gameData.name || 'Pack'} Winners Circle`,
         '',
-        ...sorted.slice(0, 3).map((p, i) => `${medals[i]} ${p.displayName || p.name} — ${p.score} pts · ${p.foundCount}/${totalPlates} plates`),
+        ...sorted.slice(0, 3).map((p, i) => `${medals[i]} ${p.displayName || p.name} — ${p.score} pts · ${p.foundCount}/${totalPlates} animals`),
         '',
         pithyDesc,
         '',
@@ -5891,7 +5889,7 @@ function buildActivityEvents() {
 
     Object.values(playersData).forEach(player => {
         Object.entries(player.states || {}).forEach(([stateName, sd]) => {
-            const isFirst = gameData?.claimedStates?.[stateName]?.playerKey === player.playerKey;
+            const isFirst = gameData?.claimedSpecies?.[stateName]?.playerKey === player.playerKey;
             const ec = (useGps && sd?.foundNearState) ? [sd.foundNearState] : corridor;
             const tier = computeRarityForState(stateName, ec);
             const abbr = allPlates.find(p => p.name === stateName)?.abbr || stateName.slice(0, 2).toUpperCase();
@@ -5918,7 +5916,7 @@ function renderActivityFeed() {
     if (!body) return;
     const events = buildActivityEvents();
     if (!events.length) {
-        body.innerHTML = '<div class="activity-empty">No activity yet — start spotting plates!</div>';
+        body.innerHTML = '<div class="activity-empty">No activity yet — start spotting animals!</div>';
         return;
     }
     body.innerHTML = events.map(ev => {

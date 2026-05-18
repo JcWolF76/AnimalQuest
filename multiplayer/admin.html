@@ -93,12 +93,12 @@ button:disabled { opacity: 0.4; cursor: default; }
 .ticket-actions button:hover { background: rgba(255,255,255,0.14); }
 
 #plateList { display: flex; flex-direction: column; gap: 6px; }
-.plate-row { display: flex; align-items: center; gap: 10px; background: #0d1b2a; border: 1px solid #2e4a68; border-radius: 8px; padding: 8px 12px; cursor: pointer; transition: border-color 0.15s; }
-.plate-row:hover { border-color: #4a90d9; }
-.plate-row.selected { border-color: #1a73e8; background: rgba(26,115,232,0.1); }
-.plate-name { flex: 1; font-size: 14px; font-weight: 600; }
-.plate-ts { font-size: 12px; color: rgba(255,255,255,0.45); }
-.plate-first { font-size: 11px; color: #f1c40f; font-weight: 700; }
+.animal-row { display: flex; align-items: center; gap: 10px; background: #0d1b2a; border: 1px solid #2e4a68; border-radius: 8px; padding: 8px 12px; cursor: pointer; transition: border-color 0.15s; }
+.animal-row:hover { border-color: #4a90d9; }
+.animal-row.selected { border-color: #1a73e8; background: rgba(26,115,232,0.1); }
+.animal-name { flex: 1; font-size: 14px; font-weight: 600; }
+.animal-ts { font-size: 12px; color: rgba(255,255,255,0.45); }
+.animal-first { font-size: 11px; color: #f1c40f; font-weight: 700; }
 
 /* ── Editor ── */
 #editor .field-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 5px; }
@@ -235,9 +235,9 @@ button:disabled { opacity: 0.4; cursor: default; }
         </select>
     </div>
 
-    <!-- Plate list + editor -->
+    <!-- Animal list + editor -->
     <div class="card" id="platesCard" style="display:none">
-        <h3>Plates</h3>
+        <h3>Animals</h3>
         <div id="sortBar">
             <button class="secondary" onclick="sortPlates('alpha')">A–Z</button>
             <button class="secondary" onclick="sortPlates('ts-asc')">Oldest first</button>
@@ -259,7 +259,7 @@ button:disabled { opacity: 0.4; cursor: default; }
             </div>
             <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
                 <button class="secondary" onclick="setToNow()">Set to now</button>
-                <button class="danger" style="margin-left:auto" onclick="deletePlate()">Remove plate</button>
+                <button class="danger" style="margin-left:auto" onclick="deletePlate()">Remove animal</button>
             </div>
             <div id="editStatus"></div>
         </div>
@@ -588,7 +588,7 @@ async function deleteSelectedGames() {
 let gameRef = null;
 let gameData = null;
 let selectedPlayerKey = null;
-let plates = [];        // { name, foundAt, isFirst }
+let animals = [];        // { name, foundAt, isFirst }
 let sortMode = 'alpha';
 let selectedPlate = null;
 
@@ -617,7 +617,7 @@ async function loadGame() {
         document.getElementById('platesCard').style.display = 'none';
         document.getElementById('editorCard').style.display = 'none';
         selectedPlayerKey = null;
-        plates = [];
+        animals = [];
         // Clear status messages tied to the previously-loaded game so a stale
         // 'Renamed to X' or 'Removed Y' doesn't linger over a different game.
         const pms = document.getElementById('playerMgrStatus');
@@ -630,15 +630,15 @@ async function loadGame() {
     }
 }
 
-// ── Plate list ────────────────────────────────────────────────────────────────
+// ── Animal list ────────────────────────────────────────────────────────────────
 function loadPlates() {
     selectedPlayerKey = document.getElementById('playerSelect').value;
     if (!selectedPlayerKey || !gameData) return;
     const player = gameData.players[selectedPlayerKey];
     const states = player?.states || {};
-    const claims = gameData.claimedStates || {};
+    const claims = gameData.claimedSpecies || {};
 
-    plates = Object.entries(states).map(([name, data]) => ({
+    animals = Object.entries(states).map(([name, data]) => ({
         name,
         foundAt: typeof data.foundAt === 'number' ? data.foundAt : 0,
         isFirst: claims[name]?.playerKey === selectedPlayerKey,
@@ -653,27 +653,27 @@ function loadPlates() {
 
 function sortPlates(mode, render = true) {
     sortMode = mode;
-    if (mode === 'alpha') plates.sort((a, b) => a.name.localeCompare(b.name));
-    else if (mode === 'ts-asc') plates.sort((a, b) => a.foundAt - b.foundAt);
-    else if (mode === 'ts-desc') plates.sort((a, b) => b.foundAt - a.foundAt);
+    if (mode === 'alpha') animals.sort((a, b) => a.name.localeCompare(b.name));
+    else if (mode === 'ts-asc') animals.sort((a, b) => a.foundAt - b.foundAt);
+    else if (mode === 'ts-desc') animals.sort((a, b) => b.foundAt - a.foundAt);
     if (render) renderPlateList();
 }
 
 function renderPlateList() {
     const filter = document.getElementById('filterInput').value.toLowerCase();
     const container = document.getElementById('plateList');
-    const visible = filter ? plates.filter(p => p.name.toLowerCase().includes(filter)) : plates;
+    const visible = filter ? animals.filter(p => p.name.toLowerCase().includes(filter)) : animals;
 
-    if (!visible.length) { container.innerHTML = '<div style="color:rgba(255,255,255,0.35);font-size:13px;padding:8px 0">No plates found.</div>'; return; }
+    if (!visible.length) { container.innerHTML = '<div style="color:rgba(255,255,255,0.35);font-size:13px;padding:8px 0">No animals found.</div>'; return; }
 
     container.innerHTML = '';
-    visible.forEach(plate => {
+    visible.forEach(animal => {
         const row = document.createElement('div');
-        row.className = 'plate-row' + (selectedPlate === plate.name ? ' selected' : '');
-        const ts = plate.foundAt ? new Date(plate.foundAt).toLocaleString() : '—';
-        const firstTag = plate.isFirst ? '<span class="tag tag-first">1st</span>' : '<span class="tag tag-later">later</span>';
-        row.innerHTML = `<div class="plate-name">${plate.name}${firstTag}</div><div class="plate-ts">${ts}</div>`;
-        row.addEventListener('click', () => openEditor(plate.name, plate.foundAt));
+        row.className = 'animal-row' + (selectedPlate === animal.name ? ' selected' : '');
+        const ts = animal.foundAt ? new Date(animal.foundAt).toLocaleString() : '—';
+        const firstTag = animal.isFirst ? '<span class="tag tag-first">1st</span>' : '<span class="tag tag-later">later</span>';
+        row.innerHTML = `<div class="animal-name">${animal.name}${firstTag}</div><div class="animal-ts">${ts}</div>`;
+        row.addEventListener('click', () => openEditor(animal.name, animal.foundAt));
         container.appendChild(row);
     });
 }
@@ -714,10 +714,10 @@ async function saveTimestamp() {
         setStatus('editStatus', `✅ Saved — ${new Date(newTs).toLocaleString()}`, 'ok');
 
         // Update local cache
-        const plate = plates.find(p => p.name === selectedPlate);
-        if (plate) plate.foundAt = newTs;
+        const animal = animals.find(p => p.name === selectedPlate);
+        if (animal) animal.foundAt = newTs;
 
-        // Refresh claimedStates first-finder for this state based on new timestamps
+        // Refresh claimedSpecies first-finder for this state based on new timestamps
         await recomputeFirstFinder(selectedPlate);
         renderPlateList();
     } catch (err) {
@@ -732,19 +732,19 @@ async function deletePlate() {
     try {
         await gameRef.child(`players/${selectedPlayerKey}/states/${selectedPlate}`).remove();
         // Remove first-finder claim if this player held it
-        const snap = await gameRef.child(`claimedStates/${selectedPlate}`).once('value');
+        const snap = await gameRef.child(`claimedSpecies/${selectedPlate}`).once('value');
         if (snap.val()?.playerKey === selectedPlayerKey) {
-            await gameRef.child(`claimedStates/${selectedPlate}`).remove();
+            await gameRef.child(`claimedSpecies/${selectedPlate}`).remove();
         }
         setStatus('editStatus', `✅ ${selectedPlate} removed.`, 'ok');
-        plates = plates.filter(p => p.name !== selectedPlate);
+        animals = animals.filter(p => p.name !== selectedPlate);
         closeEditor();
     } catch (err) {
         setStatus('editStatus', 'Error: ' + err.message, 'err');
     }
 }
 
-// Recompute and update claimedStates first-finder for one state across all players
+// Recompute and update claimedSpecies first-finder for one state across all players
 async function recomputeFirstFinder(stateName) {
     if (!gameRef || !gameData) return;
     // Refresh full game snapshot to get latest timestamps
@@ -762,10 +762,10 @@ async function recomputeFirstFinder(stateName) {
     });
 
     if (!earliest) {
-        await gameRef.child(`claimedStates/${stateName}`).remove();
+        await gameRef.child(`claimedSpecies/${stateName}`).remove();
     } else {
         const pd = earliest.playerData;
-        await gameRef.child(`claimedStates/${stateName}`).set({
+        await gameRef.child(`claimedSpecies/${stateName}`).set({
             state: stateName,
             playerKey: earliest.playerKey,
             name: pd.name, tag: pd.tag,
@@ -774,9 +774,9 @@ async function recomputeFirstFinder(stateName) {
         });
     }
 
-    // Refresh local plate isFirst flags
-    const claims = gameData.claimedStates || {};
-    plates.forEach(p => { p.isFirst = claims[p.name]?.playerKey === selectedPlayerKey; });
+    // Refresh local animal isFirst flags
+    const claims = gameData.claimedSpecies || {};
+    animals.forEach(p => { p.isFirst = claims[p.name]?.playerKey === selectedPlayerKey; });
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -842,7 +842,7 @@ function renderPlayerMgr() {
         const coins = p.coins || 0;
         const isHost = key === gameData.hostPlayerKey;
         const row = document.createElement('div');
-        row.className = 'plate-row';
+        row.className = 'animal-row';
         row.style.cssText = 'cursor:default;flex-wrap:wrap';
         const shortKey = key.length > 36 ? key.slice(0, 36) + '…' : key;
         row.innerHTML = `
@@ -853,7 +853,7 @@ function renderPlayerMgr() {
                     ${isHost ? '<span style="color:#f1c40f;font-size:11px;margin-left:6px">★ host</span>' : ''}
                 </div>
                 <div style="font-size:11px;color:rgba(255,255,255,0.5);overflow:hidden;text-overflow:ellipsis">
-                    ${plateCount} plate${plateCount===1?'':'s'} · ${coins} coins · <span style="font-family:monospace">${shortKey}</span>
+                    ${plateCount} animal${plateCount===1?'':'s'} · ${coins} coins · <span style="font-family:monospace">${shortKey}</span>
                 </div>
             </div>
             <button class="secondary" data-action="rename" data-key="${key}" style="font-size:11px;padding:5px 10px;flex:0 0 auto">✏️</button>
@@ -908,7 +908,7 @@ async function openRenameFlow(playerKey) {
     }
 }
 
-// Reusable: rename one player in one game, also rewriting claimedStates + foundBy refs.
+// Reusable: rename one player in one game, also rewriting claimedSpecies + foundBy refs.
 // After the field update, auto-re-keys the record if the derived slug key
 // no longer matches the current playerKey (e.g. renamed Jc → JcWolF, so
 // jc__jcwolf needs to become jcwolf__jcwolf to match the device's derivation).
@@ -922,17 +922,17 @@ async function renamePlayerInGame(gameCode, playerKey, newName, newTag) {
     updates[`players/${playerKey}/displayName`] = displayName;
 
     // Update first-finder claims this player owns
-    const claimsSnap = await ref.child('claimedStates').once('value');
+    const claimsSnap = await ref.child('claimedSpecies').once('value');
     const claims = claimsSnap.val() || {};
     Object.entries(claims).forEach(([state, claim]) => {
         if (claim.playerKey === playerKey) {
-            updates[`claimedStates/${state}/name`] = newName;
-            updates[`claimedStates/${state}/tag`] = newTag;
-            updates[`claimedStates/${state}/displayName`] = displayName;
+            updates[`claimedSpecies/${state}/name`] = newName;
+            updates[`claimedSpecies/${state}/tag`] = newTag;
+            updates[`claimedSpecies/${state}/displayName`] = displayName;
         }
     });
 
-    // Update historical foundBy on this player's own states (the cosmetic "found by ___" string on plate cards)
+    // Update historical foundBy on this player's own states (the cosmetic "found by ___" string on animal cards)
     const statesSnap = await ref.child(`players/${playerKey}/states`).once('value');
     const states = statesSnap.val() || {};
     Object.keys(states).forEach(stateName => {
@@ -951,9 +951,9 @@ async function renamePlayerInGame(gameCode, playerKey, newName, newTag) {
 }
 
 // Move a player record from oldKey to newKey within one game. Rewrites
-// foundByKey on every state, repoints claimedStates entries, and transfers
+// foundByKey on every state, repoints claimedSpecies entries, and transfers
 // hostPlayerKey if applicable. With allowOverwrite, a destination key that
-// already exists but holds an empty record (0 plates, 0 coins) gets clobbered;
+// already exists but holds an empty record (0 animals, 0 coins) gets clobbered;
 // without it, a non-empty destination throws so data is never silently lost.
 async function rekeyPlayerInGame(gameCode, oldKey, newKey, opts = {}) {
     if (oldKey === newKey) return false;
@@ -962,7 +962,7 @@ async function rekeyPlayerInGame(gameCode, oldKey, newKey, opts = {}) {
     const [srcSnap, dstSnap, claimsSnap, gameSnap] = await Promise.all([
         ref.child(`players/${oldKey}`).once('value'),
         ref.child(`players/${newKey}`).once('value'),
-        ref.child('claimedStates').once('value'),
+        ref.child('claimedSpecies').once('value'),
         ref.child('hostPlayerKey').once('value'),
     ]);
     const src = srcSnap.val();
@@ -991,11 +991,11 @@ async function rekeyPlayerInGame(gameCode, oldKey, newKey, opts = {}) {
     updates[`players/${newKey}`] = { ...src, states: newStates };
     updates[`players/${oldKey}`] = null;
 
-    // Repoint claimedStates that pointed at the old key
+    // Repoint claimedSpecies that pointed at the old key
     const claims = claimsSnap.val() || {};
     Object.entries(claims).forEach(([state, claim]) => {
         if (claim.playerKey === oldKey) {
-            updates[`claimedStates/${state}/playerKey`] = newKey;
+            updates[`claimedSpecies/${state}/playerKey`] = newKey;
         }
     });
 
@@ -1010,16 +1010,16 @@ async function rekeyPlayerInGame(gameCode, oldKey, newKey, opts = {}) {
 
 async function deletePlayerInGameUI(playerKey) {
     const p = gameData.players[playerKey];
-    if (!confirm(`Delete "${p.displayName || playerKey}" from this game?\n\nRemoves their plates, coins, and any first-finder claims. Cannot be undone.`)) return;
+    if (!confirm(`Delete "${p.displayName || playerKey}" from this game?\n\nRemoves their animals, coins, and any first-finder claims. Cannot be undone.`)) return;
     setStatus('playerMgrStatus', 'Deleting…', 'info');
     try {
         const ref = db.ref(`animalquest/games/${currentGameCodeUpper()}`);
         const updates = {};
         updates[`players/${playerKey}`] = null;
-        const claimsSnap = await ref.child('claimedStates').once('value');
+        const claimsSnap = await ref.child('claimedSpecies').once('value');
         const claims = claimsSnap.val() || {};
         Object.entries(claims).forEach(([state, claim]) => {
-            if (claim.playerKey === playerKey) updates[`claimedStates/${state}`] = null;
+            if (claim.playerKey === playerKey) updates[`claimedSpecies/${state}`] = null;
         });
         if (gameData.hostPlayerKey === playerKey) updates['hostPlayerKey'] = null;
         await ref.update(updates);
@@ -1041,14 +1041,14 @@ function openMergeDialog() {
     modal.innerHTML = `
         <div style="background:#1a2d42;border:1px solid #2e4a68;border-radius:14px;padding:18px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto">
             <h2 style="font-size:18px;color:#7eb8f7;margin-bottom:8px">Merge Players</h2>
-            <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:14px">Pick the player to KEEP. Others' plates, coins, effects, and first-finder claims fold into the winner; then the loser records get deleted.</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:14px">Pick the player to KEEP. Others' animals, coins, effects, and first-finder claims fold into the winner; then the loser records get deleted.</div>
             <div id="mergeWinnerList">
                 ${players.map(p => `
                     <label style="display:block;background:#0d1b2a;border:1px solid #2e4a68;border-radius:8px;padding:10px 14px;margin-bottom:8px;cursor:pointer">
                         <input type="radio" name="mergeWinner" value="${p.key}" style="margin-right:8px">
                         <strong>${escapeHtmlAdmin(p.displayName || p.name || p.key)}</strong>
                         <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:3px">
-                            ${Object.keys(p.states || {}).length} plates · ${p.coins || 0} coins
+                            ${Object.keys(p.states || {}).length} animals · ${p.coins || 0} coins
                             <div style="font-family:monospace;margin-top:2px;opacity:0.7">${p.key}</div>
                         </div>
                     </label>
@@ -1081,8 +1081,8 @@ function updateMergePreview() {
     const coinIn = losers.reduce((s, p) => s + (p.coins || 0), 0);
     document.getElementById('mergePreview').innerHTML = `
         <strong>Winner:</strong> ${escapeHtmlAdmin(winner.displayName || winner.name)}<br>
-        <strong>Folding in:</strong> ${losers.length} record${losers.length===1?'':'s'} carrying ${plateIn} plate${plateIn===1?'':'s'} and ${coinIn} coin${coinIn===1?'':'s'}<br>
-        <strong>Plate conflicts:</strong> earliest <code>foundAt</code> wins<br>
+        <strong>Folding in:</strong> ${losers.length} record${losers.length===1?'':'s'} carrying ${plateIn} animal${plateIn===1?'':'s'} and ${coinIn} coin${coinIn===1?'':'s'}<br>
+        <strong>Animal conflicts:</strong> earliest <code>foundAt</code> wins<br>
         <strong>Effects:</strong> max remaining expiry per effect
     `;
 }
@@ -1139,11 +1139,11 @@ async function confirmMerge() {
         updates[`players/${winnerKey}/effects`] = mergedEffects;
 
         // Retarget first-finder claims to the winner
-        const claimsSnap = await ref.child('claimedStates').once('value');
+        const claimsSnap = await ref.child('claimedSpecies').once('value');
         const claims = claimsSnap.val() || {};
         Object.entries(claims).forEach(([state, claim]) => {
             if (loserKeys.includes(claim.playerKey)) {
-                updates[`claimedStates/${state}`] = {
+                updates[`claimedSpecies/${state}`] = {
                     state,
                     playerKey: winnerKey,
                     name: winner.name,
@@ -1247,12 +1247,12 @@ function renderRecordResults() {
     const gameCount = new Set(currentMatches.map(m => m.gameCode)).size;
     stats.textContent = `${currentMatches.length} record${currentMatches.length===1?'':'s'} across ${gameCount} game${gameCount===1?'':'s'}`;
     list.innerHTML = currentMatches.map(m => `
-        <div class="plate-row" style="cursor:default;flex-wrap:wrap">
+        <div class="animal-row" style="cursor:default;flex-wrap:wrap">
             <div style="flex:1;min-width:0">
                 <div style="font-size:13px;font-weight:600">${escapeHtmlAdmin(m.displayName)}</div>
                 <div style="font-size:11px;color:rgba(255,255,255,0.5)">
                     <span style="font-family:monospace;color:#7eb8f7">[${m.gameCode}]</span>
-                    ${escapeHtmlAdmin(m.gameName)} · ${m.plateCount} plates · ${m.coins} coins
+                    ${escapeHtmlAdmin(m.gameName)} · ${m.plateCount} animals · ${m.coins} coins
                 </div>
             </div>
             <button class="secondary" onclick="jumpToGame('${m.gameCode}')" style="font-size:11px;padding:5px 10px;flex:0 0 auto">Open</button>

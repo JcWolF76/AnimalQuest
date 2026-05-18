@@ -23,7 +23,7 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%); min-height: 100vh; color: #ecf0f1; position: relative; overflow-x: hidden; overscroll-behavior-x: none; padding-bottom: env(safe-area-inset-bottom, 0px); }
         body.dark { background: linear-gradient(135deg, #111827 0%, #0f172a 50%, #111827 100%); color: #f8fafc; }
         body.dark #game, body.dark .welcome-text, body.dark .mode-card, body.dark .state-card, body.dark input, body.dark select, body.dark .btn-secondary, body.dark .diagnostics-panel, body.dark .diagnostic-card, body.dark .play-area-panel, body.dark .play-area-chip, body.dark .setup-inline-card, body.dark .creator-games-panel, body.dark .creator-game-card, body.dark .edit-pack-dialog { background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95)); color: #f8fafc; }
-        body.dark .game-header, body.dark .license-plate-header { background: linear-gradient(45deg, #0f172a, #1e293b); }
+        body.dark .game-header, body.dark .license-animal-header { background: linear-gradient(45deg, #0f172a, #1e293b); }
         body.dark .connection-status { background: rgba(15, 23, 42, 0.75); border-color: rgba(96, 165, 250, 0.35); }
         body.dark .game-code-display { background: rgba(15, 23, 42, 0.35); }
         body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 48, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%); pointer-events: none; z-index: 1; }
@@ -201,13 +201,13 @@
         .shop-status-pill { display: inline-block; font-size: 10px; font-weight: 700; background: rgba(46,204,113,0.2); color: #2ecc71; border: 1px solid rgba(46,204,113,0.35); border-radius: 8px; padding: 1px 6px; margin-left: 4px; vertical-align: middle; }
         .btn-shop-buy { flex-shrink: 0; background: linear-gradient(135deg, #7d5a00, #b8860b); color: #ffe066; font-weight: 800; border: 1px solid rgba(255,224,102,0.3); border-radius: 10px; padding: 8px 12px; font-size: 13px; cursor: pointer; touch-action: manipulation; white-space: nowrap; }
         .btn-shop-buy--off { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.25); border-color: transparent; cursor: not-allowed; }
-        /* Chest + Lucky Plate plate card badges */
+        /* Chest + Rare Sighting animal card badges */
         .chest-badge { position: absolute; top: 6px; left: 8px; font-size: 18px; line-height: 1; pointer-events: none; animation: chestPulse 2s ease-in-out infinite; }
         @keyframes chestPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
         .lucky-badge { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); background: rgba(39,174,96,0.9); color: #fff; font-size: 11px; font-weight: 800; border-radius: 8px; padding: 2px 8px; white-space: nowrap; pointer-events: none; }
-        /* Bounty badge on plate cards */
+        /* Bounty badge on animal cards */
         .bounty-badge { position: absolute; top: 6px; right: 8px; background: linear-gradient(135deg,#7d5a00,#c9960c); color: #ffe066; font-size: 11px; font-weight: 900; border-radius: 8px; padding: 2px 7px; pointer-events: none; white-space: nowrap; }
-        /* Speed round banner */
+        /* Migration sprint banner */
         .speed-round-banner { background: linear-gradient(135deg,#1a0a3a,#2d1060); border: 1px solid rgba(155,89,182,0.5); border-radius: 12px; color: #d7bfff; font-size: 15px; font-weight: 800; text-align: center; padding: 10px 16px; margin-bottom: 8px; letter-spacing: 0.3px; }
         #speedRoundCountdown { font-size: 19px; color: #e056fd; font-weight: 900; }
         /* Bounty modal */
@@ -217,9 +217,9 @@
         .thief-player-btn.disabled { opacity: 0.4; cursor: not-allowed; }
         .thief-player-icon { font-size: 24px; flex-shrink: 0; }
         .thief-player-name { font-weight: 700; flex: 1; }
-        .thief-plate-preview { font-size: 12px; color: #7f8c8d; white-space: nowrap; }
+        .thief-animal-preview { font-size: 12px; color: #7f8c8d; white-space: nowrap; }
         .thief-pts { color: #e056fd; font-weight: 700; }
-        .thief-no-plates { font-size: 12px; color: rgba(255,255,255,0.25); }
+        .thief-no-animals { font-size: 12px; color: rgba(255,255,255,0.25); }
         .bounty-sheet { width: 100%; max-height: 85vh; overflow-y: auto; background: linear-gradient(180deg,#1e2a3a,#16202e); border-radius: 20px 20px 0 0; padding: 22px 20px 32px; display: flex; flex-direction: column; gap: 12px; }
         .bounty-header { display: flex; justify-content: space-between; align-items: center; }
         .bounty-title { font-size: 19px; font-weight: 900; color: #f1c40f; }
@@ -231,7 +231,7 @@
         .bounty-actions .btn { flex: 1; }
         .btn-bounty-confirm { background: linear-gradient(135deg,#7d5a00,#c9960c); color: #ffe066; font-weight: 800; border: none; }
         .btn-bounty { background: linear-gradient(135deg,#7d5a00,#b8860b); color: #ffe066; }
-        /* Speed round modal */
+        /* Migration sprint modal */
         .speed-round-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.78); z-index: 1430; display: flex; align-items: flex-end; }
         .speed-round-sheet { width: 100%; background: linear-gradient(180deg,#1e2a3a,#16202e); border-radius: 20px 20px 0 0; padding: 22px 20px 32px; display: flex; flex-direction: column; gap: 14px; }
         .speed-prizes { text-align: center; font-size: 16px; font-weight: 800; color: #f1c40f; }
@@ -297,9 +297,9 @@
         .state-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(45deg, transparent 49%, rgba(255,255,255,0.05) 50%, transparent 51%), linear-gradient(-45deg, transparent 49%, rgba(0,0,0,0.05) 50%, transparent 51%); background-size: 20px 20px; pointer-events: none; }
         .state-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 40px rgba(52, 152, 219, 0.4), inset 0 1px 0 rgba(255,255,255,0.2); border-color: #3498db; }
         .state-card:hover::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.1), transparent); transform: rotate(45deg); animation: shimmer 1s ease-in-out; }
-        .license-plate-header { background: linear-gradient(145deg, #2c3e50, #34495e); color: #ecf0f1; padding: 8px 15px; font-size: 11px; font-weight: bold; text-align: center; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid rgba(52, 152, 219, 0.3); box-shadow: inset 0 1px 0 rgba(255,255,255,0.1); text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
-        .state-card.selected .license-plate-header { background: linear-gradient(145deg, #27ae60, #2ecc71); box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 0 20px rgba(39, 174, 96, 0.4); }
-        .state-card.selected-by-other .license-plate-header { background: linear-gradient(145deg, #f39c12, #e67e22); }
+        .license-animal-header { background: linear-gradient(145deg, #2c3e50, #34495e); color: #ecf0f1; padding: 8px 15px; font-size: 11px; font-weight: bold; text-align: center; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid rgba(52, 152, 219, 0.3); box-shadow: inset 0 1px 0 rgba(255,255,255,0.1); text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .state-card.selected .license-animal-header { background: linear-gradient(145deg, #27ae60, #2ecc71); box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 0 20px rgba(39, 174, 96, 0.4); }
+        .state-card.selected-by-other .license-animal-header { background: linear-gradient(145deg, #f39c12, #e67e22); }
         .btn { padding: 12px 20px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; touch-action: manipulation; }
         .btn-primary { background: linear-gradient(45deg, #3498db, #2980b9); color: white; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4); }
@@ -602,12 +602,12 @@
         /* First-finder tag pinned to state card — top-left to avoid conflict with clear button */
         .ff-tag { position:absolute; top:8px; left:8px; min-width:24px; height:24px; padding:0 6px; background:#f39c12; color:#fff; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; border:2px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,0.3); }
 
-        /* ── Plate card layout classes (replaces inline styles) ── */
+        /* ── Animal card layout classes (replaces inline styles) ── */
         .state-card { display:flex; flex-direction:column; }
-        .plate-body { display:flex; align-items:center; justify-content:space-between; padding:15px; flex:1; min-height:0; }
-        .plate-info { flex:1; min-width:0; }
-        .plate-name { font-size:20px; font-weight:bold; margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .plate-abbr { font-size:14px; opacity:0.8; text-transform:uppercase; letter-spacing:2px; font-weight:600; }
+        .animal-body { display:flex; align-items:center; justify-content:space-between; padding:15px; flex:1; min-height:0; }
+        .animal-info { flex:1; min-width:0; }
+        .animal-name { font-size:20px; font-weight:bold; margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .animal-abbr { font-size:14px; opacity:0.8; text-transform:uppercase; letter-spacing:2px; font-weight:600; }
         .state-flag { width:50px; height:35px; border-radius:8px; background:linear-gradient(145deg,#95a5a6,#7f8c8d); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; color:#2c3e50; box-shadow:0 3px 10px rgba(0,0,0,0.2); border:1px solid rgba(52,152,219,0.2); overflow:hidden; position:relative; flex-shrink:0; }
         .state-flag img { width:100%; height:100%; object-fit:cover; border-radius:6px; display:block; }
 
@@ -698,8 +698,8 @@
         .breakdown-pts { font-size:14px; font-weight:700; color:#ecf0f1; text-align:right; min-width:60px; }
         .breakdown-bonus { background:rgba(39,174,96,0.12); border-radius:8px; padding:6px 10px; }
         .breakdown-bonus-label { font-size:12px; font-weight:700; color:#27ae60; flex:1; }
-        /* Found plates chips */
-        .found-plates-grid { display:flex; flex-wrap:wrap; gap:6px; }
+        /* Found animals chips */
+        .found-animals-grid { display:flex; flex-wrap:wrap; gap:6px; }
         .found-chip { border-radius:8px; cursor:default; }
         .rarity-chip-common       { background:rgba(127,140,141,0.25); border:1px solid #7f8c8d; color:#ecf0f1; }
         .rarity-chip-occasional   { background:rgba(39,174,96,0.25);   border:1px solid #27ae60; color:#ecf0f1; }
@@ -716,7 +716,7 @@
 
         @media (max-width: 900px) { .states-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); } .game-mode-selector { grid-template-columns: 1fr; } .play-area-map, .edit-play-area-map { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
         @media (max-width: 768px) { .container { padding: 10px; } .states-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; } .input-row { flex-direction: column; align-items: stretch; } .game-mode-selector { grid-template-columns: 1fr; } .logo { width: min(250px, 80vw); } .game-code-header { flex-direction: column; gap: 6px; text-align: center; padding-left: 12px; padding-right: 12px; } .share-controls { justify-content: center; width: 100%; flex-wrap: wrap; } .share-controls .btn { min-height: 34px !important; font-size: 11px; padding: 4px 9px; } .diagnostics-grid { grid-template-columns: 1fr 1fr; } .diagnostics-panel { padding: 10px; } .diagnostics-header span { font-size: 11px !important; } .game-title { font-size: 18px; } .game-subtitle { font-size: 12px; } .game-code-display { font-size: 17px; letter-spacing: 2px; padding: 4px 10px; } .welcome-text { padding: 28px 20px; } .setup-section, .live-scores, .game-active > div, .game-active > div:last-child { padding-left: 16px !important; padding-right: 16px !important; } .btn { min-height: 46px; } .mode-input { min-height: 48px; } .toast-container { left: 12px; right: 12px; top: max(12px, env(safe-area-inset-top, 0px)); } .toast { max-width: none; width: 100%; margin-bottom: 8px; } .play-area-map, .edit-play-area-map { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-          .state-card { min-height: unset; aspect-ratio: 1.7 / 1; border-width: 2px; position: relative; border-radius: 8px; } .state-card.selected { background: linear-gradient(145deg, #27ae60, #2ecc71); border-color: #2ecc71; box-shadow: 0 0 18px rgba(39, 174, 96, 0.4), 0 4px 18px rgba(0,0,0,0.4); } .state-card.selected-by-other { background: linear-gradient(145deg, #f39c12, #e67e22); border-color: #e67e22; } .license-plate-header { display: none; } .plate-body { padding: 3px 4px; min-height: 0; height: 100%; display: block; position: relative; } .plate-info { width: 100%; min-width: 0; } .plate-name { font-size: 11px; margin-bottom: 0; line-height: 1.1; white-space: normal; overflow: visible; text-overflow: clip; word-break: normal; overflow-wrap: normal; letter-spacing: -0.2px; text-align: left; } .state-card:has(.chest-badge) .plate-name { padding-left: 16px; } .state-card:has(.bounty-badge) .plate-name { padding-right: 32px; } .plate-abbr { display: none; } .state-flag { width: 30px; height: 20px; font-size: 7px; position: absolute; left: 50%; transform: translateX(-50%); bottom: 17px; flex-shrink: 0; border-radius: 4px; margin: 0; } .state-flag img { border-radius: 3px; } .state-card .rarity-badge { font-size: 7px; padding: 1px 3px; bottom: 2px; left: 2px; } .ff-tag { top: auto; left: auto; bottom: 2px; right: 2px; height: 12px; min-width: 14px; max-width: 50%; font-size: 7px; padding: 0 4px; border-width: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-flex; } .chest-badge { font-size: 11px; top: 2px; left: 2px; } .bounty-badge { font-size: 8px; padding: 1px 3px; top: 2px; right: 2px; } .lucky-badge { font-size: 8px; padding: 1px 4px; } .clear-req-btn { top: auto; bottom: 17px; right: 3px; width: 18px; height: 18px; font-size: 10px; } }
+          .state-card { min-height: unset; aspect-ratio: 1.7 / 1; border-width: 2px; position: relative; border-radius: 8px; } .state-card.selected { background: linear-gradient(145deg, #27ae60, #2ecc71); border-color: #2ecc71; box-shadow: 0 0 18px rgba(39, 174, 96, 0.4), 0 4px 18px rgba(0,0,0,0.4); } .state-card.selected-by-other { background: linear-gradient(145deg, #f39c12, #e67e22); border-color: #e67e22; } .license-animal-header { display: none; } .animal-body { padding: 3px 4px; min-height: 0; height: 100%; display: block; position: relative; } .animal-info { width: 100%; min-width: 0; } .animal-name { font-size: 11px; margin-bottom: 0; line-height: 1.1; white-space: normal; overflow: visible; text-overflow: clip; word-break: normal; overflow-wrap: normal; letter-spacing: -0.2px; text-align: left; } .state-card:has(.chest-badge) .animal-name { padding-left: 16px; } .state-card:has(.bounty-badge) .animal-name { padding-right: 32px; } .animal-abbr { display: none; } .state-flag { width: 30px; height: 20px; font-size: 7px; position: absolute; left: 50%; transform: translateX(-50%); bottom: 17px; flex-shrink: 0; border-radius: 4px; margin: 0; } .state-flag img { border-radius: 3px; } .state-card .rarity-badge { font-size: 7px; padding: 1px 3px; bottom: 2px; left: 2px; } .ff-tag { top: auto; left: auto; bottom: 2px; right: 2px; height: 12px; min-width: 14px; max-width: 50%; font-size: 7px; padding: 0 4px; border-width: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-flex; } .chest-badge { font-size: 11px; top: 2px; left: 2px; } .bounty-badge { font-size: 8px; padding: 1px 3px; top: 2px; right: 2px; } .lucky-badge { font-size: 8px; padding: 1px 4px; } .clear-req-btn { top: auto; bottom: 17px; right: 3px; width: 18px; height: 18px; font-size: 10px; } }
         @media (max-width: 520px) { .diagnostics-grid { grid-template-columns: 1fr; } .share-controls .btn { flex: 1 1 30%; min-height: 34px !important; } .game-code-info { flex-direction: column; gap: 6px; } .play-area-map, .edit-play-area-map { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
         /* ── How to Play Modal ───────────────────────────────────────────────── */
@@ -749,7 +749,7 @@
 <body>
     <div class="container">
         <div id="splash">
-            <div class="logo-container"><img src="../animalquest-final-logo.jpeg" alt="AnimalQuest Logo" class="logo"></div>
+            <div class="logo-container"><img src="../AnimalQuest_Logo-JcWolF.png" alt="AnimalQuest Logo" class="logo"></div>
             <div class="welcome-text">
                 <p><strong>MULTIPLAYER EDITION</strong></p>
                 <p>Play live with friends and family! Real-time updates, shared adventures, and instant competition across all devices.</p>
@@ -829,7 +829,7 @@
                         <button class="btn btn-primary" id="resumePackBtn" style="white-space:nowrap;">▶️ Return to Pack</button>
                     </div>
                     <hr class="paused-pack-divider">
-                    <div style="font-size:13px; color:#bdc3c7; margin-bottom:12px;">Update settings for this pack. Found plates and first-finder tags will not be affected.</div>
+                    <div style="font-size:13px; color:#bdc3c7; margin-bottom:12px;">Update settings for this pack. Found animals and first-finder tags will not be affected.</div>
                     <div class="setup-inline-card">
                         <label for="pausedPackRegionSelect" style="margin-bottom:8px; display:block; color:#3498db; font-weight:700; font-size:14px;">🧭 Primary Play Region</label>
                         <select id="pausedPackRegionSelect" class="mode-input" style="margin-bottom:0;">
@@ -861,7 +861,7 @@
                         </select>
                     </div>
                     <div class="setup-inline-card">
-                        <label for="pausedPackScopeSelect" style="margin-bottom:8px; display:block; color:#3498db; font-weight:700; font-size:14px;">🌎 Plate Coverage</label>
+                        <label for="pausedPackScopeSelect" style="margin-bottom:8px; display:block; color:#3498db; font-weight:700; font-size:14px;">🌎 Animal Coverage</label>
                         <select id="pausedPackScopeSelect" class="mode-input" style="margin-bottom:0;">
                             <option value="us_only">U.S. States Only</option>
                             <option value="us_canada">U.S. + Canada</option>
@@ -933,7 +933,7 @@
                             </select>
                         </div>
                         <div class="setup-inline-card">
-                            <label for="plateScopeSelect" style="margin-bottom:8px; display:block; color:#3498db; font-weight:700; font-size:14px;">🌎 Plate Coverage</label>
+                            <label for="plateScopeSelect" style="margin-bottom:8px; display:block; color:#3498db; font-weight:700; font-size:14px;">🌎 Animal Coverage</label>
                             <select id="plateScopeSelect" class="mode-input" disabled style="margin-bottom:0;">
                                 <option value="us_only">U.S. States Only</option>
                                 <option value="us_canada">U.S. + Canada</option>
@@ -945,7 +945,7 @@
                         <div class="setup-inline-card">
                             <label style="margin-bottom:8px; display:block; color:#3498db; font-weight:700; font-size:14px;">📍 Rarity Mode</label>
                             <label class="gps-toggle-row"><input type="checkbox" id="gpsRarityToggle"> <span>Use Live GPS for Rarity</span></label>
-                            <div class="setup-hint">When on, each player's real-time location at the moment of spotting determines rarity — plates far from where you are score higher. Defaults to the travel corridor.</div>
+                            <div class="setup-hint">When on, each player's real-time location at the moment of spotting determines rarity — animals far from where you are score higher. Defaults to the travel corridor.</div>
                         </div>
                         <div class="play-area-panel">
                             <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
@@ -1003,7 +1003,7 @@
                         <button class="htp-help-btn" id="howToPlayHelpBtn" title="How to play">?</button>
                     </div>
                     <div class="speed-round-banner" id="speedRoundBanner" style="display:none;">
-                        ⚡ Speed Round — <span id="speedRoundCountdown">0:00</span> left!
+                        ⚡ Migration Sprint — <span id="speedRoundCountdown">0:00</span> left!
                     </div>
                     <div class="sudden-death-banner" id="suddenDeathBanner" style="display:none;">
                         🔔 SUDDEN DEATH — Find <span id="suddenDeathBannerPlate"></span> first!
@@ -1030,9 +1030,9 @@
                             <button class="btn btn-new-round" id="newRoundBtn">🔁 New Round</button>
                             <button class="btn btn-secondary" id="resetRoundBtn">🔄 Reset Round</button>
                             <button class="btn btn-end-game" id="endGameBtn">🏁 End Game</button>
-                            <button class="btn btn-secondary action-span" id="rerollPrizesBtn">🎲 Re-roll Lucky Plate &amp; Chests</button>
+                            <button class="btn btn-secondary action-span" id="rerollPrizesBtn">🎲 Re-roll Rare Sighting &amp; Chests</button>
                             <button class="btn btn-bounty" id="placeBountyBtn">💰 Place Bounty</button>
-                            <button class="btn btn-speed-round" id="speedRoundBtn">⚡ Speed Round</button>
+                            <button class="btn btn-speed-round" id="speedRoundBtn">⚡ Migration Sprint</button>
                             <button class="btn btn-secret-target" id="assignSecretTargetsBtn">🎯 Secret Targets</button>
                             <button class="btn btn-sudden-death" id="suddenDeathBtn">🔔 Sudden Death</button>
                         </div>
@@ -1101,7 +1101,7 @@
                 <div class="edit-pack-header">
                     <div>
                         <div class="edit-pack-title">Edit Pack Settings</div>
-                        <div class="creator-game-meta">Host-only changes. Existing plate progress will be preserved.</div>
+                        <div class="creator-game-meta">Host-only changes. Existing animal progress will be preserved.</div>
                     </div>
                     <button class="btn btn-secondary btn-small" id="closeEditPackBtn">✕ Close</button>
                 </div>
@@ -1140,7 +1140,7 @@
                     </select>
                 </div>
                 <div class="edit-pack-section">
-                    <label for="editPlateScopeSelect" style="margin-bottom:8px; display:block; color:#3498db; font-weight:700; font-size:14px;">🌎 Plate Coverage</label>
+                    <label for="editPlateScopeSelect" style="margin-bottom:8px; display:block; color:#3498db; font-weight:700; font-size:14px;">🌎 Animal Coverage</label>
                     <select id="editPlateScopeSelect" class="mode-input" style="margin-bottom:0;">
                         <option value="us_only">U.S. States Only</option>
                         <option value="us_canada">U.S. + Canada</option>
@@ -1152,7 +1152,7 @@
                 <div class="edit-pack-section">
                     <label style="margin-bottom:8px; display:block; color:#3498db; font-weight:700; font-size:14px;">📍 Rarity Mode</label>
                     <label class="gps-toggle-row"><input type="checkbox" id="editGpsRarityToggle"> <span>Use Live GPS for Rarity</span></label>
-                    <div class="setup-hint">When on, rarity is based on each player's real-time location when they spot a plate.</div>
+                    <div class="setup-hint">When on, rarity is based on each player's real-time location when they spot a animal.</div>
                 </div>
                 <div class="edit-pack-section">
                     <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
@@ -1198,7 +1198,7 @@
                         <div class="detail-stat-value" id="detailScore">0</div>
                     </div>
                     <div class="detail-stat-card">
-                        <div class="detail-stat-label">Plates</div>
+                        <div class="detail-stat-label">Animals</div>
                         <div class="detail-stat-value" id="detailFoundCount">0</div>
                     </div>
                     <div class="detail-stat-card">
@@ -1220,8 +1220,8 @@
                     <div id="detailAchievementGrid" class="achievement-grid"></div>
                 </div>
                 <div>
-                    <div class="detail-section-title">🗺️ Plates Found</div>
-                    <div id="detailFoundGrid" class="found-plates-grid"></div>
+                    <div class="detail-section-title">🗺️ Animals Found</div>
+                    <div id="detailFoundGrid" class="found-animals-grid"></div>
                 </div>
                 <!-- Badge detail overlay — slides over modal content when a badge is tapped -->
                 <div id="badgeDetailOverlay" class="badge-detail-overlay">
@@ -1329,9 +1329,9 @@
                     <div class="bounty-title">💰 Place a Bounty</div>
                     <button class="btn btn-secondary btn-small" onclick="closeBountyModal()">✕</button>
                 </div>
-                <p class="bounty-desc">Deduct coins from your balance and place a bounty on a plate. First player to spot it wins the reward.</p>
+                <p class="bounty-desc">Deduct coins from your balance and place a bounty on a animal. First player to spot it wins the reward.</p>
                 <div class="bounty-balance">Your balance: 🪙 <span id="bountyHostBalance">0</span></div>
-                <label class="bounty-label">Plate</label>
+                <label class="bounty-label">Animal</label>
                 <select id="bountyStateSelect" class="bounty-select"></select>
                 <label class="bounty-label">Reward (🪙)</label>
                 <input id="bountyRewardInput" type="number" min="5" max="500" class="bounty-input" placeholder="e.g. 50">
@@ -1342,14 +1342,14 @@
             </div>
         </div>
 
-        <!-- Speed Round Modal -->
+        <!-- Migration Sprint Modal -->
         <div id="speedRoundModal" class="speed-round-modal" style="display:none;">
             <div class="speed-round-sheet">
                 <div class="bounty-header">
-                    <div class="bounty-title">⚡ Start Speed Round</div>
+                    <div class="bounty-title">⚡ Start Migration Sprint</div>
                     <button class="btn btn-secondary btn-small" onclick="closeSpeedRoundModal()">✕</button>
                 </div>
-                <p class="bounty-desc">A timed sprint — top 3 plate-finders in the window earn bonus coins. Results posted when time's up.</p>
+                <p class="bounty-desc">A timed sprint — top 3 animal-finders in the window earn bonus coins. Results posted when time's up.</p>
                 <div class="speed-prizes">🥇 100🪙 &nbsp;·&nbsp; 🥈 60🪙 &nbsp;·&nbsp; 🥉 30🪙</div>
                 <div class="speed-round-btns">
                     <button class="btn btn-speed-choice" onclick="startSpeedRound(3*60*1000); closeSpeedRoundModal()">3 min</button>
@@ -1366,8 +1366,8 @@
                     <div class="bounty-title">🔔 Sudden Death</div>
                     <button class="btn btn-secondary btn-small" onclick="closeSuddenDeathModal()">✕</button>
                 </div>
-                <p class="bounty-desc">Announce a plate — first player to spot it wins 150🪙. Only unclaimed plates are shown by default.</p>
-                <label class="bounty-label">Plate</label>
+                <p class="bounty-desc">Announce a animal — first player to spot it wins 150🪙. Only unclaimed animals are shown by default.</p>
+                <label class="bounty-label">Animal</label>
                 <select id="suddenDeathPlateSelect" class="bounty-select"></select>
                 <div class="bounty-actions">
                     <button class="btn btn-secondary" onclick="closeSuddenDeathModal()">Cancel</button>
@@ -1537,8 +1537,8 @@
                 <div class="htp-title">🐺 Welcome to AnimalQuest!</div>
 
                 <div class="htp-section">
-                    <div class="htp-section-head">👆 How to Spot a Plate</div>
-                    <div class="htp-section-body">See a wildlife from another state or province? <strong>Swipe right</strong> on its card in the list below. You earn coins and points — more for rarer plates, plus a bonus if you're the first in the pack to spot it.</div>
+                    <div class="htp-section-head">👆 How to Spot a Animal</div>
+                    <div class="htp-section-body">See a wildlife from another state or province? <strong>Swipe right</strong> on its card in the list below. You earn coins and points — more for rarer animals, plus a bonus if you're the first in the pack to spot it.</div>
                 </div>
 
                 <div class="htp-section">
@@ -1552,7 +1552,7 @@
 
                 <div class="htp-section">
                     <div class="htp-section-head">🏆 Points &amp; Coins</div>
-                    <div class="htp-section-body">The number on each card is its rarity value in points. First finder gets full points + 5🪙 bonus coins. Spot all plates in a region to earn extra coin bonuses and unlock badges.</div>
+                    <div class="htp-section-body">The number on each card is its rarity value in points. First finder gets full points + 5🪙 bonus coins. Spot all animals in a region to earn extra coin bonuses and unlock badges.</div>
                 </div>
 
                 <div class="htp-section">
@@ -1562,15 +1562,15 @@
 
                 <div class="htp-section">
                     <div class="htp-section-head">⚔️ Challenges &amp; Rivalries</div>
-                    <div class="htp-section-body">Tap <strong>⚔️ Challenge</strong> on another player's card to mark them as your rival. Both your cards get a <strong>⚔️ Rival</strong> badge, and tapping their card pops up a <strong>Head-to-Head</strong> comparison so you can see who's ahead by points, plates, and first-finds. One rival at a time — challenging a new player drops the old. Tap <strong>⚔️ Drop</strong> on your current rival's card to end it.</div>
+                    <div class="htp-section-body">Tap <strong>⚔️ Challenge</strong> on another player's card to mark them as your rival. Both your cards get a <strong>⚔️ Rival</strong> badge, and tapping their card pops up a <strong>Head-to-Head</strong> comparison so you can see who's ahead by points, animals, and first-finds. One rival at a time — challenging a new player drops the old. Tap <strong>⚔️ Drop</strong> on your current rival's card to end it.</div>
                 </div>
 
                 <div class="htp-section">
                     <div class="htp-section-head">💡 Tips</div>
                     <div class="htp-tips">
-                        <div class="htp-tip">Long-press any plate you've marked to request its removal</div>
+                        <div class="htp-tip">Long-press any animal you've marked to request its removal</div>
                         <div class="htp-tip">Tap any player on the leaderboard to see their full stats &amp; achievements</div>
-                        <div class="htp-tip">Host can run Speed Rounds ⚡, place Bounties 💰, and call Sudden Death 🔔</div>
+                        <div class="htp-tip">Host can run Migration Sprints ⚡, place Bounties 💰, and call Sudden Death 🔔</div>
                         <div class="htp-tip">Earn achievements 🏆 as you hit milestones — check your profile to see them all</div>
                     </div>
                 </div>
@@ -1600,7 +1600,7 @@
 
     <!-- Clear-request confirmation sheet — outside #game so backdrop-filter stacking context doesn't break hit-testing -->
     <div id="clearConfirmSheet" class="clear-confirm-sheet">
-        <div class="clear-confirm-title" id="clearConfirmTitle">Remove plate?</div>
+        <div class="clear-confirm-title" id="clearConfirmTitle">Remove animal?</div>
         <div class="clear-confirm-msg" id="clearConfirmMsg"></div>
         <div class="clear-confirm-btns">
             <button class="btn btn-secondary" id="clearConfirmCancel">Cancel</button>
@@ -1608,7 +1608,7 @@
         </div>
     </div>
 
-    <script src="game.js?v=20260518c"></script>
+    <script src="game.js?v=20260518a"></script>
     <script>
     (function() {
         const LIBRARY_KEY_PREFIX = 'animalquest_created_games_v1_';
@@ -1729,12 +1729,12 @@
             if (!nextRegion) { if (typeof showToast === 'function') showToast('Please choose a primary play region.', 'error'); return; }
             if (!nextPlayAreaStates.length) { if (typeof showToast === 'function') showToast('Select at least one trip-area state.', 'error'); return; }
             const room = pack.data || {};
-            const hasCanadianProgress = Object.keys(room.claimedStates || {}).some((name) => CANADA_PLATE_NAMES.includes(name)) || Object.values(room.players || {}).some((player) => Object.keys(player?.states || {}).some((name) => CANADA_PLATE_NAMES.includes(name)));
-            const hasLatamProgress = Object.keys(room.claimedStates || {}).some((name) => LATAM_PLATE_NAMES.includes(name)) || Object.values(room.players || {}).some((player) => Object.keys(player?.states || {}).some((name) => LATAM_PLATE_NAMES.includes(name)));
+            const hasCanadianProgress = Object.keys(room.claimedSpecies || {}).some((name) => CANADA_PLATE_NAMES.includes(name)) || Object.values(room.players || {}).some((player) => Object.keys(player?.states || {}).some((name) => CANADA_PLATE_NAMES.includes(name)));
+            const hasLatamProgress = Object.keys(room.claimedSpecies || {}).some((name) => LATAM_PLATE_NAMES.includes(name)) || Object.values(room.players || {}).some((player) => Object.keys(player?.states || {}).some((name) => LATAM_PLATE_NAMES.includes(name)));
             const nextHasCanada = nextScope === 'us_canada' || nextScope === 'us_canada_latam';
             const nextHasLatam = nextScope === 'us_latam' || nextScope === 'us_canada_latam';
-            if (!nextHasCanada && hasCanadianProgress) { if (typeof showToast === 'function') showToast('Cannot remove Canada — this pack already has Canadian plate progress.', 'error'); return; }
-            if (!nextHasLatam && hasLatamProgress) { if (typeof showToast === 'function') showToast('Cannot remove Latin America — this pack already has Latin American plate progress.', 'error'); return; }
+            if (!nextHasCanada && hasCanadianProgress) { if (typeof showToast === 'function') showToast('Cannot remove Canada — this pack already has Canadian animal progress.', 'error'); return; }
+            if (!nextHasLatam && hasLatamProgress) { if (typeof showToast === 'function') showToast('Cannot remove Latin America — this pack already has Latin American animal progress.', 'error'); return; }
             const payload = { settings: { ...(room.settings || {}), playRegion: nextRegion, plateScope: nextScope, playAreaStates: nextPlayAreaStates }, updatedAt: Date.now() };
             try {
                 await db.ref(`animalquest/games/${pack.code}`).update(payload);
@@ -1851,12 +1851,12 @@
             if (!nextName) { if (typeof showToast === 'function') showToast('Please enter a pack name.', 'error'); return; }
             if (!nextRegion) { if (typeof showToast === 'function') showToast('Please choose a primary play region.', 'error'); return; }
             if (!nextPlayAreaStates.length) { if (typeof showToast === 'function') showToast('Select at least one trip-area state.', 'error'); return; }
-            const hasCanadianProgress = Object.keys(room.claimedStates || {}).some((name) => CANADA_PLATE_NAMES.includes(name)) || Object.values(room.players || {}).some((player) => Object.keys(player?.states || {}).some((name) => CANADA_PLATE_NAMES.includes(name)));
-            const hasLatamProgress = Object.keys(room.claimedStates || {}).some((name) => LATAM_PLATE_NAMES.includes(name)) || Object.values(room.players || {}).some((player) => Object.keys(player?.states || {}).some((name) => LATAM_PLATE_NAMES.includes(name)));
+            const hasCanadianProgress = Object.keys(room.claimedSpecies || {}).some((name) => CANADA_PLATE_NAMES.includes(name)) || Object.values(room.players || {}).some((player) => Object.keys(player?.states || {}).some((name) => CANADA_PLATE_NAMES.includes(name)));
+            const hasLatamProgress = Object.keys(room.claimedSpecies || {}).some((name) => LATAM_PLATE_NAMES.includes(name)) || Object.values(room.players || {}).some((player) => Object.keys(player?.states || {}).some((name) => LATAM_PLATE_NAMES.includes(name)));
             const nextHasCanada = nextScope === 'us_canada' || nextScope === 'us_canada_latam';
             const nextHasLatam = nextScope === 'us_latam' || nextScope === 'us_canada_latam';
-            if (!nextHasCanada && hasCanadianProgress) { if (typeof showToast === 'function') showToast('Cannot remove Canada — this pack already has Canadian plate progress.', 'error'); return; }
-            if (!nextHasLatam && hasLatamProgress) { if (typeof showToast === 'function') showToast('Cannot remove Latin America — this pack already has Latin American plate progress.', 'error'); return; }
+            if (!nextHasCanada && hasCanadianProgress) { if (typeof showToast === 'function') showToast('Cannot remove Canada — this pack already has Canadian animal progress.', 'error'); return; }
+            if (!nextHasLatam && hasLatamProgress) { if (typeof showToast === 'function') showToast('Cannot remove Latin America — this pack already has Latin American animal progress.', 'error'); return; }
             const payload = { name: nextName, settings: { ...(room.settings || {}), playRegion: nextRegion, plateScope: nextScope, playAreaStates: nextPlayAreaStates, gpsRarity: nextGpsRarity }, updatedAt: Date.now() };
             try {
                 await db.ref(`animalquest/games/${code}`).update(payload);
