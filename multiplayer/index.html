@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<!--
-    AnimalQuest © 2026 Jesse Bliss (JcWolF). All rights reserved.
-    Proprietary software — see LICENSE at repo root. Unauthorized copying,
-    modification, redistribution, or commercial use is prohibited.
--->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -289,6 +284,16 @@
         }
         .modal-foot .modal-status { font-size: 13px; color: #d6e9c6; flex: 1; text-align: right; }
 
+        .filter-bar.categories .filter-chip.active {
+            background: linear-gradient(45deg, #5da8a8, #3a92e0);
+            border-color: #3a92e0;
+        }
+        .animal-card.zoo-animal { border-style: solid; }
+        .animal-card.zoo-animal::before {
+            content: '🦓'; position: absolute; top: 6px; right: 8px;
+            font-size: 12px; opacity: 0.55;
+        }
+
         .help-row {
             margin-top: 14px; text-align: center;
             font-size: 13px; color: #d6e9c6; opacity: 0.75;
@@ -316,7 +321,7 @@
                 <!-- Join -->
                 <div class="tab-panel" id="panel-join">
                     <label class="field-label">Your Player Tag</label>
-                    <input class="field" id="joinName" placeholder="e.g. JcWolF" maxlength="20">
+                    <input class="field" id="joinName" placeholder="e.g. JcWoLF76" maxlength="20">
                     <label class="field-label">Pack Code</label>
                     <input class="field code-input" id="joinCode" placeholder="ABC123" maxlength="6">
                     <button class="btn btn-primary btn-block" id="joinBtn">Join Pack</button>
@@ -325,20 +330,24 @@
                 <!-- Create -->
                 <div class="tab-panel" id="panel-create" style="display:none;">
                     <label class="field-label">Your Player Tag (Host)</label>
-                    <input class="field" id="hostName" placeholder="e.g. JcWolF" maxlength="20">
+                    <input class="field" id="hostName" placeholder="e.g. JcWoLF76" maxlength="20">
                     <label class="field-label">Pack Name</label>
                     <input class="field" id="packName" placeholder="Yellowstone 2026" maxlength="40">
                     <label class="field-label">Region</label>
                     <select class="field" id="packRegion"></select>
+                    <label class="field-label" style="display:flex; align-items:center; gap:10px;">
+                        <input type="checkbox" id="packZoo" style="width:16px; height:16px; accent-color:#e84393;">
+                        <span>🦓 Zoo Mode — include global animals (good for actual zoo visits)</span>
+                    </label>
                     <button class="btn btn-primary btn-block" id="createBtn">Create Pack</button>
                 </div>
             </div>
 
             <div class="help-row">
                 <a href="../index.html">🚗 Back to AnimalQuest</a> ·
-                <a href="../../index.html">🪪 PlateQuest</a>
+                <a href="https://jcwolf76.github.io/PlateQuest/">🪪 PlateQuest</a>
             </div>
-            <p style="margin-top: 24px; opacity: 0.7; font-style: italic;">Created by JcWolF</p>
+            <p style="margin-top: 24px; opacity: 0.7; font-style: italic;">Created by JcWoLF76</p>
         </div>
 
         <!-- ────────── GAME ────────── -->
@@ -377,6 +386,7 @@
                 <div class="groups-grid" id="groupsGrid"></div>
             </div>
 
+            <div class="filter-bar categories" id="categoryBar"></div>
             <div class="filter-bar" id="filterBar"></div>
             <div id="animalsContainer"></div>
 
@@ -424,6 +434,7 @@
         let currentPlayerName = null;
         let packListener = null;
         let activeFilter = 'all';
+        let activeCategory = 'all';
 
         const $ = id => document.getElementById(id);
 
@@ -519,10 +530,12 @@
             currentPlayerName = name;
             currentPackCode = code;
 
+            const includeZoo = !!$('packZoo').checked;
             const pack = {
                 code,
                 name: packName,
                 region,
+                includeZoo,
                 hostId: currentPlayerId,
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 updatedAt: firebase.database.ServerValue.TIMESTAMP,
@@ -625,12 +638,31 @@
             if (!currentPack) return;
             $('packNameLabel').textContent = currentPack.name || '(unnamed)';
             $('packCodeLabel').textContent = currentPack.code || currentPackCode;
-            $('packMeta').textContent = `${D.REGIONS[currentPack.region]?.emoji || ''} ${D.REGIONS[currentPack.region]?.label || 'National'} · ${Object.keys(currentPack.players || {}).length} player(s)`;
+            $('packMeta').textContent = `${D.REGIONS[currentPack.region]?.emoji || ''} ${D.REGIONS[currentPack.region]?.label || 'National'} · ${Object.keys(currentPack.players || {}).length} player(s)${currentPack.includeZoo ? ' · 🦓 Zoo on' : ''}`;
             renderLeaderboard();
             renderMyScore();
             renderGroups();
+            renderCategoryBar();
             renderFilterBar();
             renderAnimals();
+        }
+
+        function renderCategoryBar() {
+            const bar = $('categoryBar');
+            const cats = [{ id: 'all', label: 'All' }]
+                .concat(Object.entries(D.CATEGORIES).map(([id, c]) => ({
+                    id, label: `${c.emoji} ${c.label}`
+                })));
+            bar.innerHTML = cats.map(c =>
+                `<div class="filter-chip ${activeCategory===c.id?'active':''}" data-cat="${c.id}">${escapeHtml(c.label)}</div>`
+            ).join('');
+            bar.querySelectorAll('.filter-chip').forEach(el => {
+                el.addEventListener('click', () => {
+                    activeCategory = el.dataset.cat;
+                    renderCategoryBar();
+                    renderAnimals();
+                });
+            });
         }
 
         function perPlayerStats() {
@@ -774,7 +806,9 @@
         function renderAnimals() {
             const region = currentPack.region || 'national';
             const spots = currentPack.spots || {};
-            const animals = D.animalsForRegion(region).filter(a => filterMatches(a, spots));
+            const animals = D.animalsForRegion(region, { includeZoo: !!currentPack.includeZoo })
+                .filter(a => filterMatches(a, spots))
+                .filter(a => activeCategory === 'all' || a.category === activeCategory);
             const byRarity = { common: [], uncommon: [], rare: [], epic: [], legendary: [], mythic: [] };
             animals.forEach(a => byRarity[a.rarity]?.push(a));
 
@@ -815,6 +849,7 @@
             else if (s.live) cls.push('spotted-live');
             else if (s.roadkill) cls.push('spotted-roadkill');
             if (D.isOutOfRegion(animal, region)) cls.push('out-of-region');
+            if (animal.setting === 'zoo') cls.push('zoo-animal');
             const livePts = D.pointsForSpot(animal, 'live', region);
             const rkPts = D.pointsForSpot(animal, 'roadkill', region);
 

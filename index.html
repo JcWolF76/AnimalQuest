@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<!--
-    AnimalQuest © 2026 Jesse Bliss (JcWolF). All rights reserved.
-    Proprietary software — see LICENSE at repo root. Unauthorized copying,
-    modification, redistribution, or commercial use is prohibited.
--->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -487,7 +482,7 @@
         .modal-foot .skip-btn:hover { background: rgba(0,0,0,0.25); }
         .modal-foot .modal-status { font-size: 13px; color: #d6e9c6; flex: 1; text-align: right; }
 
-        .edu-toggle {
+        .edu-toggle, .zoo-toggle {
             display: inline-flex; align-items: center; gap: 8px;
             background: rgba(0,0,0,0.25);
             padding: 8px 14px; border-radius: 22px;
@@ -495,8 +490,29 @@
             cursor: pointer; user-select: none;
             font-size: 13px; color: #d6e9c6;
         }
-        .edu-toggle input { width: 14px; height: 14px; accent-color: #7eb056; }
+        .edu-toggle input, .zoo-toggle input { width: 14px; height: 14px; accent-color: #7eb056; }
         .edu-toggle.on { border-color: #f1c40f; color: #f1c40f; }
+        .zoo-toggle.on { border-color: #e84393; color: #e84393; background: rgba(232,67,147,0.12); }
+
+        .zoo-badge {
+            display: inline-block; font-size: 10px; font-weight: bold;
+            padding: 2px 6px; margin-left: 6px;
+            background: linear-gradient(45deg, #e84393, #c2185b);
+            color: white; border-radius: 4px; vertical-align: middle;
+        }
+        .animal-card.zoo-animal { border-style: solid; }
+        .animal-card.zoo-animal::before {
+            content: '🦓'; position: absolute; top: 6px; right: 8px;
+            font-size: 12px; opacity: 0.55;
+        }
+
+        .filter-bar.categories {
+            margin-bottom: 12px;
+        }
+        .filter-bar.categories .filter-chip.active {
+            background: linear-gradient(45deg, #5da8a8, #3a92e0);
+            border-color: #3a92e0;
+        }
 
         @media (max-width: 600px) {
             .game-title { font-size: 1.8em; }
@@ -527,9 +543,9 @@
             <button class="start-btn" id="startBtn">Start Your Quest! 🎯</button>
             <div class="version-links">
                 <a href="multiplayer/index.html" class="version-link">👥 Try Multiplayer Version</a>
-                <a href="../index.html" class="version-link">🚗 Back to PlateQuest</a>
+                <a href="https://jcwolf76.github.io/PlateQuest/" class="version-link">🚗 Back to PlateQuest</a>
             </div>
-            <p style="margin-top: 30px; opacity: 0.7; font-style: italic;">Created by JcWolF</p>
+            <p style="margin-top: 30px; opacity: 0.7; font-style: italic;">Created by JcWoLF76</p>
         </div>
 
         <!-- ────────── GAME ────────── -->
@@ -570,6 +586,10 @@
                             <!-- populated -->
                         </select>
                         <button class="btn btn-secondary" id="detectRegionBtn">📡 Detect (GPS)</button>
+                        <label class="zoo-toggle" id="zooToggleWrap">
+                            <input type="checkbox" id="zooToggle">
+                            🦓 Zoo Mode
+                        </label>
                     </div>
                 </div>
 
@@ -627,6 +647,7 @@
                 <div class="groups-grid" id="groupsGrid"></div>
             </div>
 
+            <div class="filter-bar categories" id="categoryBar"></div>
             <div class="filter-bar" id="filterBar"></div>
 
             <div id="animalsContainer"></div>
@@ -694,8 +715,9 @@
         let currentTripId = null;
         let currentTripData = null;
         let challengeTimerHandle = null;
-        let activeFilter = 'all'; // 'all' | rarity id | 'roadkill' | 'live'
-        let pendingQuiz = null;   // { animalId, kind } awaiting a quiz answer
+        let activeFilter = 'all';      // rarity / state filter
+        let activeCategory = 'all';    // category filter
+        let pendingQuiz = null;
 
         const $ = (id) => document.getElementById(id);
 
@@ -756,9 +778,12 @@
                 if (!currentTripData.spots) currentTripData.spots = {};
                 if (!currentTripData.region) currentTripData.region = 'national';
                 if (!currentTripData.contributors) currentTripData.contributors = [];
+                if (currentTripData.includeZoo == null) currentTripData.includeZoo = false;
             }
             renderAll();
         }
+
+        function tripIncludeZoo() { return !!(currentTripData && currentTripData.includeZoo); }
 
         function saveCurrentTrip() {
             if (!currentTripData) return;
@@ -786,8 +811,36 @@
         function renderAll() {
             renderScore();
             renderGroups();
+            renderCategoryBar();
             renderFilterBar();
             renderAnimals();
+            syncZooToggle();
+        }
+
+        function renderCategoryBar() {
+            const bar = $('categoryBar');
+            const cats = [{ id: 'all', label: 'All' }]
+                .concat(Object.entries(D.CATEGORIES).map(([id, c]) => ({
+                    id, label: `${c.emoji} ${c.label}`
+                })));
+            bar.innerHTML = cats.map(c =>
+                `<div class="filter-chip ${activeCategory===c.id?'active':''}" data-cat="${c.id}">${escapeHtml(c.label)}</div>`
+            ).join('');
+            bar.querySelectorAll('.filter-chip').forEach(el => {
+                el.addEventListener('click', () => {
+                    activeCategory = el.dataset.cat;
+                    renderCategoryBar();
+                    renderAnimals();
+                });
+            });
+        }
+
+        function syncZooToggle() {
+            const cb = $('zooToggle');
+            const wrap = $('zooToggleWrap');
+            if (!cb) return;
+            cb.checked = tripIncludeZoo();
+            wrap.classList.toggle('on', cb.checked);
         }
 
         function renderScore() {
@@ -801,7 +854,7 @@
                 return;
             }
             const region = currentTripData.region || 'national';
-            const visible = D.animalsForRegion(region);
+            const visible = D.animalsForRegion(region, { includeZoo: tripIncludeZoo() });
             const spots = currentTripData.spots || {};
             const total = D.tripTotal(spots, region);
             const earned = D.earnedGroups(spots);
@@ -894,7 +947,9 @@
             if (!currentTripData) { container.innerHTML = '<p style="text-align:center;opacity:0.7;">Create or select a trip to start spotting.</p>'; return; }
             const region = currentTripData.region || 'national';
             const spots = currentTripData.spots || {};
-            const visible = D.animalsForRegion(region).filter(a => filterMatches(a, spots));
+            const visible = D.animalsForRegion(region, { includeZoo: tripIncludeZoo() })
+                .filter(a => filterMatches(a, spots))
+                .filter(a => activeCategory === 'all' || a.category === activeCategory);
 
             // Group by rarity
             const byRarity = { common: [], uncommon: [], rare: [], epic: [], legendary: [], mythic: [] };
@@ -947,6 +1002,7 @@
             else if (s.live) cls.push('spotted-live');
             else if (s.roadkill) cls.push('spotted-roadkill');
             if (D.isOutOfRegion(animal, region)) cls.push('out-of-region');
+            if (animal.setting === 'zoo') cls.push('zoo-animal');
 
             const livePts = D.pointsForSpot(animal, 'live', region);
             const rkPts = D.pointsForSpot(animal, 'roadkill', region);
@@ -1256,6 +1312,18 @@
             currentTripData.region = e.target.value;
             saveCurrentTrip();
             renderAll();
+        });
+
+        $('zooToggle').addEventListener('change', (e) => {
+            if (!currentTripData) {
+                e.target.checked = false;
+                toast('Create or select a trip first', false);
+                return;
+            }
+            currentTripData.includeZoo = e.target.checked;
+            saveCurrentTrip();
+            renderAll();
+            toast(e.target.checked ? '🦓 Zoo Mode ON — global animals unlocked' : 'Zoo Mode off');
         });
 
         document.querySelectorAll('input[name=mode]').forEach(r => {
