@@ -4,9 +4,15 @@
  *
  * Animal entry shape:
  *   id, name, scientific, emoji, rarity, category, regions[]
- *   setting?:    'wild' (default — North American wildlife) or 'zoo' (global)
- *   groups?:     bonus-group ids this animal belongs to
- *   roadkillable?: false to disable the roadkill button (defaults to true)
+ *   setting?:          'wild' (default — North American wildlife) or 'zoo' (global)
+ *   groups?:           bonus-group ids this animal belongs to
+ *   roadkillable?:     false to disable the roadkill button (defaults to true)
+ *   elusiveness?:      { 'CA': 'rare', 'OR': 'epic', ... }  per-state rarity tier
+ *                      Populated by scripts/fetch-inat.mjs + scripts/merge-rarity.mjs.
+ *                      Missing state = species considered out of range there.
+ *   vagrantEligible?:  true for wide-ranging wanderers (cougar, moose, wolverine).
+ *                      When spotted outside their `elusiveness` range, they're
+ *                      scored as a 2× mythic "vagrant" rather than rejected.
  */
 (function (root) {
     'use strict';
@@ -44,6 +50,66 @@
         national:            { label: 'National (anywhere)',      emoji: '🇺🇸' },
         zoo:                 { label: 'Zoo (Anywhere)',           emoji: '🦓' }
     };
+
+    // USPS state code → label + approximate centroid (lat, lng).
+    // The centroid is used by getStateFromCoords() to map a GPS fix to a
+    // state via nearest-centroid lookup. Crude but adequate: most US points
+    // are closer to their own state's centroid than to any neighbor's.
+    const STATES = {
+        AL: { label: 'Alabama',        lat: 32.806, lng: -86.791 },
+        AK: { label: 'Alaska',         lat: 61.370, lng: -152.404 },
+        AZ: { label: 'Arizona',        lat: 33.730, lng: -111.431 },
+        AR: { label: 'Arkansas',       lat: 34.969, lng: -92.373 },
+        CA: { label: 'California',     lat: 36.116, lng: -119.682 },
+        CO: { label: 'Colorado',       lat: 39.059, lng: -105.311 },
+        CT: { label: 'Connecticut',    lat: 41.597, lng: -72.755 },
+        DE: { label: 'Delaware',       lat: 39.318, lng: -75.507 },
+        FL: { label: 'Florida',        lat: 27.766, lng: -81.686 },
+        GA: { label: 'Georgia',        lat: 33.040, lng: -83.643 },
+        HI: { label: 'Hawaii',         lat: 21.094, lng: -157.498 },
+        ID: { label: 'Idaho',          lat: 44.240, lng: -114.478 },
+        IL: { label: 'Illinois',       lat: 40.349, lng: -88.986 },
+        IN: { label: 'Indiana',        lat: 39.849, lng: -86.258 },
+        IA: { label: 'Iowa',           lat: 42.011, lng: -93.210 },
+        KS: { label: 'Kansas',         lat: 38.526, lng: -96.726 },
+        KY: { label: 'Kentucky',       lat: 37.668, lng: -84.670 },
+        LA: { label: 'Louisiana',      lat: 31.169, lng: -91.867 },
+        ME: { label: 'Maine',          lat: 44.693, lng: -69.381 },
+        MD: { label: 'Maryland',       lat: 39.063, lng: -76.802 },
+        MA: { label: 'Massachusetts',  lat: 42.230, lng: -71.530 },
+        MI: { label: 'Michigan',       lat: 43.326, lng: -84.536 },
+        MN: { label: 'Minnesota',      lat: 45.694, lng: -93.901 },
+        MS: { label: 'Mississippi',    lat: 32.741, lng: -89.678 },
+        MO: { label: 'Missouri',       lat: 38.456, lng: -92.288 },
+        MT: { label: 'Montana',        lat: 46.921, lng: -110.454 },
+        NE: { label: 'Nebraska',       lat: 41.125, lng: -98.268 },
+        NV: { label: 'Nevada',         lat: 38.313, lng: -117.055 },
+        NH: { label: 'New Hampshire',  lat: 43.452, lng: -71.563 },
+        NJ: { label: 'New Jersey',     lat: 40.298, lng: -74.521 },
+        NM: { label: 'New Mexico',     lat: 34.840, lng: -106.248 },
+        NY: { label: 'New York',       lat: 42.166, lng: -74.948 },
+        NC: { label: 'North Carolina', lat: 35.630, lng: -79.806 },
+        ND: { label: 'North Dakota',   lat: 47.529, lng: -99.784 },
+        OH: { label: 'Ohio',           lat: 40.389, lng: -82.764 },
+        OK: { label: 'Oklahoma',       lat: 35.565, lng: -96.928 },
+        OR: { label: 'Oregon',         lat: 44.572, lng: -122.071 },
+        PA: { label: 'Pennsylvania',   lat: 40.590, lng: -77.210 },
+        RI: { label: 'Rhode Island',   lat: 41.681, lng: -71.511 },
+        SC: { label: 'South Carolina', lat: 33.857, lng: -80.945 },
+        SD: { label: 'South Dakota',   lat: 44.299, lng: -99.439 },
+        TN: { label: 'Tennessee',      lat: 35.747, lng: -86.692 },
+        TX: { label: 'Texas',          lat: 31.054, lng: -97.563 },
+        UT: { label: 'Utah',           lat: 40.150, lng: -111.862 },
+        VT: { label: 'Vermont',        lat: 44.045, lng: -72.711 },
+        VA: { label: 'Virginia',       lat: 37.769, lng: -78.170 },
+        WA: { label: 'Washington',     lat: 47.400, lng: -121.490 },
+        WV: { label: 'West Virginia',  lat: 38.491, lng: -80.954 },
+        WI: { label: 'Wisconsin',      lat: 44.268, lng: -89.616 },
+        WY: { label: 'Wyoming',        lat: 42.756, lng: -107.302 }
+    };
+
+    // Bonus multiplier for a vagrant species spotted outside its known range.
+    const VAGRANT_MULTIPLIER = 2;
 
     const GROUPS = {
         // ───── US-specific (existing) ──────────────────────────────────────
@@ -734,6 +800,55 @@
         return Math.round(base * multiplier) + roadkillExtra;
     }
 
+    // ── State-aware scoring (Phase 2a) ──────────────────────────────────
+    // Resolve a (lat, lng) to a USPS state code by nearest centroid.
+    // Returns null for points clearly outside CONUS+AK+HI (e.g. ocean far
+    // from any state). Caller can then fall back to manual state pick.
+    function getStateFromCoords(lat, lng) {
+        if (typeof lat !== 'number' || typeof lng !== 'number') return null;
+        // Quick out-of-US bail: nothing east of -65 or west of -180 inside US.
+        if (lng > -60 || lng < -180 || lat < 15 || lat > 72) return null;
+        let bestCode = null, bestD2 = Infinity;
+        for (const [code, s] of Object.entries(STATES)) {
+            const dLat = lat - s.lat;
+            // Cosine-correct longitude difference so distance is more honest.
+            const dLng = (lng - s.lng) * Math.cos(((lat + s.lat) / 2) * Math.PI / 180);
+            const d2 = dLat * dLat + dLng * dLng;
+            if (d2 < bestD2) { bestD2 = d2; bestCode = code; }
+        }
+        // Reject matches more than ~6° away from any centroid (mid-ocean etc).
+        return bestD2 < 36 ? bestCode : null;
+    }
+
+    // Tier resolution for a (species, state) pair.
+    // Returns one of: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' |
+    // 'mythic' | 'vagrant' | 'out-of-range' | null (no per-state data yet).
+    function tierForState(animal, stateCode) {
+        if (!animal || !stateCode) return null;
+        if (animal.setting === 'zoo') return animal.rarity || 'rare';
+        const elus = animal.elusiveness;
+        // No elusiveness data at all → null (caller falls back to region scoring).
+        if (!elus || Object.keys(elus).length === 0) return null;
+        if (elus[stateCode]) return elus[stateCode];
+        // Pipeline ran but this state isn't in the species' range.
+        return animal.vagrantEligible ? 'vagrant' : 'out-of-range';
+    }
+
+    // Points for a spot when we know which state the spot happened in.
+    // Falls back to pointsForSpot when state is unknown or elusiveness data
+    // hasn't been populated for the species yet.
+    function pointsForSpotInState(animal, kind, stateCode, regionFallback) {
+        const tier = tierForState(animal, stateCode);
+        if (tier === null) return pointsForSpot(animal, kind, regionFallback);
+        const roadkillExtra = (kind === 'roadkill') ? ROADKILL_BONUS : 0;
+        if (tier === 'out-of-range') return 0;
+        if (tier === 'vagrant') {
+            return Math.round(RARITY.mythic.points * VAGRANT_MULTIPLIER) + roadkillExtra;
+        }
+        const tierDef = RARITY[tier] || RARITY[animal.rarity] || RARITY.common;
+        return tierDef.points + roadkillExtra;
+    }
+
     function speciesBonusPoints(animal) {
         return (RARITY[animal.rarity] || RARITY.common).points;
     }
@@ -779,9 +894,11 @@
         Object.entries(spots || {}).forEach(([id, s]) => {
             const a = getAnimalById(id);
             if (!a || !s) return;
-            if (s.live) total += pointsForSpot(a, 'live', region);
-            if (s.roadkill) total += pointsForSpot(a, 'roadkill', region);
-            if (s.species) total += speciesBonusPoints(a);
+            const liveState = s.liveLoc && s.liveLoc.state;
+            const rkState   = s.roadkillLoc && s.roadkillLoc.state;
+            if (s.live)     total += pointsForSpotInState(a, 'live',     liveState, region);
+            if (s.roadkill) total += pointsForSpotInState(a, 'roadkill', rkState,   region);
+            if (s.species)  total += speciesBonusPoints(a);
         });
         earnedGroups(spots).forEach(gid => total += GROUPS[gid].bonus || 0);
         return total;
@@ -804,6 +921,8 @@
         FIRST_FINDER_BONUS,
         SPECIES_QUIZ_OPTION_COUNT,
         REGIONS,
+        STATES,
+        VAGRANT_MULTIPLIER,
         GROUPS,
         ANIMALS,
         FIREBASE_CONFIG,
@@ -811,6 +930,9 @@
         animalsForRegion,
         isOutOfRegion,
         pointsForSpot,
+        pointsForSpotInState,
+        tierForState,
+        getStateFromCoords,
         speciesBonusPoints,
         quizOptions,
         earnedGroups,

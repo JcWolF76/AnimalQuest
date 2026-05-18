@@ -272,6 +272,31 @@
             font-size: 10px; font-weight: bold; color: #e67e22;
             background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px;
         }
+        .animal-card.out-of-state { opacity: 0.55; }
+        .animal-card.out-of-state::after {
+            content: 'NOT IN STATE';
+            position: absolute; top: 6px; right: 8px;
+            font-size: 9px; font-weight: bold; color: #95a5a6;
+            background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 4px;
+        }
+        .animal-card.vagrant { border-color: #e84393; box-shadow: 0 0 20px rgba(232,67,147,0.45); }
+        .animal-card.vagrant::after {
+            content: '✨ VAGRANT 2×';
+            position: absolute; top: 6px; right: 8px;
+            font-size: 10px; font-weight: bold; color: #e84393;
+            background: rgba(0,0,0,0.55); padding: 2px 6px; border-radius: 4px;
+        }
+        .state-picker-grid {
+            display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px;
+            margin: 16px 0; max-width: 100%;
+        }
+        .state-cell {
+            padding: 10px 6px; font-size: 13px; font-weight: bold;
+            background: rgba(0,0,0,0.3); color: #ecf0f1;
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+            cursor: pointer; transition: all .15s ease;
+        }
+        .state-cell:hover { background: rgba(126,176,86,0.3); border-color: #7eb056; }
         .animal-emoji { font-size: 2.4em; line-height: 1; margin-bottom: 6px; }
         .animal-name { font-weight: bold; font-size: 14px; margin-bottom: 4px; }
         .animal-meta { display: flex; gap: 6px; font-size: 11px; color: #d6e9c6; opacity: 0.8; margin-bottom: 10px; flex-wrap: wrap; }
@@ -580,12 +605,13 @@
                 </div>
 
                 <div class="control-group">
-                    <label>📍 Region</label>
+                    <label>📍 Region <span style="opacity:0.6; font-weight:normal;">· State: <span id="currentStateIndicator" style="font-weight:bold;">—</span></span></label>
                     <div class="input-row">
                         <select id="regionSelect" style="flex: 1; min-width: 220px;">
                             <!-- populated -->
                         </select>
                         <button class="btn btn-secondary" id="detectRegionBtn">📡 Detect (GPS)</button>
+                        <button class="btn btn-secondary" id="pickStateBtn" title="Set state manually for per-state rarity scoring">🗺️ Pick State</button>
                         <label class="zoo-toggle" id="zooToggleWrap">
                             <input type="checkbox" id="zooToggle">
                             🦓 Zoo Mode
@@ -658,6 +684,21 @@
                 <button class="btn btn-secondary" id="importBtn">📥 Load Shared Trip</button>
                 <button class="btn btn-secondary" id="exportBtn">📋 Export Backup</button>
                 <button class="btn btn-secondary" id="darkModeBtn">🌙 Dark Mode</button>
+            </div>
+
+            <!-- State picker modal (manual fallback for state-aware scoring) -->
+            <div class="modal-overlay" id="statePickerModal" style="display:none;">
+                <div class="modal-card">
+                    <div class="modal-head">
+                        <div class="modal-emoji">📍</div>
+                        <div class="modal-name">Which state are you in?</div>
+                        <div style="font-size:13px; opacity:0.75; margin-top:4px;">Used for per-state rarity scoring.</div>
+                    </div>
+                    <div id="statePickerGrid" class="state-picker-grid"></div>
+                    <div class="modal-foot">
+                        <button class="skip-btn" id="statePickerSkip">Skip — use region scoring</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Species quiz modal (hidden until a fresh spot fires it) -->
@@ -1004,8 +1045,12 @@
             if (D.isOutOfRegion(animal, region)) cls.push('out-of-region');
             if (animal.setting === 'zoo') cls.push('zoo-animal');
 
-            const livePts = D.pointsForSpot(animal, 'live', region);
-            const rkPts = D.pointsForSpot(animal, 'roadkill', region);
+            const state = currentTripData && currentTripData.lastKnownState;
+            const livePts = D.pointsForSpotInState(animal, 'live', state, region);
+            const rkPts   = D.pointsForSpotInState(animal, 'roadkill', state, region);
+            const tier    = state ? D.tierForState(animal, state) : null;
+            if (tier === 'vagrant') cls.push('vagrant');
+            if (tier === 'out-of-range') cls.push('out-of-state');
             const finder = (s.liveBy || s.roadkillBy)
                 ? `<span class="finder-tag">${s.liveBy ? '🌿 ' + escapeHtml(s.liveBy) : ''}${s.liveBy && s.roadkillBy ? ' · ' : ''}${s.roadkillBy ? '🦴 ' + escapeHtml(s.roadkillBy) : ''}</span>`
                 : '';
@@ -1066,13 +1111,26 @@
 
             const prevEarned = new Set(D.earnedGroups(spots));
 
+            const locKey = kind === 'live' ? 'liveLoc' : 'roadkillLoc';
             if (s[key]) {
-                delete s[key]; delete s[byKey]; delete s[atKey];
+                delete s[key]; delete s[byKey]; delete s[atKey]; delete s[locKey];
             } else {
                 s[key] = true;
                 s[byKey] = activeContributor();
                 s[atKey] = new Date().toISOString();
-                const spotPts = D.pointsForSpot(animal, kind, region);
+                const state = currentTripData.lastKnownState || null;
+                if (state) {
+                    s[locKey] = {
+                        state,
+                        source: currentTripData.lastKnownStateSource || 'manual',
+                        at: s[atKey]
+                    };
+                }
+                const spotPts = D.pointsForSpotInState(animal, kind, state, region);
+                const tier = state ? D.tierForState(animal, state) : null;
+                let prefix = '';
+                if (tier === 'vagrant') prefix = '✨ Vagrant! ';
+                else if (tier === 'out-of-range') prefix = '⚠️ Out of range — ';
                 let bonusMsg = '';
                 if (quizResult === true) {
                     s.species = true;
@@ -1083,7 +1141,7 @@
                     s.species = false;
                     s.speciesQuizTaken = true;
                 }
-                toast(`${animal.emoji} ${kind === 'live' ? 'Live' : 'Roadkill'}! +${spotPts}${bonusMsg}`, !!quizResult);
+                toast(`${prefix}${animal.emoji} ${kind === 'live' ? 'Live' : 'Roadkill'}! +${spotPts}${bonusMsg}`, !!quizResult);
             }
             if (!s.live && !s.roadkill && !s.species) delete spots[animalId];
 
@@ -1304,6 +1362,7 @@
                 document.querySelector(`input[name=mode][value="${currentTripData.mode}"]`).checked = true;
                 $('regionSelect').value = currentTripData.region || 'national';
             }
+            refreshStateIndicator();
             startChallengeTimerIfNeeded();
         });
 
@@ -1343,20 +1402,66 @@
             if (!navigator.geolocation) { toast('Geolocation not supported', false); return; }
             $('detectRegionBtn').textContent = '📡 Detecting...';
             navigator.geolocation.getCurrentPosition((pos) => {
-                const region = guessRegionFromLatLng(pos.coords.latitude, pos.coords.longitude);
+                const { latitude: lat, longitude: lng } = pos.coords;
+                const region = guessRegionFromLatLng(lat, lng);
+                const state  = D.getStateFromCoords(lat, lng);
                 $('regionSelect').value = region;
                 if (currentTripData) {
                     currentTripData.region = region;
+                    if (state) {
+                        currentTripData.lastKnownState = state;
+                        currentTripData.lastKnownStateSource = 'gps';
+                        currentTripData.lastKnownStateAt = Date.now();
+                    }
                     saveCurrentTrip();
                     renderAll();
                 }
+                refreshStateIndicator();
                 $('detectRegionBtn').textContent = '📡 Detect (GPS)';
-                toast(`📍 ${D.REGIONS[region].label}`, false);
+                const stateLabel = state ? ` · ${D.STATES[state].label}` : '';
+                toast(`📍 ${D.REGIONS[region].label}${stateLabel}`, false);
             }, () => {
                 $('detectRegionBtn').textContent = '📡 Detect (GPS)';
-                toast('Location denied — pick a region manually', false);
+                toast('Location denied — pick a region & state manually', false);
+                openStatePicker();
             }, { timeout: 10000 });
         });
+
+        // ── State picker (manual fallback when GPS unavailable) ─────────────
+        function openStatePicker() {
+            const modal = $('statePickerModal');
+            if (!modal) return;
+            modal.style.display = 'flex';
+        }
+        function closeStatePicker() {
+            const modal = $('statePickerModal');
+            if (modal) modal.style.display = 'none';
+        }
+        function setStateManually(code) {
+            if (!currentTripData) return;
+            if (!D.STATES[code]) return;
+            currentTripData.lastKnownState = code;
+            currentTripData.lastKnownStateSource = 'manual';
+            currentTripData.lastKnownStateAt = Date.now();
+            saveCurrentTrip();
+            refreshStateIndicator();
+            renderAll();
+            toast(`📍 State set to ${D.STATES[code].label}`);
+            closeStatePicker();
+        }
+        function refreshStateIndicator() {
+            const el = $('currentStateIndicator');
+            if (!el) return;
+            const code = currentTripData && currentTripData.lastKnownState;
+            if (!code) {
+                el.textContent = '—';
+                el.title = 'No state set. Use GPS or pick one to enable per-state scoring.';
+            } else {
+                const src = currentTripData.lastKnownStateSource === 'gps' ? '📡' : '✋';
+                el.textContent = `${src} ${code}`;
+                el.title = `${D.STATES[code].label} (${currentTripData.lastKnownStateSource})`;
+            }
+        }
 
         function guessRegionFromLatLng(lat, lng) {
             // Very rough US regional bucketing.
@@ -1437,6 +1542,25 @@
             localStorage.setItem(STORAGE_KEYS.darkMode, document.body.classList.contains('dark') ? '1' : '0');
         });
 
+        // ── State picker wiring ─────────────────────────────────────────────
+        (function buildStatePickerGrid() {
+            const grid = $('statePickerGrid');
+            if (!grid) return;
+            const codes = Object.keys(D.STATES).sort();
+            grid.innerHTML = codes.map(c =>
+                `<button class="state-cell" data-state="${c}" title="${escapeHtml(D.STATES[c].label)}">${c}</button>`
+            ).join('');
+            grid.querySelectorAll('.state-cell').forEach(b => {
+                b.addEventListener('click', () => setStateManually(b.dataset.state));
+            });
+        })();
+
+        const pickStateBtn = $('pickStateBtn');
+        if (pickStateBtn) pickStateBtn.addEventListener('click', () => openStatePicker());
+
+        const statePickerSkip = $('statePickerSkip');
+        if (statePickerSkip) statePickerSkip.addEventListener('click', () => closeStatePicker());
+
         // ── Init ────────────────────────────────────────────────────────────
         function initGame() {
             if (localStorage.getItem(STORAGE_KEYS.darkMode) === '1') document.body.classList.add('dark');
@@ -1456,6 +1580,7 @@
                 document.querySelector(`input[name=mode][value="${currentTripData.mode}"]`).checked = true;
                 $('regionSelect').value = currentTripData.region || 'national';
             }
+            refreshStateIndicator();
             startChallengeTimerIfNeeded();
             syncEduToggle();
         }
