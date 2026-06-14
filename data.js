@@ -139,7 +139,8 @@
         weasel:        { label: 'Weasel / Badger / Marten',  emoji: '🦡',  category: 'mammal' },
         marmot:        { label: 'Groundhog / Marmot',        emoji: '🦦',  category: 'mammal' },
         beaver:        { label: 'Beaver / Muskrat',          emoji: '🦫',  category: 'mammal' },
-        whale:         { label: 'Whale / Dolphin',           emoji: '🐋',  category: 'mammal' },
+        whale:         { label: 'Whale',                     emoji: '🐋',  category: 'mammal' },
+        dolphin:       { label: 'Dolphin',                   emoji: '🐬',  category: 'mammal' },
         seal:          { label: 'Seal / Sea Lion / Walrus',  emoji: '🦭',  category: 'mammal' },
         'wild-pig':    { label: 'Wild Pig / Boar / Javelina', emoji: '🐗', category: 'mammal' },
 
@@ -231,10 +232,11 @@
         'groundhog':'marmot','yellow-bellied-marmot':'marmot','hoary-marmot':'marmot',
         // beaver / muskrat
         'beaver':'beaver','muskrat':'beaver',
-        // whale / dolphin (incl manatee + orca)
+        // whale (orca / manatee stay separate per design)
         'gray-whale':'whale','humpback-whale':'whale','blue-whale':'whale','sperm-whale':'whale',
-        'right-whale':'whale','beluga-whale':'whale','narwhal':'whale','manatee':'whale',
-        'bottlenose-dolphin':'whale','orca':'whale',
+        'right-whale':'whale','beluga-whale':'whale','narwhal':'whale',
+        // dolphin
+        'bottlenose-dolphin':'dolphin',
         // seal / sea lion
         'harbor-seal':'seal','california-sea-lion':'seal','steller-sea-lion':'seal',
         'northern-elephant-seal':'seal','walrus':'seal',
@@ -276,8 +278,8 @@
         'horned-puffin':'puffin','tufted-puffin':'puffin','atlantic-puffin':'puffin',
         // shorebird
         'killdeer':'shorebird','piping-plover':'shorebird','black-skimmer':'shorebird',
-        // gamebird
-        'wild-turkey':'gamebird','ring-necked-pheasant':'gamebird','ruffed-grouse':'gamebird',
+        // gamebird (wild turkey kept separate — iconic)
+        'ring-necked-pheasant':'gamebird','ruffed-grouse':'gamebird',
         'sage-grouse':'gamebird','california-quail':'gamebird','northern-bobwhite':'gamebird',
         // pigeon / dove
         'rock-pigeon':'pigeon','mourning-dove':'pigeon',
@@ -292,9 +294,9 @@
         'ruby-throated-hummingbird':'hummingbird','annas-hummingbird':'hummingbird',
         // swallow
         'barn-swallow':'swallow','tree-swallow':'swallow',
-        // songbird (drab + colorful perching catch-all)
-        'house-sparrow':'songbird','american-robin':'songbird','northern-cardinal':'songbird',
-        'blue-jay':'songbird','american-goldfinch':'songbird','house-finch':'songbird',
+        // songbird (drab + colorful perching catch-all; robin / cardinal /
+        // blue jay stay solo as iconic kid-friendly cards)
+        'house-sparrow':'songbird','american-goldfinch':'songbird','house-finch':'songbird',
         'song-sparrow':'songbird','chickadee-bc':'songbird','tufted-titmouse':'songbird',
         'white-breasted-nuthatch':'songbird','northern-mockingbird':'songbird','gray-catbird':'songbird',
         'brown-thrasher':'songbird','eastern-bluebird':'songbird','baltimore-oriole':'songbird',
