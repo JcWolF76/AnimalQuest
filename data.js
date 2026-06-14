@@ -111,6 +111,259 @@
     // Bonus multiplier for a vagrant species spotted outside its known range.
     const VAGRANT_MULTIPLIER = 2;
 
+    // ────────────────────────────────────────────────────────────────────
+    // KINDS — common-name groupings for at-a-glance ID.
+    // ────────────────────────────────────────────────────────────────────
+    // The game shows one card per kind in the spotting grid (e.g. one "Hawk"
+    // card, not eight species). Tapping a multi-species kind opens a
+    // species-picker so the user can pick which one they actually saw —
+    // that's where scientific-name education + per-species scoring happens.
+    //
+    // Species without a SPECIES_TO_KIND mapping become their own singleton
+    // kind at load time (label = species.name, emoji = species.emoji).
+    const KINDS = {
+        // ── Mammals ──
+        squirrel:      { label: 'Squirrel',                  emoji: '🐿️',  category: 'mammal' },
+        rabbit:        { label: 'Rabbit / Hare',             emoji: '🐇',  category: 'mammal' },
+        deer:          { label: 'Deer / Elk / Pronghorn',    emoji: '🦌',  category: 'mammal' },
+        mouse:         { label: 'Mouse / Shrew',             emoji: '🐭',  category: 'mammal' },
+        rat:           { label: 'Rat / Opossum',             emoji: '🐀',  category: 'mammal' },
+        raccoon:       { label: 'Raccoon / Ringtail',        emoji: '🦝',  category: 'mammal' },
+        fox:           { label: 'Fox',                       emoji: '🦊',  category: 'mammal' },
+        wolf:          { label: 'Wolf / Coyote',             emoji: '🐺',  category: 'mammal' },
+        bear:          { label: 'Bear',                      emoji: '🐻',  category: 'mammal' },
+        cat:           { label: 'Wild Cat',                  emoji: '🐈',  category: 'mammal' },
+        cougar:        { label: 'Cougar / Panther',          emoji: '🦁',  category: 'mammal' },
+        bat:           { label: 'Bat',                       emoji: '🦇',  category: 'mammal' },
+        otter:         { label: 'Otter / Mink',              emoji: '🦦',  category: 'mammal' },
+        weasel:        { label: 'Weasel / Badger / Marten',  emoji: '🦡',  category: 'mammal' },
+        marmot:        { label: 'Groundhog / Marmot',        emoji: '🦦',  category: 'mammal' },
+        beaver:        { label: 'Beaver / Muskrat',          emoji: '🦫',  category: 'mammal' },
+        whale:         { label: 'Whale / Dolphin',           emoji: '🐋',  category: 'mammal' },
+        seal:          { label: 'Seal / Sea Lion / Walrus',  emoji: '🦭',  category: 'mammal' },
+        'wild-pig':    { label: 'Wild Pig / Boar / Javelina', emoji: '🐗', category: 'mammal' },
+
+        // ── Birds ──
+        hawk:          { label: 'Hawk',                      emoji: '🦅',  category: 'bird' },
+        eagle:         { label: 'Eagle',                     emoji: '🦅',  category: 'bird' },
+        falcon:        { label: 'Falcon / Kestrel',          emoji: '🦅',  category: 'bird' },
+        owl:           { label: 'Owl',                       emoji: '🦉',  category: 'bird' },
+        vulture:       { label: 'Vulture',                   emoji: '🦃',  category: 'bird' },
+        duck:          { label: 'Duck',                      emoji: '🦆',  category: 'bird' },
+        goose:         { label: 'Goose',                     emoji: '🪿',  category: 'bird' },
+        swan:          { label: 'Swan',                      emoji: '🦢',  category: 'bird' },
+        heron:         { label: 'Heron / Egret',             emoji: '🪶',  category: 'bird' },
+        crane:         { label: 'Crane',                     emoji: '🪶',  category: 'bird' },
+        pelican:       { label: 'Pelican',                   emoji: '🦤',  category: 'bird' },
+        loon:          { label: 'Loon / Grebe',              emoji: '🦆',  category: 'bird' },
+        gull:          { label: 'Gull',                      emoji: '🐦',  category: 'bird' },
+        puffin:        { label: 'Puffin',                    emoji: '🐦',  category: 'bird' },
+        shorebird:     { label: 'Shorebird',                 emoji: '🐦',  category: 'bird' },
+        gamebird:      { label: 'Grouse / Quail / Pheasant', emoji: '🐦',  category: 'bird' },
+        pigeon:        { label: 'Pigeon / Dove',             emoji: '🕊️',  category: 'bird' },
+        crow:          { label: 'Crow / Raven',              emoji: '🐦‍⬛', category: 'bird' },
+        blackbird:     { label: 'Blackbird / Grackle',       emoji: '🐦‍⬛', category: 'bird' },
+        woodpecker:    { label: 'Woodpecker',                emoji: '🐦',  category: 'bird' },
+        hummingbird:   { label: 'Hummingbird',               emoji: '🐦',  category: 'bird' },
+        swallow:       { label: 'Swallow',                   emoji: '🐦',  category: 'bird' },
+        songbird:      { label: 'Small Songbird',            emoji: '🐦',  category: 'bird' },
+
+        // ── Reptiles ──
+        snake:         { label: 'Snake',                     emoji: '🐍',  category: 'reptile' },
+        lizard:        { label: 'Lizard',                    emoji: '🦎',  category: 'reptile' },
+        turtle:        { label: 'Turtle / Tortoise',         emoji: '🐢',  category: 'reptile' },
+        'sea-turtle':  { label: 'Sea Turtle',                emoji: '🐢',  category: 'reptile' },
+        crocodilian:   { label: 'Alligator / Crocodile',     emoji: '🐊',  category: 'reptile' },
+
+        // ── Amphibians ──
+        frog:          { label: 'Frog / Toad',               emoji: '🐸',  category: 'amphibian' },
+        salamander:    { label: 'Salamander / Newt',         emoji: '🦎',  category: 'amphibian' },
+
+        // ── Fish ──
+        trout:         { label: 'Trout / Salmon',            emoji: '🐟',  category: 'fish' },
+        bass:          { label: 'Bass',                      emoji: '🐟',  category: 'fish' },
+        panfish:       { label: 'Panfish',                   emoji: '🐟',  category: 'fish' },
+        catfish:       { label: 'Catfish',                   emoji: '🐟',  category: 'fish' },
+        shark:         { label: 'Shark',                     emoji: '🦈',  category: 'fish' },
+        gamefish:      { label: 'Saltwater Gamefish',        emoji: '🐠',  category: 'fish' },
+
+        // ── Inverts ──
+        butterfly:     { label: 'Butterfly',                 emoji: '🦋',  category: 'invert' },
+        bee:           { label: 'Bee',                       emoji: '🐝',  category: 'invert' },
+        crab:          { label: 'Crab',                      emoji: '🦀',  category: 'invert' },
+        octopus:       { label: 'Octopus',                   emoji: '🐙',  category: 'invert' },
+        spider:        { label: 'Spider',                    emoji: '🕷️',  category: 'invert' }
+    };
+
+    // Species id → kind id. Only species that belong to a multi-species kind
+    // are listed; everything else stays a singleton (its own kind).
+    const SPECIES_TO_KIND = {
+        // squirrel
+        'eastern-gray-squirrel':'squirrel','fox-squirrel':'squirrel','red-squirrel':'squirrel',
+        'flying-squirrel':'squirrel','eastern-chipmunk':'squirrel','black-tailed-prairie-dog':'squirrel',
+        // rabbit
+        'eastern-cottontail':'rabbit','snowshoe-hare':'rabbit','black-tailed-jackrabbit':'rabbit','pika':'rabbit',
+        // deer
+        'white-tailed-deer':'deer','mule-deer':'deer','elk':'deer','caribou':'deer','pronghorn':'deer',
+        // mouse
+        'house-mouse':'mouse','deer-mouse':'mouse','short-tailed-shrew':'mouse','kangaroo-rat':'mouse',
+        // rat / opossum
+        'brown-rat':'rat','virginia-opossum':'rat',
+        // raccoon
+        'raccoon':'raccoon','ringtail':'raccoon',
+        // fox
+        'red-fox':'fox','gray-fox':'fox','arctic-fox':'fox','kit-fox':'fox',
+        // wolf / coyote
+        'coyote':'wolf','gray-wolf':'wolf','red-wolf':'wolf',
+        // bear
+        'black-bear':'bear','grizzly-bear':'bear',
+        // wild cat
+        'bobcat':'cat','canada-lynx':'cat','ocelot':'cat',
+        // cougar
+        'mountain-lion':'cougar','florida-panther':'cougar',
+        // bat
+        'little-brown-bat':'bat','big-brown-bat':'bat','mexican-free-tailed-bat':'bat',
+        // otter / mink
+        'river-otter':'otter','sea-otter':'otter','mink':'otter',
+        // weasel / badger
+        'american-badger':'weasel','fisher':'weasel','american-marten':'weasel','long-tailed-weasel':'weasel',
+        // groundhog / marmot
+        'groundhog':'marmot','yellow-bellied-marmot':'marmot','hoary-marmot':'marmot',
+        // beaver / muskrat
+        'beaver':'beaver','muskrat':'beaver',
+        // whale / dolphin (incl manatee + orca)
+        'gray-whale':'whale','humpback-whale':'whale','blue-whale':'whale','sperm-whale':'whale',
+        'right-whale':'whale','beluga-whale':'whale','narwhal':'whale','manatee':'whale',
+        'bottlenose-dolphin':'whale','orca':'whale',
+        // seal / sea lion
+        'harbor-seal':'seal','california-sea-lion':'seal','steller-sea-lion':'seal',
+        'northern-elephant-seal':'seal','walrus':'seal',
+        // wild pig
+        'wild-boar':'wild-pig','javelina':'wild-pig',
+        // hawk
+        'red-tailed-hawk':'hawk','coopers-hawk':'hawk','sharp-shinned-hawk':'hawk','northern-harrier':'hawk',
+        'red-shouldered-hawk':'hawk','swainsons-hawk':'hawk','ferruginous-hawk':'hawk','rough-legged-hawk':'hawk',
+        'snail-kite':'hawk',
+        // eagle
+        'bald-eagle':'eagle','golden-eagle':'eagle',
+        // falcon
+        'peregrine-falcon':'falcon','american-kestrel':'falcon','merlin':'falcon','gyrfalcon':'falcon',
+        'crested-caracara':'falcon',
+        // owl
+        'great-horned-owl':'owl','barred-owl':'owl','barn-owl':'owl','eastern-screech-owl':'owl',
+        'western-screech-owl':'owl','long-eared-owl':'owl','short-eared-owl':'owl','burrowing-owl':'owl',
+        'snowy-owl':'owl','great-gray-owl':'owl','elf-owl':'owl','spotted-owl':'owl',
+        // vulture
+        'turkey-vulture':'vulture','black-vulture':'vulture',
+        // duck
+        'mallard':'duck','wood-duck':'duck','hooded-merganser':'duck','common-merganser':'duck',
+        // goose
+        'canada-goose':'goose','snow-goose':'goose',
+        // swan
+        'tundra-swan':'swan','mute-swan':'swan','trumpeter-swan':'swan',
+        // heron / egret
+        'great-blue-heron':'heron','great-egret':'heron','snowy-egret':'heron','cattle-egret':'heron',
+        'green-heron':'heron','black-crowned-night-heron':'heron',
+        // crane
+        'sandhill-crane':'crane','whooping-crane':'crane',
+        // pelican
+        'brown-pelican':'pelican','american-white-pelican':'pelican',
+        // loon / grebe
+        'common-loon':'loon','pied-billed-grebe':'loon',
+        // gull
+        'herring-gull':'gull','ring-billed-gull':'gull',
+        // puffin
+        'horned-puffin':'puffin','tufted-puffin':'puffin','atlantic-puffin':'puffin',
+        // shorebird
+        'killdeer':'shorebird','piping-plover':'shorebird','black-skimmer':'shorebird',
+        // gamebird
+        'wild-turkey':'gamebird','ring-necked-pheasant':'gamebird','ruffed-grouse':'gamebird',
+        'sage-grouse':'gamebird','california-quail':'gamebird','northern-bobwhite':'gamebird',
+        // pigeon / dove
+        'rock-pigeon':'pigeon','mourning-dove':'pigeon',
+        // crow / raven
+        'american-crow':'crow','common-raven':'crow',
+        // blackbird / grackle / starling
+        'common-grackle':'blackbird','red-winged-blackbird':'blackbird','european-starling':'blackbird',
+        // woodpecker
+        'pileated-woodpecker':'woodpecker','downy-woodpecker':'woodpecker','northern-flicker':'woodpecker',
+        'red-bellied-woodpecker':'woodpecker','ivory-billed-woodpecker':'woodpecker',
+        // hummingbird
+        'ruby-throated-hummingbird':'hummingbird','annas-hummingbird':'hummingbird',
+        // swallow
+        'barn-swallow':'swallow','tree-swallow':'swallow',
+        // songbird (drab + colorful perching catch-all)
+        'house-sparrow':'songbird','american-robin':'songbird','northern-cardinal':'songbird',
+        'blue-jay':'songbird','american-goldfinch':'songbird','house-finch':'songbird',
+        'song-sparrow':'songbird','chickadee-bc':'songbird','tufted-titmouse':'songbird',
+        'white-breasted-nuthatch':'songbird','northern-mockingbird':'songbird','gray-catbird':'songbird',
+        'brown-thrasher':'songbird','eastern-bluebird':'songbird','baltimore-oriole':'songbird',
+        'scarlet-tanager':'songbird','western-tanager':'songbird','indigo-bunting':'songbird',
+        'painted-bunting':'songbird','yellow-warbler':'songbird','common-yellowthroat':'songbird',
+        'eastern-meadowlark':'songbird','western-meadowlark':'songbird','painted-redstart':'songbird',
+        'kirtlands-warbler':'songbird','florida-grasshopper-sparrow':'songbird',
+
+        // snake (rattlesnakes folded in)
+        'garter-snake':'snake','eastern-rat-snake':'snake','northern-water-snake':'snake',
+        'corn-snake':'snake','eastern-kingsnake':'snake','milk-snake':'snake','gopher-snake':'snake',
+        'bullsnake':'snake','eastern-hognose':'snake','eastern-diamondback-rattlesnake':'snake',
+        'western-diamondback-rattlesnake':'snake','timber-rattlesnake':'snake','sidewinder':'snake',
+        'copperhead':'snake','cottonmouth':'snake','coral-snake':'snake','coachwhip':'snake',
+        // lizard (incl gila monster + iguana family)
+        'green-anole':'lizard','brown-anole':'lizard','eastern-fence-lizard':'lizard',
+        'side-blotched-lizard':'lizard','collared-lizard':'lizard','whiptail-lizard':'lizard',
+        'horned-lizard':'lizard','desert-iguana':'lizard','common-chuckwalla':'lizard',
+        'gila-monster':'lizard',
+        // turtle / tortoise
+        'red-eared-slider':'turtle','painted-turtle':'turtle','snapping-turtle':'turtle',
+        'eastern-box-turtle':'turtle','three-toed-box-turtle':'turtle','wood-turtle':'turtle',
+        'diamondback-terrapin':'turtle','spotted-turtle':'turtle','desert-tortoise':'turtle',
+        'gopher-tortoise':'turtle',
+        // sea turtle
+        'loggerhead-sea-turtle':'sea-turtle','green-sea-turtle':'sea-turtle',
+        'leatherback-sea-turtle':'sea-turtle','kemps-ridley':'sea-turtle','hawksbill-turtle':'sea-turtle',
+        // crocodilian
+        'american-alligator':'crocodilian','american-crocodile':'crocodilian',
+
+        // frog / toad
+        'bullfrog':'frog','green-frog':'frog','wood-frog':'frog','leopard-frog':'frog',
+        'spring-peeper':'frog','gray-treefrog':'frog','pacific-treefrog':'frog',
+        'american-toad':'frog',"fowlers-toad":'frog','western-toad':'frog','pickerel-frog':'frog',
+        'cane-toad':'frog',
+        // salamander (incl hellbender / mudpuppy / newt)
+        'eastern-newt':'salamander','red-backed-salamander':'salamander','spotted-salamander':'salamander',
+        'tiger-salamander':'salamander','marbled-salamander':'salamander','slimy-salamander':'salamander',
+        'pacific-giant-salamander':'salamander','hellbender':'salamander','mudpuppy':'salamander',
+        'flatwoods-salamander':'salamander',
+
+        // trout / salmon
+        'rainbow-trout':'trout','brook-trout':'trout','brown-trout':'trout',
+        'chinook-salmon':'trout','sockeye-salmon':'trout',
+        // bass
+        'largemouth-bass':'bass','smallmouth-bass':'bass','striped-bass':'bass',
+        // panfish
+        'bluegill':'panfish','crappie':'panfish','yellow-perch':'panfish',
+        // catfish (singleton — kept just because there's only one but the name is generic enough)
+        'channel-catfish':'catfish',
+        // shark
+        'great-white-shark':'shark','tiger-shark':'shark','hammerhead-shark':'shark',
+        'mako-shark':'shark','bull-shark':'shark','whale-shark':'shark',
+        // saltwater gamefish
+        'mahi-mahi':'gamefish','red-snapper':'gamefish','atlantic-bluefin-tuna':'gamefish','tarpon':'gamefish',
+
+        // butterfly
+        'monarch-butterfly':'butterfly','eastern-tiger-swallowtail':'butterfly',
+        'black-swallowtail':'butterfly','mourning-cloak':'butterfly','painted-lady':'butterfly',
+        // bee
+        'honeybee':'bee','common-eastern-bumblebee':'bee',
+        // crab (incl horseshoe + lobster — same "shelled crustacean" vibe? keep lobster separate)
+        'horseshoe-crab':'crab','blue-crab':'crab',
+        // octopus
+        'common-octopus':'octopus','giant-pacific-octopus':'octopus',
+        // spider
+        'tarantula':'spider','black-widow':'spider'
+    };
+
     const GROUPS = {
         // ───── US-specific (existing) ──────────────────────────────────────
         'wild-five':     { label: 'The Wild Five',        emoji: '🐺',
@@ -754,11 +1007,40 @@
     // Apply default `setting: 'wild'` to anything without one (most US species).
     ANIMALS.forEach(a => { if (!a.setting) a.setting = 'wild'; });
 
+    // Assign kindId to every species: explicit mapping wins; otherwise the
+    // species is its own singleton kind (kindId === species id).
+    ANIMALS.forEach(a => { a.kindId = SPECIES_TO_KIND[a.id] || a.id; });
+
     // ────────────────────────────────────────────────────────────────────
     // Helpers
     // ────────────────────────────────────────────────────────────────────
 
     function getAnimalById(id) { return ANIMALS.find(a => a.id === id) || null; }
+
+    // Kind metadata for a species. Multi-species kinds use the KINDS table;
+    // singletons synthesize a kind from the species itself.
+    function kindFor(animal) {
+        if (!animal) return null;
+        const k = KINDS[animal.kindId];
+        if (k) return { id: animal.kindId, label: k.label, emoji: k.emoji, category: k.category, singleton: false };
+        return { id: animal.id, label: animal.name, emoji: animal.emoji, category: animal.category, singleton: true };
+    }
+
+    // Group a list of animals by kind, preserving the input order of the
+    // first species seen per kind. Returns [{ kind, species:[a,a,...] }, ...].
+    function animalsByKind(animals) {
+        const order = [];
+        const buckets = new Map();
+        animals.forEach(a => {
+            const kid = a.kindId || a.id;
+            if (!buckets.has(kid)) { order.push(kid); buckets.set(kid, []); }
+            buckets.get(kid).push(a);
+        });
+        return order.map(kid => ({
+            kind: kindFor(buckets.get(kid)[0]),
+            species: buckets.get(kid)
+        }));
+    }
 
     // animalsForRegion(region, opts)
     //   region: a key in REGIONS (or 'national', or 'zoo')
@@ -923,10 +1205,14 @@
         REGIONS,
         STATES,
         VAGRANT_MULTIPLIER,
+        KINDS,
+        SPECIES_TO_KIND,
         GROUPS,
         ANIMALS,
         FIREBASE_CONFIG,
         getAnimalById,
+        kindFor,
+        animalsByKind,
         animalsForRegion,
         isOutOfRegion,
         pointsForSpot,

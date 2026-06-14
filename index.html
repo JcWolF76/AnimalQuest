@@ -297,6 +297,30 @@
             cursor: pointer; transition: all .15s ease;
         }
         .state-cell:hover { background: rgba(126,176,86,0.3); border-color: #7eb056; }
+
+        .kind-card.expandable { cursor: pointer; }
+        .kind-card.expandable:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+        .spot-btn.pick { background: rgba(126,176,86,0.18); border-color: rgba(126,176,86,0.4); }
+        .spot-btn.pick:hover { background: rgba(126,176,86,0.35); }
+
+        .species-picker-card { max-width: 540px; }
+        .species-picker-list {
+            display: flex; flex-direction: column; gap: 8px;
+            max-height: 60vh; overflow-y: auto; padding: 8px 0;
+        }
+        .species-picker-row {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; padding: 10px 12px;
+            background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+        }
+        .spr-main { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+        .spr-emoji { font-size: 1.6em; line-height: 1; }
+        .spr-text { min-width: 0; flex: 1; }
+        .spr-name { font-weight: bold; font-size: 14px; color: #ecf0f1; }
+        .spr-sci { font-size: 11px; opacity: 0.75; font-style: italic; }
+        .spr-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .spr-actions .spot-btn { padding: 6px 10px; font-size: 12px; }
         .animal-emoji { font-size: 2.4em; line-height: 1; margin-bottom: 6px; }
         .animal-name { font-weight: bold; font-size: 14px; margin-bottom: 4px; }
         .animal-meta { display: flex; gap: 6px; font-size: 11px; color: #d6e9c6; opacity: 0.8; margin-bottom: 10px; flex-wrap: wrap; }
@@ -686,6 +710,21 @@
                 <button class="btn btn-secondary" id="darkModeBtn">🌙 Dark Mode</button>
             </div>
 
+            <!-- Species picker modal (opens when a multi-species kind card is tapped) -->
+            <div class="modal-overlay" id="speciesPickerModal" style="display:none;">
+                <div class="modal-card species-picker-card">
+                    <div class="modal-head">
+                        <div class="modal-emoji" id="speciesPickerEmoji">🦅</div>
+                        <div class="modal-name" id="speciesPickerName">Which species?</div>
+                        <div id="speciesPickerSubName" style="font-size:13px; opacity:0.75; margin-top:4px;">Pick the one you actually saw.</div>
+                    </div>
+                    <div id="speciesPickerList" class="species-picker-list"></div>
+                    <div class="modal-foot">
+                        <button class="skip-btn" id="speciesPickerClose">Close</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- State picker modal (manual fallback for state-aware scoring) -->
             <div class="modal-overlay" id="statePickerModal" style="display:none;">
                 <div class="modal-card">
@@ -856,6 +895,16 @@
             renderFilterBar();
             renderAnimals();
             syncZooToggle();
+            refreshSpeciesPickerIfOpen();
+        }
+
+        function refreshSpeciesPickerIfOpen() {
+            if (!activePickerKindId || !currentTripData) return;
+            if ($('speciesPickerModal').style.display === 'none') return;
+            const region = currentTripData.region || 'national';
+            const visible = D.animalsForRegion(region, { includeZoo: tripIncludeZoo() });
+            const species = visible.filter(a => (a.kindId || a.id) === activePickerKindId);
+            if (species.length) renderSpeciesPickerList(species);
         }
 
         function renderCategoryBar() {
@@ -992,34 +1041,134 @@
                 .filter(a => filterMatches(a, spots))
                 .filter(a => activeCategory === 'all' || a.category === activeCategory);
 
-            // Group by rarity
-            const byRarity = { common: [], uncommon: [], rare: [], epic: [], legendary: [], mythic: [] };
-            visible.forEach(a => byRarity[a.rarity]?.push(a));
+            const kindGroups = D.animalsByKind(visible);
 
-            const sections = ['common','uncommon','rare','epic','legendary','mythic'].map(rid => {
-                const list = byRarity[rid];
+            // Group kinds by category for clean section headers.
+            const RARITY_ORDER = ['mythic','legendary','epic','rare','uncommon','common'];
+            const rarityRank = r => RARITY_ORDER.indexOf(r);
+            const byCategory = {};
+            kindGroups.forEach(g => {
+                const cat = g.kind.category;
+                (byCategory[cat] ||= []).push(g);
+            });
+
+            // Sort kinds within each category: top rarity desc, then alphabetical.
+            Object.values(byCategory).forEach(list => {
+                list.sort((a, b) => {
+                    const ar = Math.min(...a.species.map(s => rarityRank(s.rarity)));
+                    const br = Math.min(...b.species.map(s => rarityRank(s.rarity)));
+                    if (ar !== br) return ar - br;
+                    return a.kind.label.localeCompare(b.kind.label);
+                });
+            });
+
+            const CAT_ORDER = ['mammal','bird','reptile','amphibian','fish','invert'];
+            const sections = CAT_ORDER.map(cat => {
+                const list = byCategory[cat];
                 if (!list || !list.length) return '';
-                const r = D.RARITY[rid];
+                const c = D.CATEGORIES[cat];
                 return `<div class="rarity-section">
-                    <div class="rarity-header" style="color: ${r.color}">
-                        <span>${escapeHtml(r.label)}</span>
-                        <span class="pts">base ${r.points} pts ${rid==='mythic'?'· good luck':''}</span>
+                    <div class="rarity-header" style="color: #ecf0f1">
+                        <span>${c.emoji} ${escapeHtml(c.label)}</span>
+                        <span class="pts">${list.length} kinds</span>
                     </div>
                     <div class="animals-grid">
-                        ${list.map(a => animalCardHtml(a, spots, region)).join('')}
+                        ${list.map(g => kindCardHtml(g, spots, region)).join('')}
                     </div>
                 </div>`;
             }).join('');
 
             container.innerHTML = sections || '<p style="text-align:center;opacity:0.7;padding:40px;">No animals match this filter.</p>';
 
+            // Click handlers: singleton kinds get inline spot buttons; multi-species
+            // cards open the species picker.
             container.querySelectorAll('.spot-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const id = btn.dataset.id;
                     const kind = btn.dataset.kind;
                     toggleSpot(id, kind);
                 });
             });
+            container.querySelectorAll('.kind-card.expandable').forEach(card => {
+                card.addEventListener('click', () => openSpeciesPicker(card.dataset.kindId));
+            });
+        }
+
+        // Render a single kind card. Singleton kinds embed Live/RK buttons;
+        // multi-species kinds show a "pick species" prompt and a per-kind
+        // spot tally instead.
+        function kindCardHtml(group, spots, region) {
+            const { kind, species } = group;
+            const state = currentTripData && currentTripData.lastKnownState;
+            const cls = ['animal-card', 'kind-card'];
+
+            const speciesSpots = species.map(sp => spots[sp.id] || {});
+            const liveCount = speciesSpots.filter(s => s.live).length;
+            const rkCount   = speciesSpots.filter(s => s.roadkill).length;
+            const anySpot   = liveCount + rkCount > 0;
+
+            if (anySpot) cls.push(liveCount && rkCount ? 'spotted-both'
+                                   : liveCount ? 'spotted-live' : 'spotted-roadkill');
+            if (kind.category === 'mammal' && species[0].setting === 'zoo') cls.push('zoo-animal');
+
+            // Highest possible points across the kind's species.
+            const maxLivePts = Math.max(...species.map(sp =>
+                D.pointsForSpotInState(sp, 'live', state, region)));
+            const maxRkPts = Math.max(...species.map(sp =>
+                D.pointsForSpotInState(sp, 'roadkill', state, region)));
+
+            // For singleton kinds, render the species' Live/RK buttons inline.
+            if (species.length === 1) {
+                const animal = species[0];
+                const sp = speciesSpots[0];
+                if (D.isOutOfRegion(animal, region)) cls.push('out-of-region');
+                const tier = state ? D.tierForState(animal, state) : null;
+                if (tier === 'vagrant') cls.push('vagrant');
+                if (tier === 'out-of-range') cls.push('out-of-state');
+                const speciesBadge = sp.species ? `<span class="species-badge" title="Identified by scientific name">🎓 ID</span>` : '';
+                const finder = (sp.liveBy || sp.roadkillBy)
+                    ? `<span class="finder-tag">${sp.liveBy ? '🌿 ' + escapeHtml(sp.liveBy) : ''}${sp.liveBy && sp.roadkillBy ? ' · ' : ''}${sp.roadkillBy ? '🦴 ' + escapeHtml(sp.roadkillBy) : ''}</span>`
+                    : '';
+                return `<div class="${cls.join(' ')}" data-id="${animal.id}">
+                    <div class="animal-emoji">${kind.emoji}</div>
+                    <div class="animal-name">${escapeHtml(kind.label)}${speciesBadge}</div>
+                    <div class="animal-sci">${escapeHtml(animal.scientific || '')}</div>
+                    <div class="animal-meta">
+                        <span class="pts-tag">${maxLivePts}</span>
+                        <span>${escapeHtml(D.RARITY[animal.rarity].label)}</span>
+                    </div>
+                    <div class="animal-actions">
+                        <button class="spot-btn live ${sp.live?'active':''}" data-id="${animal.id}" data-kind="live" title="Spotted alive (+${maxLivePts})">🌿 Live</button>
+                        <button class="spot-btn roadkill ${sp.roadkill?'active':''}" data-id="${animal.id}" data-kind="roadkill" ${animal.roadkillable===false?'disabled title="Not realistically roadkill"':`title="Roadkill (+${maxRkPts})"`}>🦴 RK</button>
+                    </div>
+                    ${finder}
+                </div>`;
+            }
+
+            // Multi-species kind: kind card, tap to pick.
+            cls.push('expandable');
+            const totalSpecies = species.length;
+            const spotted = speciesSpots.filter(s => s.live || s.roadkill).length;
+            const topRarity = species.reduce((best, sp) =>
+                rarityRankOf(sp.rarity) < rarityRankOf(best.rarity) ? sp : best, species[0]).rarity;
+            const rarityColor = D.RARITY[topRarity].color;
+            return `<div class="${cls.join(' ')}" data-kind-id="${kind.id}" style="border-left: 3px solid ${rarityColor};">
+                <div class="animal-emoji">${kind.emoji}</div>
+                <div class="animal-name">${escapeHtml(kind.label)}</div>
+                <div class="animal-sci">${totalSpecies} species · up to ${escapeHtml(D.RARITY[topRarity].label)}</div>
+                <div class="animal-meta">
+                    <span class="pts-tag">up to ${maxLivePts}</span>
+                    <span>${spotted}/${totalSpecies} spotted</span>
+                </div>
+                <div class="animal-actions">
+                    <button class="spot-btn pick" title="Tap to pick which species you saw">👁️ Pick species</button>
+                </div>
+            </div>`;
+        }
+
+        function rarityRankOf(r) {
+            return ['mythic','legendary','epic','rare','uncommon','common'].indexOf(r);
         }
 
         function filterMatches(animal, spots) {
@@ -1034,43 +1183,6 @@
                     return animal.rarity === activeFilter;
                 default: return true;
             }
-        }
-
-        function animalCardHtml(animal, spots, region) {
-            const s = spots[animal.id] || {};
-            const cls = ['animal-card'];
-            if (s.live && s.roadkill) cls.push('spotted-both');
-            else if (s.live) cls.push('spotted-live');
-            else if (s.roadkill) cls.push('spotted-roadkill');
-            if (D.isOutOfRegion(animal, region)) cls.push('out-of-region');
-            if (animal.setting === 'zoo') cls.push('zoo-animal');
-
-            const state = currentTripData && currentTripData.lastKnownState;
-            const livePts = D.pointsForSpotInState(animal, 'live', state, region);
-            const rkPts   = D.pointsForSpotInState(animal, 'roadkill', state, region);
-            const tier    = state ? D.tierForState(animal, state) : null;
-            if (tier === 'vagrant') cls.push('vagrant');
-            if (tier === 'out-of-range') cls.push('out-of-state');
-            const finder = (s.liveBy || s.roadkillBy)
-                ? `<span class="finder-tag">${s.liveBy ? '🌿 ' + escapeHtml(s.liveBy) : ''}${s.liveBy && s.roadkillBy ? ' · ' : ''}${s.roadkillBy ? '🦴 ' + escapeHtml(s.roadkillBy) : ''}</span>`
-                : '';
-
-            const speciesBadge = s.species ? `<span class="species-badge" title="Identified by scientific name">🎓 ID</span>` : '';
-
-            return `<div class="${cls.join(' ')}" data-id="${animal.id}">
-                <div class="animal-emoji">${animal.emoji}</div>
-                <div class="animal-name">${escapeHtml(animal.name)}${speciesBadge}</div>
-                <div class="animal-sci">${escapeHtml(animal.scientific || '')}</div>
-                <div class="animal-meta">
-                    <span class="pts-tag">${livePts}</span>
-                    <span>${escapeHtml(D.RARITY[animal.rarity].label)}</span>
-                </div>
-                <div class="animal-actions">
-                    <button class="spot-btn live ${s.live?'active':''}" data-id="${animal.id}" data-kind="live" title="Spotted alive (+${livePts})">🌿 Live</button>
-                    <button class="spot-btn roadkill ${s.roadkill?'active':''}" data-id="${animal.id}" data-kind="roadkill" ${animal.roadkillable===false?'disabled title="Not realistically roadkill"':`title="Roadkill (+${rkPts})"`}>🦴 RK</button>
-                </div>
-                ${finder}
-            </div>`;
         }
 
         function isEducationalMode() {
@@ -1427,6 +1539,71 @@
             }, { timeout: 10000 });
         });
 
+        // ── Species picker (opened from multi-species kind cards) ───────────
+        let activePickerKindId = null;
+
+        function openSpeciesPicker(kindId) {
+            if (!currentTripData) return;
+            const region = currentTripData.region || 'national';
+            const visible = D.animalsForRegion(region, { includeZoo: tripIncludeZoo() });
+            const species = visible.filter(a => (a.kindId || a.id) === kindId);
+            if (!species.length) return;
+            activePickerKindId = kindId;
+            const kindMeta = D.kindFor(species[0]);
+            $('speciesPickerEmoji').textContent = kindMeta.emoji;
+            $('speciesPickerName').textContent = kindMeta.label;
+            $('speciesPickerSubName').textContent =
+                `${species.length} species · pick the one you saw to claim points + ID bonus.`;
+            renderSpeciesPickerList(species);
+            $('speciesPickerModal').style.display = 'flex';
+        }
+
+        function renderSpeciesPickerList(species) {
+            const region = currentTripData.region || 'national';
+            const state = currentTripData.lastKnownState;
+            const spots = currentTripData.spots || {};
+            const list = $('speciesPickerList');
+            list.innerHTML = species.map(a => {
+                const s = spots[a.id] || {};
+                const livePts = D.pointsForSpotInState(a, 'live', state, region);
+                const rkPts   = D.pointsForSpotInState(a, 'roadkill', state, region);
+                const r = D.RARITY[a.rarity];
+                const liveCls = s.live ? 'active' : '';
+                const rkCls   = s.roadkill ? 'active' : '';
+                return `<div class="species-picker-row" data-id="${a.id}">
+                    <div class="spr-main">
+                        <div class="spr-emoji">${a.emoji}</div>
+                        <div class="spr-text">
+                            <div class="spr-name">${escapeHtml(a.name)}</div>
+                            <div class="spr-sci">${escapeHtml(a.scientific || '')} · <span style="color:${r.color}">${escapeHtml(r.label)}</span></div>
+                        </div>
+                    </div>
+                    <div class="spr-actions">
+                        <button class="spot-btn live ${liveCls}" data-id="${a.id}" data-kind="live" title="Spotted alive (+${livePts})">🌿 +${livePts}</button>
+                        <button class="spot-btn roadkill ${rkCls}" data-id="${a.id}" data-kind="roadkill" ${a.roadkillable===false?'disabled':'title="Roadkill (+'+rkPts+')"'}>🦴 +${rkPts}</button>
+                    </div>
+                </div>`;
+            }).join('');
+            list.querySelectorAll('.spot-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleSpot(btn.dataset.id, btn.dataset.kind);
+                    // Refresh the picker list inline so the user sees the toggle.
+                    if (activePickerKindId) {
+                        const region = currentTripData.region || 'national';
+                        const visible = D.animalsForRegion(region, { includeZoo: tripIncludeZoo() });
+                        const refreshed = visible.filter(a => (a.kindId || a.id) === activePickerKindId);
+                        renderSpeciesPickerList(refreshed);
+                    }
+                });
+            });
+        }
+
+        function closeSpeciesPicker() {
+            $('speciesPickerModal').style.display = 'none';
+            activePickerKindId = null;
+        }
+
         // ── State picker (manual fallback when GPS unavailable) ─────────────
         function openStatePicker() {
             const modal = $('statePickerModal');
@@ -1560,6 +1737,13 @@
 
         const statePickerSkip = $('statePickerSkip');
         if (statePickerSkip) statePickerSkip.addEventListener('click', () => closeStatePicker());
+
+        const speciesPickerClose = $('speciesPickerClose');
+        if (speciesPickerClose) speciesPickerClose.addEventListener('click', () => closeSpeciesPicker());
+        // Click outside the species picker card to close.
+        $('speciesPickerModal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'speciesPickerModal') closeSpeciesPicker();
+        });
 
         // ── Init ────────────────────────────────────────────────────────────
         function initGame() {
